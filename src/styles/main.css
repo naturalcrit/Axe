@@ -1,0 +1,25 @@
+
+
+.page {
+    padding-block: 100px;
+    width: clamp(600px, 33%, 900px);
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+
+    font-family: 'Open Sans';
+
+    .nav {
+        display: flex;
+        justify-content: space-evenly;
+        column-gap: 20px;
+
+        .navButton {
+            text-decoration: unset;
+            background: coral;
+            color: rgb(123, 45, 17);
+            padding: .7em 1em;
+            border-radius: 2px;
+        }
+    }
+}
