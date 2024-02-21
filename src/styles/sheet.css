@@ -1,14 +1,80 @@
-.drop {
-     border: 1px solid coral;
-    .react-grid-layout {
-       
-    }
-    
+.sidebar {
+    .picker {
+        background: #3b3b3b;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 10px;
+        height: 100%;
+        overflow: auto;
 
-    .react-grid-item {
-        display:grid;
-        place-items:center;
-        background: #ff7f503d;
-        border: 1px solid red;
+        .item {
+            border-bottom: 2px solid grey;
+            padding-bottom: 5px;
+            max-height: 100px;
+
+            display: grid;
+            grid-template-columns: 1fr 55px;
+            align-items: center;
+            gap: 15px;
+
+            textarea {
+                height: 100px;
+            }
+
+            .addItem {
+                padding: 5px 10px;
+            }
+        }
     }
 }
+
+
+.drop {
+    border: 1px solid coral;
+    min-height: 600px;
+    width: 816px;
+    border-radius: 7px;
+    margin-bottom: 20px;
+
+    .react-grid-layout {
+        height: 1056px !important;
+    }
+
+    .react-grid-item {
+        position: relative;
+        display: grid;
+        place-items: center;
+        background: #ff7f503d;
+        border: 1px solid red;
+
+        .deleteItem {
+            background: unset;
+            border: unset;
+            color: white;
+            font-weight: 900;
+            filter: drop-shadow(1px 1px 2px black);
+            position: absolute;
+            top: 0;
+            right: 0;
+            opacity: 0;
+        }
+
+        &:is(:hover, :focus, :focus-within) .deleteItem {
+            opacity: 1;
+        }
+
+        input[type="text"] {
+            width: 100%;
+        }
+        input[type="number"] {
+            width:5ch;
+        }
+
+        textarea {
+            resize: none;
+            width: 100% !important;
+            height: 100% !important;
+        }
+    }
+}
+
