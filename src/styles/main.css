@@ -1,6 +1,6 @@
 body {
     background: #413939;
-    color:white;
+    color: white;
 }
 
 .page {
@@ -28,41 +28,15 @@ body {
 
     .content {
 
-
         .sidebar {
-            position: absolute;
+            position: fixed;
             left: 0;
             top: 0;
             height: 92vh;
             width: 400px;
             padding-left: 20px;
 
-            .picker {
-                background: #3b3b3b;
-                border:1px solid #ccc;
-                border-radius: 10px;
-                padding: 10px;
-                height:100%;
-                overflow: auto;
 
-                .item {
-                    border-bottom: 2px solid grey;
-                    padding-bottom: 5px;
-                }
-            }
-        }
-
-        #create {
-            height:700px;
-            width:600px;
-
-            .drop-div {
-                min-height:600px;
-                width:600px;
-                border:1px solid lightgrey;
-                border-radius:7px;
-            }
         }
     }
-
 }
