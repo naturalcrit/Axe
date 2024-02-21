@@ -54,11 +54,11 @@ body {
 
         #create {
             height:700px;
-            width:500px;
+            width:600px;
 
             .drop-div {
                 min-height:600px;
-                width:500px;
+                width:600px;
                 border:1px solid lightgrey;
                 border-radius:7px;
             }

@@ -11,7 +11,7 @@ const DropDiv = () => {
   
   return (
     <div>
-        <GridLayout className="layout" layout={layout} cols={6} rowHeight={100} width={1200}>
+        <GridLayout className="layout" layout={layout} cols={6} rowHeight={100} width={600}>
           <div key="a">A</div>
           <div key="b">B</div>
           <div key="c">C</div>

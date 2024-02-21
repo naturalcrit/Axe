@@ -1,4 +1,9 @@
 .drop {
+     border: 1px solid coral;
+    .react-grid-layout {
+       
+    }
+    
 
     .react-grid-item {
         display:grid;
