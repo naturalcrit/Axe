@@ -1,21 +1,27 @@
 import React from 'react';
 import { useDrag } from 'react-dnd';
 
-const MyDraggableComponent = ({ isDragging, text }) => {
-  const [{ opacity }, dragRef] = useDrag(
-    () => ({
-      type: 'card',
-      collect: (monitor) => ({
-        opacity: monitor.isDragging() ? 0.5 : 1
-      })
+const DraggableItem = ({ name }) => {
+  const [{ isDragging }, drag] = useDrag({
+    item: { name },
+    type: 'draggable',
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
     }),
-    []
-  )
+  });
   return (
-    <div ref={dragRef} style={{ opacity }}>
-      <label>Character Name<input type="text" name="name" id="characterName" /></label>
+    <div
+    className='item'
+    ref={drag}
+    style={{ opacity: isDragging ? 0.4 : 1 }}>
+      <label>
+        Character Name
+        <input 
+          type="text"
+          name="name"
+          id="characterName"/></label>
     </div>
   )
 };
 
-export default MyDraggableComponent;
+export default DraggableItem;

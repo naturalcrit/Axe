@@ -1,5 +1,3 @@
-
-
 .page {
     padding-block: 100px;
     width: clamp(600px, 33%, 900px);
@@ -22,4 +20,44 @@
             border-radius: 2px;
         }
     }
+
+    .content {
+
+
+        .sidebar {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 92vh;
+            width: 400px;
+            padding-left: 20px;
+
+            .picker {
+                background: #eee;
+                border:1px solid #ccc;
+                border-radius: 10px;
+                padding: 10px;
+                height:100%;
+                overflow: auto;
+
+                .item {
+                    border-bottom: 2px solid grey;
+                    padding-bottom: 5px;
+                }
+            }
+        }
+
+        #create {
+            height:700px;
+            width:500px;
+
+            .drop-div {
+                min-height:600px;
+                width:500px;
+                border:1px solid lightgrey;
+                border-radius:7px;
+            }
+        }
+    }
+
 }
