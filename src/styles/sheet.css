@@ -1,0 +1,9 @@
+.drop {
+
+    .react-grid-item {
+        display:grid;
+        place-items:center;
+        background: #ff7f503d;
+        border: 1px solid red;
+    }
+}

@@ -1,30 +1,22 @@
 import React from 'react';
-import { useDrop } from "react-dnd";
+import GridLayout from "react-grid-layout";
 
-const DropDiv = ({type, items}) => {
-  const [{ isOver }, drop] = useDrop(() => ({
-    accept: type,
-    collect: (monitor) => ({
-      isOver: !!monitor.isOver(),
-    }),
-  }));
-  console.log(items);
-  if (items.length === 0) {
-    <div 
-      ref={drop}
-      className={`drop-div ${isOver ? "drop-over" : ""}`}
-      >
-      </div>
-  }
+
+const DropDiv = () => {
+  const layout = [
+    { i: 'a', x: 0, y: 0, w: 2, h: 2 },
+    { i: 'b', x: 2, y: 0, w: 2, h: 2 },
+    { i: 'c', x: 4, y: 0, w: 2, h: 2 }
+  ];
+  
   return (
-    <div 
-      ref={drop}
-      className={`drop-div ${isOver ? "drop-over" : ""}`}
-      >
-        {items.map((item) => {
-          return <div className="item" key={item.id}>{item.content}</div>
-        })}
-      </div>
+    <div>
+        <GridLayout className="layout" layout={layout} cols={6} rowHeight={100} width={1200}>
+          <div key="a">A</div>
+          <div key="b">B</div>
+          <div key="c">C</div>
+        </GridLayout>
+    </div>
   );
 };
 

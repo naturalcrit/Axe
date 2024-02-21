@@ -1,3 +1,8 @@
+body {
+    background: #413939;
+    color:white;
+}
+
 .page {
     padding-block: 100px;
     width: clamp(600px, 33%, 900px);
@@ -33,7 +38,7 @@
             padding-left: 20px;
 
             .picker {
-                background: #eee;
+                background: #3b3b3b;
                 border:1px solid #ccc;
                 border-radius: 10px;
                 padding: 10px;

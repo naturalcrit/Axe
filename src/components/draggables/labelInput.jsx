@@ -1,14 +1,8 @@
 import React from 'react';
 import { useDrag } from 'react-dnd';
 
-const DraggableItem = ({ name }) => {
-  const [{ isDragging }, drag] = useDrag({
-    item: { name },
-    type: 'draggable',
-    collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
-    }),
-  });
+const LabelInput = () => {
+  
   return (
     <div
     className='item'
@@ -24,4 +18,4 @@ const DraggableItem = ({ name }) => {
   )
 };
 
-export default DraggableItem;
+export default LabelInput;
