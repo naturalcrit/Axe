@@ -4,66 +4,108 @@ import { Link } from "react-router-dom";
 import "../styles/main.css"; // Import CSS/LESS file directly
 import "../../node_modules/react-grid-layout/css/styles.css";
 import "../../node_modules/react-resizable/css/styles.css";
-import "../styles/sheet.css";
+import "../styles/builder.css";
 import LabelInput from "./draggables/labelInput";
 import Textarea from "./draggables/textarea";
-import StatInput from  "./draggables/statInput";
+import StatInput from "./draggables/statInput";
 
 const Builder = () => {
   const [layout, setLayout] = useState([]);
 
-  const addNewItem = (item, width, height) => {
+  const addNewItem = (component, width, height) => {
     const newItem = {
       i: `item-${layout.length + 1}`,
       x: 0,
       y: 0,
       w: width,
       h: height,
-      content: item,
+      content: component,
     };
     setLayout((prevLayout) => [...prevLayout, newItem]);
   };
-
+  
   const deleteItem = (itemId) => {
-    setLayout((prevLayout) => prevLayout.filter((item) => item.i !== itemId));
+    setLayout(prevLayout =>
+      prevLayout.filter(item => item.i !== itemId).map((item, index) => ({
+        ...item,
+        i: `item-${index}` // Reassigning IDs based on index
+      }))
+    );
   };
+  const saveLayout = (layout) => {
+    console.log("Current Layout:", layout);
+  
+    const updatedLayout = layout.map((item, index) => {
+      console.log(`Item ${index + 1} Content:`, item.content); // Log content
+      return {
+        ...item,
+        i: `item-${index}`, // Reassigning IDs based on index
+        x: item.x,
+        y: item.y,
+        w: item.w,
+        h: item.h,
+        content: item.content
+      };
+    });
+  
+    console.log("Updated Layout:", updatedLayout);
+    setLayout(updatedLayout);
+  };
+
 
   const renderPicker = () => {
     return (
       <div className="picker">
         <div className="item">
           <LabelInput />
-          <button className="addItem" onClick={() => addNewItem(<LabelInput />, 2, 1)}>Add</button>
+          <button
+            className="addItem"
+            onClick={() => addNewItem(<LabelInput />, 4, 2)}
+          >
+            Add
+          </button>
         </div>
         <div className="item">
           <Textarea />
-          <button className="addItem" onClick={() => addNewItem(<Textarea />, 3, 3)}>Add</button>
+          <button
+            className="addItem"
+            onClick={() => addNewItem(<Textarea />, 6, 6)}
+          >
+            Add
+          </button>
         </div>
         <div className="item">
           <StatInput />
-          <button className="addItem" onClick={() => addNewItem(<StatInput />, 1, 1)}>Add</button>
+          <button
+            className="addItem"
+            onClick={() => addNewItem(<StatInput />, 2, 2)}
+          >
+            Add
+          </button>
         </div>
       </div>
     );
   };
 
   const renderDropDiv = () => {
-    console.log(layout);
+    if (layout[0]) {console.table(layout[0].content);}
 
     return (
       <div>
         <GridLayout
           className="layout"
           layout={layout}
-          cols={6}
-          rowHeight={100}
+          cols={12}
+          rowHeight={50}
           width={816}
+          onLayoutChange={saveLayout}
         >
           {layout.map((item) => (
             <div key={item.i}>
-              <button className="deleteItem" onClick={() => deleteItem(item.i)}>x</button>
-              {/* Render your component here */}
-                {item.content}
+              <button className="deleteItem" onClick={() => deleteItem(item.i)}>
+                x
+              </button>
+              {item.content}
             </div>
           ))}
         </GridLayout>
@@ -83,13 +125,19 @@ const Builder = () => {
       </nav>
       <main className="content">
         <aside className="sidebar">
-          <h2>Pick your draggable component</h2>
+          <h2>Pick your component</h2>
           {renderPicker()}
         </aside>
         <section id="create">
           <h1>Create your own</h1>
           <div className="drop">{renderDropDiv()}</div>
-          <button onClick={() => {alert('This is not ready yet bro')}}>Export as pdf</button>
+          <button
+            onClick={() => {
+              alert("This is not ready yet bro");
+            }}
+          >
+            Export as pdf
+          </button>
         </section>
       </main>
     </div>

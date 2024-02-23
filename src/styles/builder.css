@@ -35,6 +35,8 @@
     width: 816px;
     border-radius: 7px;
     margin-bottom: 20px;
+    background: white;
+    color:black;
 
     .react-grid-layout {
         height: 1056px !important;
