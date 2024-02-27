@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Component } from "react";
 import GridLayout from "react-grid-layout";
 import { Link } from "react-router-dom";
 import "../styles/main.css"; // Import CSS/LESS file directly
@@ -9,52 +9,84 @@ import LabelInput from "./draggables/labelInput";
 import Textarea from "./draggables/textarea";
 import StatInput from "./draggables/statInput";
 
-const Builder = () => {
-  const [layout, setLayout] = useState([]);
+class Builder extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      layout: []
+    };
+  }
 
-  const addNewItem = (component, width, height) => {
+  componentDidMount() {
+    const savedLayout = localStorage.getItem("BuilderLayout");
+    console.log('saved layout in local when didmount', JSON.parse(savedLayout));
+    if (savedLayout) {
+      this.setState({ layout: JSON.parse(savedLayout) });
+    }
+    
+    console.log('this.state.layout didMount:',this.state.layout);
+  }
+
+  addNewItem = (componentName, width, height) => {
+    //console.log(component);
+    const { layout } = this.state;
     const newItem = {
       i: `item-${layout.length + 1}`,
       x: 0,
       y: 0,
       w: width,
       h: height,
-      content: component,
+      componentName: componentName,
     };
-    setLayout((prevLayout) => [...prevLayout, newItem]);
+    this.setState({ layout: [...layout, newItem] });
   };
-  
-  const deleteItem = (itemId) => {
-    setLayout(prevLayout =>
-      prevLayout.filter(item => item.i !== itemId).map((item, index) => ({
-        ...item,
-        i: `item-${index}` // Reassigning IDs based on index
-      }))
-    );
+
+  deleteItem = (itemId) => {
+    const { layout } = this.state;
+    const updatedLayout = layout.filter(item => item.i !== itemId).map((item, index) => ({
+      ...item,
+      i: `item-${index}` // Reassigning IDs based on index
+    }));
+    this.setState({ layout: updatedLayout });
   };
-  const saveLayout = (newLayout) => {
-    const updatedLayout = newLayout.map((item, index) => {
-      return {
-        ...layout[index],
-        ...item,
-        i: `item-${index}`, // Reassigning IDs based on index
-      };
-    });
-  
+
+  saveLayout = (newLayout) => {
+    const { layout } = this.state;
+    const updatedLayout = newLayout.map((item, index) => ({
+      ...layout[index],
+      ...item,
+      i: `item-${index}`, // Reassigning IDs based on index
+    }));
+
+    localStorage.setItem("BuilderLayout", JSON.stringify(updatedLayout));
+    const savedLayout = localStorage.getItem("BuilderLayout");
+    console.log('localStorage when saving', JSON.parse(savedLayout));
+
     console.log("Updated Layout:", updatedLayout);
-    setLayout(updatedLayout);
+    this.setState({ layout: updatedLayout });
   };
+  renderComponent = (name) => {
+    // Dynamically render the component using JSX syntax and string interpolation
+    switch (name) {
+      case 'LabelInput':
+        return <LabelInput />;
+      case 'Textarea':
+        return <Textarea />;
+      case 'StatInput':
+        return <StatInput />;
+      default:
+        return null; // or handle unrecognized component name
+    }
+  }
 
-
-
-  const renderPicker = () => {
+  renderPicker = () => {
     return (
       <div className="picker">
         <div className="item">
           <LabelInput />
           <button
             className="addItem"
-            onClick={() => addNewItem(<LabelInput />, 4, 2)}
+            onClick={() => this.addNewItem('LabelInput', 4, 2)}
           >
             Add
           </button>
@@ -63,7 +95,7 @@ const Builder = () => {
           <Textarea />
           <button
             className="addItem"
-            onClick={() => addNewItem(<Textarea />, 6, 6)}
+            onClick={() => this.addNewItem('Textarea', 6, 6)}
           >
             Add
           </button>
@@ -72,7 +104,7 @@ const Builder = () => {
           <StatInput />
           <button
             className="addItem"
-            onClick={() => addNewItem(<StatInput />, 2, 2)}
+            onClick={() => this.addNewItem('StatInput', 2, 2)}
           >
             Add
           </button>
@@ -81,8 +113,11 @@ const Builder = () => {
     );
   };
 
-  const renderDropDiv = () => {
-    if (layout[0]) {console.table(layout[0].content);}
+  renderDropDiv = () => {
+    //console.log(this.state)
+    const layout = this.state.layout;
+
+    if (layout.length !== 0) {console.table(layout);}
 
     return (
       <div>
@@ -92,14 +127,14 @@ const Builder = () => {
           cols={12}
           rowHeight={50}
           width={816}
-          onLayoutChange={saveLayout}
+          onLayoutChange={this.saveLayout}
         >
           {layout.map((item) => (
             <div key={item.i}>
-              <button className="deleteItem" onClick={() => deleteItem(item.i)}>
+              <button className="deleteItem" onClick={() => this.deleteItem(item.i)}>
                 x
               </button>
-              {item.content}
+              {this.renderComponent(item.componentName)}
             </div>
           ))}
         </GridLayout>
@@ -107,35 +142,37 @@ const Builder = () => {
     );
   };
 
-  return (
-    <div className="Builder page">
-      <nav className="nav">
-        <Link to="/builder" className="navButton">
-          Builder
-        </Link>
-        <Link to="/sheets" className="navButton">
-          Sheets
-        </Link>
-      </nav>
-      <main className="content">
-        <aside className="sidebar">
-          <h2>Pick your component</h2>
-          {renderPicker()}
-        </aside>
-        <section id="create">
-          <h1>Create your own</h1>
-          <div className="drop">{renderDropDiv()}</div>
-          <button
-            onClick={() => {
-              alert("This is not ready yet bro");
-            }}
-          >
-            Export as pdf
-          </button>
-        </section>
-      </main>
-    </div>
-  );
-};
+  render() {
+    return (
+      <div className="Builder page">
+        <nav className="nav">
+          <Link to="/builder" className="navButton">
+            Builder
+          </Link>
+          <Link to="/sheets" className="navButton">
+            Sheets
+          </Link>
+        </nav>
+        <main className="content">
+          <aside className="sidebar">
+            <h2>Pick your component</h2>
+            {this.renderPicker()}
+          </aside>
+          <section id="create">
+            <h1>Create your own</h1>
+            <div className="drop">{this.renderDropDiv()}</div>
+            <button
+              onClick={() => {
+                alert("This is not ready yet bro");
+              }}
+            >
+              Export as pdf
+            </button>
+          </section>
+        </main>
+      </div>
+    );
+  }
+}
 
 export default Builder;
