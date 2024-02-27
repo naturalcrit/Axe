@@ -112,6 +112,10 @@
                         resize: none;
                         width: 100% !important;
                         height: 100% !important;
+                        border: none;
+                    }
+                    &.react-draggable-dragging {
+                        box-shadow: 0 5px 15px gray;
                     }
                 }
             }
