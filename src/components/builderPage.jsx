@@ -163,7 +163,7 @@ class Builder extends Component {
             <div className="drop">{this.renderDropDiv()}</div>
             <button
               onClick={() => {
-                alert("This is not ready yet bro");
+                window.print();
               }}
             >
               Export as pdf
