@@ -22,7 +22,7 @@ class Builder extends Component {
             settings: {
                 name: "Character sheet",
                 columns: 12,
-                rowHeight: 30,
+                rowHeight: 40,
                 size: "Letter",
                 height: null,
                 width: null,
@@ -34,6 +34,11 @@ class Builder extends Component {
         const savedLayout = localStorage.getItem("BuilderLayout");
         if (savedLayout) {
             this.setState({ layout: JSON.parse(savedLayout) });
+        }
+        const savedSettings = localStorage.getItem("sheetSettings");
+        if (savedSettings) {
+            console.table(savedSettings);
+            this.setState({ settings: JSON.parse(savedSettings) });
         }
     }
 
@@ -125,23 +130,53 @@ class Builder extends Component {
     };
 
     renderDropDiv = () => {
-        //console.log(this.state)
         const layout = this.state.layout;
+        const { columns, rowHeight, size, width, height } = this.state.settings;
 
-        /*
-        if (layout.length !== 0) {
-            console.table(layout);
-        }
-        */
+        const getSize = (side) => {
+            if (side === "height") {
+                switch (size) {
+                    case "letter":
+                        return 1100;
+                    case "A4":
+                        return 1169;
+                    case "A5":
+                        return 827;
+                    case "custom":
+                        return height !== null ? height : 1056;
+                    default:
+                        return 1100;
+                }
+            }
+            if (side === "width") {
+                switch (size) {
+                    case "letter":
+                        return 816;
+                    case "A4":
+                        return 827;
+                    case "A5":
+                        return 583;
+                    case "custom":
+                        return width !== null ? width : 816;
+                    default:
+                        return 816;
+                }
+            }
+        };
+
         return (
             <div>
                 <GridLayout
                     className="layout"
                     layout={layout}
-                    cols={12}
-                    rowHeight={50}
-                    width={816}
+                    cols={columns}
+                    rowHeight={rowHeight}
+                    width={getSize("width")}
                     onLayoutChange={this.saveLayout}
+                    style={{
+                        width: getSize("width"),
+                        height: getSize("height"),
+                    }}
                 >
                     {layout.map((item) => (
                         <div key={item.i}>
@@ -162,20 +197,24 @@ class Builder extends Component {
     saveSettings = () => {
         const form = document.getElementById("settingsForm");
         const settings = {
-            columns: form.querySelector("#columns").value || 12,
+            columns: Number(form.querySelector("#columns").value) || 12,
             size: form.querySelector("#size").value || "Letter",
-            width: form.querySelector("#width") ?  form.querySelector("#width").value : null,
-            height: form.querySelector("#height") ? form.querySelector("#height").value : null,
+            width: form.querySelector("#width")
+                ? Number(form.querySelector("#width").value)
+                : null,
+            height: form.querySelector("#height")
+                ? Number(form.querySelector("#height").value)
+                : null,
+            rowHeight: Number(form.querySelector("#rowHeight").value) || 40,
         };
 
         localStorage.setItem("sheetSettings", JSON.stringify(settings));
 
         this.setState({ settings: settings });
-
     };
 
     displayCustomInputs = () => {
-        console.log(this.state.settings);
+        //console.log(this.state.settings);
         if (this.state.settings.size === "custom") {
             return (
                 <div className="formGroup">
@@ -184,15 +223,20 @@ class Builder extends Component {
                         type="number"
                         id="width"
                         name="width"
-                        defaultValue={this.state.settings.width}
+                        min={300}
+                        max={2000}
+                        defaultValue={this.state.settings.width || 816}
                     />
                     <label htmlFor="height">Height:</label>
                     <input
                         type="number"
                         id="height"
                         name="height"
-                        defaultValue={this.state.settings.height}
+                        min={300}
+                        max={3000}
+                        defaultValue={this.state.settings.height || 1056}
                     />
+                    <sub>Measurements in pixels.</sub>
                 </div>
             );
         } else {
@@ -209,7 +253,18 @@ class Builder extends Component {
                         id="columns"
                         type="number"
                         name="columns"
+                        min={3}
                         defaultValue={this.state.settings.columns}
+                    />
+                </div>
+                <div className="formGroup">
+                    <label htmlFor="rowHeight">Row height:</label>
+                    <input
+                        id="rowHeight"
+                        type="number"
+                        name="rowHeight"
+                        min={20}
+                        defaultValue={this.state.settings.rowHeight}
                     />
                 </div>
                 <div className="formGroup">
