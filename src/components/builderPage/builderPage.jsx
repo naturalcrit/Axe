@@ -124,7 +124,9 @@ class Builder extends Component {
             <div className="picker">
                 {buildingBlocks.map((block, index) => {
                         return <div className="item" key={index}>
-                            {this.renderComponent(block.name, index)}
+                            <div className="component">
+                                {this.renderComponent(block.name, index)}
+                            </div>
                             <button
                             className="addItem"
                             onClick={() => this.addNewItem(block.name, block.width, block.height)}

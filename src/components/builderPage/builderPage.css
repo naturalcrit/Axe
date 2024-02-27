@@ -19,23 +19,33 @@
                 overflow: auto;
 
                 .item {
+                    position: relative;
                     border-bottom: 2px solid grey;
                     padding-bottom: 5px;
                     max-height: 100px;
                     padding-block: 10px;
                     height: 100px;
-                    display: grid;
-                    grid-template-columns: 1fr 55px;
+                    display: flex;
                     align-items: center;
                     gap: 15px;
 
-                    textarea {
-                        height: 90%;
+                    .component {
+                        border: 1px dotted gray;
+                        border-radius: 5px;
+                        position: relative;
+                        height: 100%;
+                        flex: 1 1 auto;
+                        textarea {
+                            width: 100%;
+                        }
+                        .addItem {
+                            flex: 1 0 auto;
+                        }
                     }
 
-                    .addItem {
-                        padding: 5px 10px;
-                    }
+                    
+
+                    
                 }
             }
 
