@@ -83,8 +83,20 @@
                         position: absolute;
                         top: 0;
                         right: 0;
+                        visibility: hidden;
                     }
 
+                    .react-resizable-handle {
+                        visibility: hidden;
+                    }
+
+
+
+                    &:is(:hover, :focus, :focus-within) {
+                        border: 1px dotted gray;
+                        .deleteItem, .react-resizable-handle {
+                            visibility: visible;
+                        }
                     }
 
                     input[type="text"] {
