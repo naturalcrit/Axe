@@ -23,7 +23,7 @@ body {
             color: white;
             padding: .7em 1em;
             border-radius: 2px;
-            font-weight:900;
+            font-weight: 900;
             text-transform: uppercase;
         }
     }
@@ -38,7 +38,20 @@ body {
             width: 400px;
             padding-left: 20px;
 
+            .item {
+                padding-block: 10px;
+                height: 100px;
+
+                textarea {
+                    height: 90%;
+                    resize: none;
+                }
+
+                input, textarea {
+                    display:block;
+                    pointer-events: none;
+                }
+            }
         }
     }
 }
-
