@@ -10,6 +10,7 @@ import "../../../node_modules/react-resizable/css/styles.css";
 import LabelInput from "../draggables/labelInput";
 import Textarea from "../draggables/textarea";
 import StatInput from "../draggables/statInput";
+import EmptySpace from "../draggables/emptySpace";
 
 //OTHER COMPONENTS
 import Nav from "../nav/navBar";
@@ -28,6 +29,11 @@ const buildingBlocks = [
     },
     {
         name: "StatInput",
+        width: 2,
+        height: 2
+    },
+    {
+        name: "EmptySpace",
         width: 2,
         height: 2
     }
@@ -106,7 +112,8 @@ class Builder extends Component {
         const components = {
             LabelInput: <LabelInput key={key}/>,
             Textarea: <Textarea key={key}/>,
-            StatInput: <StatInput key={key}/>
+            StatInput: <StatInput key={key}/>,
+            EmptySpace: <EmptySpace key={key}/>
         };
         
         return components[name] || null;
