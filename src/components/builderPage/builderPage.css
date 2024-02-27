@@ -71,9 +71,8 @@
                     position: relative;
                     display: grid;
                     place-items: center;
-                    border: 1px solid;
-                    border-radius: 2px;
                     background-color: white;
+                    box-sizing: border-box;
 
                     .deleteItem {
                         background: unset;
@@ -84,11 +83,8 @@
                         position: absolute;
                         top: 0;
                         right: 0;
-                        opacity: 0;
                     }
 
-                    &:is(:hover, :focus, :focus-within) .deleteItem {
-                        opacity: 1;
                     }
 
                     input[type="text"] {
