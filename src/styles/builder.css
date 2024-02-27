@@ -1,7 +1,7 @@
 .sidebar {
     .picker {
-        background: #3b3b3b;
-        border: 1px solid #ccc;
+        background: #333;
+        border: 1px solid #666;
         border-radius: 10px;
         padding: 10px;
         height: 100%;
@@ -46,8 +46,8 @@
         position: relative;
         display: grid;
         place-items: center;
-        background: #ff7f503d;
-        border: 1px solid red;
+        border: 1px solid;
+        border-radius: 2px;
 
         .deleteItem {
             background: unset;
@@ -66,10 +66,11 @@
         }
 
         input[type="text"] {
-            width: 100%;
+            width: 90%;
+            margin-left: 5%;
         }
         input[type="number"] {
-            width:5ch;
+            width: 5ch;
         }
 
         textarea {

@@ -1,5 +1,5 @@
 body {
-    background: #413939;
+    background-color: #2C3E50;
     color: white;
 }
 
@@ -20,9 +20,11 @@ body {
         .navButton {
             text-decoration: unset;
             background: coral;
-            color: rgb(123, 45, 17);
+            color: white;
             padding: .7em 1em;
             border-radius: 2px;
+            font-weight:900;
+            text-transform: uppercase;
         }
     }
 
@@ -32,13 +34,11 @@ body {
             position: fixed;
             left: 0;
             top: 0;
-            height: 92vh;
+            height: 90vh;
             width: 400px;
             padding-left: 20px;
 
-
         }
     }
-    
 }
 
