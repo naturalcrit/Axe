@@ -39,4 +39,17 @@ body {
 
         }
     }
+    
+}
+
+@media print {
+    *:not(:has(.drop), .drop, .drop *) {
+        display:none;
+    }
+
+    .drop {
+        position:fixed;
+        top:0;
+        left:0;
+    }
 }
