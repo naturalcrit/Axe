@@ -14,6 +14,27 @@ import StatInput from "../draggables/statInput";
 //OTHER COMPONENTS
 import Nav from "../nav/navBar";
 
+
+const buildingBlocks = [ 
+    {
+        name: "LabelInput",
+        width: 4,
+        height: 2
+    },
+    {
+        name: "Textarea",
+        width: 6,
+        height: 6
+    },
+    {
+        name: "StatInput",
+        width: 2,
+        height: 2
+    }
+];
+
+
+
 class Builder extends Component {
     constructor(props) {
         super(props);
@@ -81,50 +102,30 @@ class Builder extends Component {
         this.setState({ layout: updatedLayout });
     };
 
-    renderComponent = (name) => {
-        // Dynamically render the component using JSX syntax and string interpolation
-        switch (name) {
-            case "LabelInput":
-                return <LabelInput />;
-            case "Textarea":
-                return <Textarea />;
-            case "StatInput":
-                return <StatInput />;
-            default:
-                return null; // or handle unrecognized component name
-        }
+    renderComponent = (name, key) => {
+        const components = {
+            LabelInput: <LabelInput key={key}/>,
+            Textarea: <Textarea key={key}/>,
+            StatInput: <StatInput key={key}/>
+        };
+        
+        return components[name] || null;
     };
 
     renderPicker = () => {
         return (
             <div className="picker">
-                <div className="item">
-                    <LabelInput />
-                    <button
-                        className="addItem"
-                        onClick={() => this.addNewItem("LabelInput", 4, 2)}
-                    >
-                        Add
-                    </button>
-                </div>
-                <div className="item">
-                    <Textarea />
-                    <button
-                        className="addItem"
-                        onClick={() => this.addNewItem("Textarea", 6, 6)}
-                    >
-                        Add
-                    </button>
-                </div>
-                <div className="item">
-                    <StatInput />
-                    <button
-                        className="addItem"
-                        onClick={() => this.addNewItem("StatInput", 2, 2)}
-                    >
-                        Add
-                    </button>
-                </div>
+                {buildingBlocks.map((block, index) => {
+                        return <div className="item" key={index}>
+                            {this.renderComponent(block.name, index)}
+                            <button
+                            className="addItem"
+                            onClick={() => this.addNewItem(block.name, block.width, block.height)}
+                        >
+                            Add
+                        </button>
+                        </div>                        
+                    })}
             </div>
         );
     };
