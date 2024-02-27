@@ -7,6 +7,20 @@
 
 Maybe users could later edit those saved CS and save them...
 
-- [ ] Export to pdf, like the HB does it
 - [ ] Save CS to DB
 
+
+## MVP
+
+- [ ] DB connection via NaturalCrit
+- [ ] Styles preset.
+- [ ] basic config features
+    - [ ] Page size
+    - [ ] Block columns*
+- [ ] NavBar
+- [ ] edit labels
+
+
+### Other ideas
+- Import content for the boxes
+- Export as custom Json file
