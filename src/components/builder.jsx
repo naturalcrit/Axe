@@ -32,25 +32,19 @@ const Builder = () => {
       }))
     );
   };
-  const saveLayout = (layout) => {
-    console.log("Current Layout:", layout);
-  
-    const updatedLayout = layout.map((item, index) => {
-      console.log(`Item ${index + 1} Content:`, item.content); // Log content
+  const saveLayout = (newLayout) => {
+    const updatedLayout = newLayout.map((item, index) => {
       return {
+        ...layout[index],
         ...item,
         i: `item-${index}`, // Reassigning IDs based on index
-        x: item.x,
-        y: item.y,
-        w: item.w,
-        h: item.h,
-        content: item.content
       };
     });
   
     console.log("Updated Layout:", updatedLayout);
     setLayout(updatedLayout);
   };
+
 
 
   const renderPicker = () => {
