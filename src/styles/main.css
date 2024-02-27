@@ -4,54 +4,11 @@ body {
 }
 
 .page {
-    padding-block: 100px;
-    width: clamp(600px, 33%, 900px);
+    width:100%;
+    height:100vh;
     margin-inline: auto;
     display: flex;
     flex-direction: column;
-
     font-family: 'Open Sans';
 
-    .nav {
-        display: flex;
-        justify-content: space-evenly;
-        column-gap: 20px;
-
-        .navButton {
-            text-decoration: unset;
-            background: coral;
-            color: white;
-            padding: .7em 1em;
-            border-radius: 2px;
-            font-weight: 900;
-            text-transform: uppercase;
-        }
-    }
-
-    .content {
-
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            height: 90vh;
-            width: 400px;
-            padding-left: 20px;
-
-            .item {
-                padding-block: 10px;
-                height: 100px;
-
-                textarea {
-                    height: 90%;
-                    resize: none;
-                }
-
-                input, textarea {
-                    display:block;
-                    pointer-events: none;
-                }
-            }
-        }
-    }
 }
