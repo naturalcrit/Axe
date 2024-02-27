@@ -21,7 +21,7 @@ class Builder extends Component {
             layout: [],
             settings: {
                 name: "Character sheet",
-                cols: 12,
+                columns: 12,
                 rowHeight: 30,
                 size: "Letter",
                 height: null,
@@ -32,15 +32,9 @@ class Builder extends Component {
 
     componentDidMount() {
         const savedLayout = localStorage.getItem("BuilderLayout");
-        console.log(
-            "saved layout in local when didmount",
-            JSON.parse(savedLayout)
-        );
         if (savedLayout) {
             this.setState({ layout: JSON.parse(savedLayout) });
         }
-
-        console.log("this.state.layout didMount:", this.state.layout);
     }
 
     addNewItem = (componentName, width, height) => {
@@ -77,12 +71,11 @@ class Builder extends Component {
         }));
 
         localStorage.setItem("BuilderLayout", JSON.stringify(updatedLayout));
-        const savedLayout = localStorage.getItem("BuilderLayout");
-        console.log("localStorage when saving", JSON.parse(savedLayout));
 
-        console.log("Updated Layout:", updatedLayout);
+        //console.log("Updated Layout:", updatedLayout);
         this.setState({ layout: updatedLayout });
     };
+
     renderComponent = (name) => {
         // Dynamically render the component using JSX syntax and string interpolation
         switch (name) {
@@ -135,10 +128,11 @@ class Builder extends Component {
         //console.log(this.state)
         const layout = this.state.layout;
 
+        /*
         if (layout.length !== 0) {
             console.table(layout);
         }
-
+        */
         return (
             <div>
                 <GridLayout
@@ -165,8 +159,24 @@ class Builder extends Component {
         );
     };
 
+    saveSettings = () => {
+        const form = document.getElementById("settingsForm");
+        const settings = {
+            columns: form.querySelector("#columns").value || 12,
+            size: form.querySelector("#size").value || "Letter",
+            width: form.querySelector("#width") ?  form.querySelector("#width").value : null,
+            height: form.querySelector("#height") ? form.querySelector("#height").value : null,
+        };
+
+        localStorage.setItem("sheetSettings", JSON.stringify(settings));
+
+        this.setState({ settings: settings });
+
+    };
+
     displayCustomInputs = () => {
-        if (this.state.size === "custom") {
+        console.log(this.state.settings);
+        if (this.state.settings.size === "custom") {
             return (
                 <div className="formGroup">
                     <label htmlFor="width">Width:</label>
@@ -174,14 +184,14 @@ class Builder extends Component {
                         type="number"
                         id="width"
                         name="width"
-                        value={this.state.w}
+                        defaultValue={this.state.settings.width}
                     />
                     <label htmlFor="height">Height:</label>
                     <input
                         type="number"
                         id="height"
                         name="height"
-                        value={this.state.w}
+                        defaultValue={this.state.settings.height}
                     />
                 </div>
             );
@@ -192,21 +202,19 @@ class Builder extends Component {
 
     renderSheetSettings = () => {
         return (
-            <div>
+            <div id="settingsForm">
                 <div className="formGroup">
                     <label htmlFor="columns">Columns:</label>
                     <input
+                        id="columns"
                         type="number"
                         name="columns"
-                        value={this.state.columns}
+                        defaultValue={this.state.settings.columns}
                     />
                 </div>
                 <div className="formGroup">
-                    <label htmlFor="">Dimensions</label>
-                    <select
-                        onChange={(e) => this.handleSelect(e)}
-                        value={this.state.size}
-                    >
+                    <label htmlFor="size">Dimensions</label>
+                    <select id="size" defaultValue={this.state.settings.size}>
                         <option value="Letter">
                             US Letter (215.9mm x 279.4mm)
                         </option>
@@ -216,6 +224,22 @@ class Builder extends Component {
                     </select>
                 </div>
                 {this.displayCustomInputs()}
+
+                <button
+                    onClick={() => {
+                        this.saveSettings();
+                    }}
+                >
+                    Save settings
+                </button>
+
+                <button
+                    onClick={() => {
+                        window.print();
+                    }}
+                >
+                    Export as pdf
+                </button>
             </div>
         );
     };
@@ -233,13 +257,6 @@ class Builder extends Component {
                     <section id="create">
                         <h1>Create your own</h1>
                         <div className="drop">{this.renderDropDiv()}</div>
-                        <button
-                            onClick={() => {
-                                window.print();
-                            }}
-                        >
-                            Export as pdf
-                        </button>
                     </section>
                     <section id="sheetSettings">
                         <h2>Sheet Settings</h2>
