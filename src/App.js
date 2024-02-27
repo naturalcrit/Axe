@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './components/homePage';
-import Sheets from './components/sheetsPage';
-import Builder from './components/builderPage';
+import Home from './components/homePage/homePage.jsx';
+import Sheets from './components/sheetsPage/sheetsPage.jsx';
+import Builder from './components/builderPage/builderPage.jsx';
 
 function App() {
   return (

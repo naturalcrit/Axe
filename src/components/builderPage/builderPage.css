@@ -1,0 +1,158 @@
+.page.Builder {
+    .content {
+        display: grid;
+        grid-template-columns: 1fr 2fr 1fr;
+
+        .sidebar {
+
+            height: 85vh;
+            width: 400px;
+            padding-left: 20px;
+            z-index: 10;
+
+            .picker {
+                background: #333;
+                border: 1px solid #666;
+                border-radius: 10px;
+                padding: 10px;
+                height: 100%;
+                overflow: auto;
+
+                .item {
+                    border-bottom: 2px solid grey;
+                    padding-bottom: 5px;
+                    max-height: 100px;
+                    padding-block: 10px;
+                    height: 100px;
+                    display: grid;
+                    grid-template-columns: 1fr 55px;
+                    align-items: center;
+                    gap: 15px;
+
+                    textarea {
+                        height: 90%;
+                    }
+
+                    .addItem {
+                        padding: 5px 10px;
+                    }
+                }
+            }
+
+            .item {
+
+                textarea {
+                    height: 90%;
+                    resize: none;
+                }
+
+                input, textarea {
+                    display: block;
+                    pointer-events: none;
+                }
+            }
+        }
+
+        #create {
+            overflow-y: scroll;
+            height: 96.8vh;
+
+            .drop {
+                border: 1px solid coral;
+                width: fit-content;
+                border-radius: 7px;
+                margin-bottom: 20px;
+                background: white;
+                color: black;
+
+                .react-grid-layout {}
+
+                .react-grid-item {
+                    position: relative;
+                    display: grid;
+                    place-items: center;
+                    border: 1px solid;
+                    border-radius: 2px;
+                    background-color: white;
+
+                    .deleteItem {
+                        background: unset;
+                        border: unset;
+                        color: white;
+                        font-weight: 900;
+                        filter: drop-shadow(1px 1px 2px black);
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        opacity: 0;
+                    }
+
+                    &:is(:hover, :focus, :focus-within) .deleteItem {
+                        opacity: 1;
+                    }
+
+                    input[type="text"] {
+                        width: 90%;
+                        margin-left: 5%;
+                    }
+
+                    input[type="number"] {
+                        width: 5ch;
+                    }
+
+                    textarea {
+                        resize: none;
+                        width: 100% !important;
+                        height: 100% !important;
+                    }
+                }
+            }
+        }
+
+        #sheetSettings {
+            padding-inline: 20px;
+            background: lightgrey;
+            height: 96.8vh;
+            color: black;
+
+            .formGroup {
+                display: grid;
+                gap: 0;
+                margin-bottom: 20px;
+
+                label {
+                    font-weight: 900;
+                    margin-top: 5px;
+                }
+            }
+        }
+
+    }
+}
+
+
+
+
+
+
+
+@media print {
+    *:not(:has(.drop), .drop, .drop *) {
+        display: none;
+    }
+
+    .drop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        border: unset;
+        border-radius: 0;
+
+        .react-grid-item {
+            .react-resizable-handle {
+                display: none;
+            }
+        }
+
+    }
+}

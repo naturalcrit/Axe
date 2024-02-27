@@ -4,7 +4,7 @@ const LabelInput = () => {
   return (
       <label>
         Character Name
-        <input type="text" name="name" id="characterName" />
+        <input type="text" name="name" />
       </label>
   );
 };
