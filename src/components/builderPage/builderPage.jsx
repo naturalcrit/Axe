@@ -51,6 +51,7 @@ class Builder extends Component {
                 size: "Letter",
                 height: null,
                 width: null,
+                background: "white"
             },
         };
     }
@@ -139,7 +140,7 @@ class Builder extends Component {
 
     renderDropDiv = () => {
         const layout = this.state.layout;
-        const { columns, rowHeight, size, width, height } = this.state.settings;
+        const { columns, rowHeight, size, width, height, background } = this.state.settings;
 
         const getSize = (side) => {
             switch (side) {
@@ -161,7 +162,7 @@ class Builder extends Component {
             }
         };
         
-
+        console.log(background);
         return (
             <div>
                 <GridLayout
@@ -174,6 +175,7 @@ class Builder extends Component {
                     style={{
                         width: getSize("width"),
                         height: getSize("height"),
+                        background: background
                     }}
                 >
                     {layout.map((item) => (
@@ -212,7 +214,6 @@ class Builder extends Component {
                         <div className="drop">{this.renderDropDiv()}</div>
                     </section>
                     <section id="sheetSettings">
-                        <h2>Sheet Settings</h2>
                         <Settings onSettingsSave={this.handleSettingsSave} />
                     </section>
                 </main>

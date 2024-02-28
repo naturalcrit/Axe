@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 
-
 class Settings extends Component {
     constructor(props) {
         super(props);
@@ -12,6 +11,7 @@ class Settings extends Component {
                 size: "Letter",
                 height: null,
                 width: null,
+                background: '#ffffff'
             },
         };
     }
@@ -66,6 +66,7 @@ class Settings extends Component {
                 ? Number(form.querySelector("#height").value)
                 : null,
             rowHeight: Number(form.querySelector("#rowHeight").value) || 40,
+            background: form.querySelector("#background-image").value !== "" ? `url('${form.querySelector("#background-image").value}')` : form.querySelector("#background-color").value,
         };
 
         localStorage.setItem("sheetSettings", JSON.stringify(settings));
@@ -79,39 +80,76 @@ class Settings extends Component {
     render() {
         return (
             <div id="settingsForm">
-                <div className="formGroup">
-                    <label htmlFor="columns">Columns:</label>
-                    <input
-                        id="columns"
-                        type="number"
-                        name="columns"
-                        min={3}
-                        defaultValue={this.state.settings.columns}
-                    />
-                </div>
-                <div className="formGroup">
-                    <label htmlFor="rowHeight">Row height:</label>
-                    <input
-                        id="rowHeight"
-                        type="number"
-                        name="rowHeight"
-                        min={20}
-                        defaultValue={this.state.settings.rowHeight}
-                    />
-                </div>
-                <div className="formGroup">
-                    <label htmlFor="size">Dimensions</label>
-                    <select id="size" defaultValue={this.state.settings.size}>
-                        <option value="Letter">
-                            US Letter (215.9mm x 279.4mm)
-                        </option>
-                        <option value="A4">A4 (297mm x 210mm)</option>
-                        <option value="A5">A5 148mm x 210mm</option>
-                        <option value="custom">Custom</option>
-                    </select>
-                </div>
-                {this.displayCustomInputs()}
-    
+                <h2>Layout settings</h2>
+                <fieldset className="styleForm">
+                    <div className="formGroup">
+                        <label>
+                            Columns:
+                            <input
+                                id="columns"
+                                type="number"
+                                name="columns"
+                                min={3}
+                                defaultValue={this.state.settings.columns}
+                            />
+                        </label>
+                    </div>
+                    <div className="formGroup">
+                        <label>
+                            Row height:
+                            <input
+                                id="rowHeight"
+                                type="number"
+                                name="rowHeight"
+                                min={20}
+                                defaultValue={this.state.settings.rowHeight}
+                            />
+                        </label>
+                    </div>
+                    <div className="formGroup">
+                        <label>
+                            Page size
+                            <select
+                                id="size"
+                                defaultValue={this.state.settings.size}
+                            >
+                                <option value="Letter">
+                                    US Letter (215.9mm x 279.4mm)
+                                </option>
+                                <option value="A4">A4 (297mm x 210mm)</option>
+                                <option value="A5">A5 148mm x 210mm</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                        </label>
+                    </div>
+                    {this.displayCustomInputs()}
+                </fieldset>
+
+                <h2>Style settings</h2>
+                <fieldset>
+                    <div className="formGroup">
+                        <label>
+                            Background-color
+                            <input
+                                type="color"
+                                name="background-color"
+                                id="background-color"
+                                defaultValue={this.state.settings.background}
+                            />
+                        </label>
+                    </div>
+                    <div className="formGroup">
+                        <label>
+                            Background-image URL
+                            <input
+                                type="text"
+                                id="background-image"
+                            />
+                        </label>
+                        <sub>Upload your image to an image hosting service and paste here the image link</sub>
+                    </div>
+                </fieldset>
+
                 <button
                     onClick={() => {
                         this.saveSettings();
@@ -119,7 +157,7 @@ class Settings extends Component {
                 >
                     Save settings
                 </button>
-    
+
                 <button
                     onClick={() => {
                         window.print();
@@ -129,8 +167,7 @@ class Settings extends Component {
                 </button>
             </div>
         );
-    };
-    
+    }
 }
 
 export default Settings;
