@@ -51,7 +51,8 @@ class Builder extends Component {
                 size: "Letter",
                 height: null,
                 width: null,
-                background: "white"
+                background: "#ffffff",
+                textColor: "#000000"
             },
         };
     }
@@ -140,7 +141,7 @@ class Builder extends Component {
 
     renderDropDiv = () => {
         const layout = this.state.layout;
-        const { columns, rowHeight, size, width, height, background } = this.state.settings;
+        const { columns, rowHeight, size, width, height, background, textColor } = this.state.settings;
 
         const getSize = (side) => {
             switch (side) {
@@ -175,7 +176,8 @@ class Builder extends Component {
                     style={{
                         width: getSize("width"),
                         height: getSize("height"),
-                        background: background
+                        background: background,
+                        color: textColor
                     }}
                 >
                     {layout.map((item) => (

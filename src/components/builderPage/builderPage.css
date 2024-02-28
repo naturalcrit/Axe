@@ -73,7 +73,6 @@
                 border-radius: 7px;
                 margin-bottom: 20px;
                 background: white;
-                color: black;
 
                 .react-grid-layout {}
 
@@ -81,7 +80,6 @@
                     position: relative;
                     display: grid;
                     place-items: center;
-                    background-color: white;
                     box-sizing: border-box;
 
                     .deleteItem {

@@ -11,7 +11,8 @@ class Settings extends Component {
                 size: "Letter",
                 height: null,
                 width: null,
-                background: '#ffffff'
+                background: "#ffffff",
+                textColor: "#000000",
             },
         };
     }
@@ -66,7 +67,11 @@ class Settings extends Component {
                 ? Number(form.querySelector("#height").value)
                 : null,
             rowHeight: Number(form.querySelector("#rowHeight").value) || 40,
-            background: form.querySelector("#background-image").value !== "" ? `url('${form.querySelector("#background-image").value}')` : form.querySelector("#background-color").value,
+            background:
+                form.querySelector("#background-image").value !== ""
+                    ? `url('${form.querySelector("#background-image").value}')`
+                    : form.querySelector("#background-color").value,
+            textColor: form.querySelector("#text-color").value,
         };
 
         localStorage.setItem("sheetSettings", JSON.stringify(settings));
@@ -141,12 +146,23 @@ class Settings extends Component {
                     <div className="formGroup">
                         <label>
                             Background-image URL
+                            <input type="text" id="background-image" />
+                        </label>
+                        <sub>
+                            Upload your image to an image hosting service and
+                            paste here the image link
+                        </sub>
+                    </div>
+                    <div className="formGroup">
+                        <label>
+                            Text Color
                             <input
-                                type="text"
-                                id="background-image"
+                                type="color"
+                                name="textColor"
+                                id="text-color"
+                                defaultValue={this.state.settings.textColor}
                             />
                         </label>
-                        <sub>Upload your image to an image hosting service and paste here the image link</sub>
                     </div>
                 </fieldset>
 
