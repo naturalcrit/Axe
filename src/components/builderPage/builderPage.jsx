@@ -126,9 +126,9 @@ class Builder extends Component {
                                 {this.renderComponent(block.name, index)}
                             </div>
                             <button
-                            className="addItem"
-                            onClick={() => this.addNewItem(block.name, block.width, block.height)}
-                        >
+                                className="addItem"
+                                onClick={() => this.addNewItem(block.name, block.width, block.height)}
+                            >
                             Add
                         </button>
                         </div>                        
@@ -142,35 +142,25 @@ class Builder extends Component {
         const { columns, rowHeight, size, width, height } = this.state.settings;
 
         const getSize = (side) => {
-            if (side === "height") {
-                switch (size) {
-                    case "letter":
-                        return 1100;
-                    case "A4":
-                        return 1169;
-                    case "A5":
-                        return 827;
-                    case "custom":
-                        return height !== null ? height : 1056;
-                    default:
-                        return 1100;
-                }
-            }
-            if (side === "width") {
-                switch (size) {
-                    case "letter":
-                        return 816;
-                    case "A4":
-                        return 827;
-                    case "A5":
-                        return 583;
-                    case "custom":
-                        return width !== null ? width : 816;
-                    default:
-                        return 816;
-                }
+            switch (side) {
+                case "height":
+                    switch (size) {
+                        case "letter": return 1100;
+                        case "A4": return 1169;
+                        case "A5": return 827;
+                        default: return height !== null ? height : 1056;
+                    }
+                case "width":
+                    switch (size) {
+                        case "letter": return 816;
+                        case "A4": return 827;
+                        case "A5": return 583;
+                        default: return width !== null ? width : 816;
+                    }
+                default: return side === "height" ? 1100 : 816;
             }
         };
+        
 
         return (
             <div>
