@@ -13,7 +13,7 @@ import StatInput from "../draggables/statInput";
 
 //OTHER COMPONENTS
 import Nav from "../nav/navBar";
-
+import Settings from "../sheetSettings.jsx";
 
 const buildingBlocks = [ 
     {
@@ -32,8 +32,6 @@ const buildingBlocks = [
         height: 2
     }
 ];
-
-
 
 class Builder extends Component {
     constructor(props) {
@@ -58,7 +56,7 @@ class Builder extends Component {
         }
         const savedSettings = localStorage.getItem("sheetSettings");
         if (savedSettings) {
-            console.table(savedSettings);
+            console.table(JSON.parse(savedSettings));
             this.setState({ settings: JSON.parse(savedSettings) });
         }
     }
@@ -195,109 +193,9 @@ class Builder extends Component {
         );
     };
 
-    saveSettings = () => {
-        const form = document.getElementById("settingsForm");
-        const settings = {
-            columns: Number(form.querySelector("#columns").value) || 12,
-            size: form.querySelector("#size").value || "Letter",
-            width: form.querySelector("#width")
-                ? Number(form.querySelector("#width").value)
-                : null,
-            height: form.querySelector("#height")
-                ? Number(form.querySelector("#height").value)
-                : null,
-            rowHeight: Number(form.querySelector("#rowHeight").value) || 40,
-        };
-
-        localStorage.setItem("sheetSettings", JSON.stringify(settings));
-
-        this.setState({ settings: settings });
-    };
-
-    displayCustomInputs = () => {
-        //console.log(this.state.settings);
-        if (this.state.settings.size === "custom") {
-            return (
-                <div className="formGroup">
-                    <label htmlFor="width">Width:</label>
-                    <input
-                        type="number"
-                        id="width"
-                        name="width"
-                        min={300}
-                        max={2000}
-                        defaultValue={this.state.settings.width || 816}
-                    />
-                    <label htmlFor="height">Height:</label>
-                    <input
-                        type="number"
-                        id="height"
-                        name="height"
-                        min={300}
-                        max={3000}
-                        defaultValue={this.state.settings.height || 1056}
-                    />
-                    <sub>Measurements in pixels.</sub>
-                </div>
-            );
-        } else {
-            return;
-        }
-    };
-
-    renderSheetSettings = () => {
-        return (
-            <div id="settingsForm">
-                <div className="formGroup">
-                    <label htmlFor="columns">Columns:</label>
-                    <input
-                        id="columns"
-                        type="number"
-                        name="columns"
-                        min={3}
-                        defaultValue={this.state.settings.columns}
-                    />
-                </div>
-                <div className="formGroup">
-                    <label htmlFor="rowHeight">Row height:</label>
-                    <input
-                        id="rowHeight"
-                        type="number"
-                        name="rowHeight"
-                        min={20}
-                        defaultValue={this.state.settings.rowHeight}
-                    />
-                </div>
-                <div className="formGroup">
-                    <label htmlFor="size">Dimensions</label>
-                    <select id="size" defaultValue={this.state.settings.size}>
-                        <option value="Letter">
-                            US Letter (215.9mm x 279.4mm)
-                        </option>
-                        <option value="A4">A4 (297mm x 210mm)</option>
-                        <option value="A5">A5 148mm x 210mm</option>
-                        <option value="custom">Custom</option>
-                    </select>
-                </div>
-                {this.displayCustomInputs()}
-
-                <button
-                    onClick={() => {
-                        this.saveSettings();
-                    }}
-                >
-                    Save settings
-                </button>
-
-                <button
-                    onClick={() => {
-                        window.print();
-                    }}
-                >
-                    Export as pdf
-                </button>
-            </div>
-        );
+    handleSettingsSave = (newSettings) => {
+        // Update parent component state with new settings
+        this.setState({ settings: newSettings});
     };
 
     render() {
@@ -316,7 +214,7 @@ class Builder extends Component {
                     </section>
                     <section id="sheetSettings">
                         <h2>Sheet Settings</h2>
-                        {this.renderSheetSettings()}
+                        <Settings onSettingsSave={this.handleSettingsSave} />
                     </section>
                 </main>
             </div>
