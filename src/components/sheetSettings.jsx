@@ -83,7 +83,9 @@ class Settings extends Component {
         tempElement.innerHTML = sheetContent;
 
         // Find and remove elements with class "noExport"
-        const elementsToRemove = tempElement.querySelectorAll(".deleteItem, .react-resizable-handle");
+        const elementsToRemove = tempElement.querySelectorAll(
+            ".deleteItem, .react-resizable-handle"
+        );
         elementsToRemove.forEach((element) =>
             element.parentNode.removeChild(element)
         );
@@ -120,24 +122,52 @@ class Settings extends Component {
             </html>
         `;
 
-        // Create a link element
         const element = document.createElement("a");
-        // Set the HTML content as the href attribute
         element.setAttribute(
             "href",
             "data:text/html," + encodeURIComponent(htmlWithStyles)
         );
-        // Set the download attribute with the desired file name
         element.setAttribute("download", "sheet.html");
-        // Hide the link element
         element.style.display = "none";
-        // Append the element to the body
         document.body.appendChild(element);
-        // Simulate a click on the link to trigger the download
         element.click();
-        // Clean up by removing the element
         document.body.removeChild(element);
     };
+
+    saveJson = () => {
+        const exportedJson = [];
+        const savedLayout = localStorage.getItem("BuilderLayout");
+        if (savedLayout) {
+            exportedJson.push(JSON.parse(savedLayout));
+        } else {
+            alert("No layouts found.");
+            return; // Stop execution if no layouts found
+        }
+        const savedSettings = localStorage.getItem("sheetSettings");
+        if (savedSettings) {
+            exportedJson.push(JSON.parse(savedSettings));
+        }
+    
+        // Convert exportedJson to a JSON string
+        const jsonContent = JSON.stringify(exportedJson, null, 2);
+    
+        // Create a blob containing the JSON data
+        const blob = new Blob([jsonContent], { type: 'application/json' });
+    
+        // Create an anchor element to trigger the download
+        const element = document.createElement("a");
+        element.href = window.URL.createObjectURL(blob);
+        element.download = "exportedData.json";
+    
+        // Hide the anchor element and trigger the download
+        element.style.display = "none";
+        document.body.appendChild(element);
+        element.click();
+    
+        // Clean up
+        document.body.removeChild(element);
+    };
+    
 
     render() {
         return (
@@ -196,6 +226,14 @@ class Settings extends Component {
                     }}
                 >
                     Export as HTML
+                </button>
+                <button
+                    onClick={() => {
+                        this.saveSettings();
+                        this.saveJson();
+                    }}
+                >
+                    Export as JSON
                 </button>
             </div>
         );
