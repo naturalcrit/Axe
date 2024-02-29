@@ -1,6 +1,33 @@
 .page.home {
+    
     .content {
-        width:50vw;
-        margin-inline:auto;
+        padding:50px;
+        color:black;
+        background: url('https://i.imgur.com/84cupji.png') repeat;
+        display:flex;
+        flex-direction: column;
+
+
+        section {
+            display:grid;
+            grid-template-columns: 1fr 1fr;
+            gap:50px;
+
+            &:nth-of-type(even) {
+                text-align:right;
+                margin-left: auto;
+            }
+
+            .text *::selection {
+                background:#333;
+                color:white;
+            }
+            
+        }
+
+        hr {
+            margin-block:50px;
+        }
+
     }
 }
