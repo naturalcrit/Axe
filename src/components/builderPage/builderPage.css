@@ -1,7 +1,11 @@
 .page.Builder {
     .content {
         display: grid;
-        grid-template-columns: 1fr 2fr 1fr;
+        grid-template-columns: 450px 3fr 1fr;
+
+        h2 {
+            margin-bottom: 20px;
+        }
 
         .sidebar {
 
@@ -35,17 +39,19 @@
                         position: relative;
                         height: 100%;
                         flex: 1 1 auto;
+
                         textarea {
                             width: 100%;
                         }
+
                         .addItem {
                             flex: 1 0 auto;
                         }
                     }
 
-                    
 
-                    
+
+
                 }
             }
 
@@ -66,6 +72,10 @@
         #create {
             overflow-y: scroll;
             height: 96.8vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap:20px;
 
             .drop {
                 border: 1px solid coral;
@@ -104,6 +114,7 @@
 
                     &:is(:hover, :focus, :focus-within) {
                         border: 1px dotted gray;
+
                         .deleteItem, .react-resizable-handle {
                             visibility: visible;
                         }
@@ -124,6 +135,7 @@
                         height: 100% !important;
                         border: none;
                     }
+
                     &.react-draggable-dragging {
                         box-shadow: 0 5px 15px gray;
                     }

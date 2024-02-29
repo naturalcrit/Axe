@@ -320,7 +320,7 @@ class Builder extends Component {
                         {this.renderPicker()}
                     </aside>
                     <section id="create">
-                        <h1>Create your own</h1>
+                        <h1>Create your own character sheet</h1>
                         <div className="drop">{this.renderDropDiv()}</div>
                     </section>
                     <section id="sheetSettings">
