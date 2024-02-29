@@ -5,6 +5,7 @@ import GridLayout from "react-grid-layout";
 import "./builderPage.css";
 import "../../../node_modules/react-grid-layout/css/styles.css";
 import "../../../node_modules/react-resizable/css/styles.css";
+import "./sheet.css";
 
 //CS BLOCKS
 import LabelInput from "../draggables/labelInput";
@@ -165,7 +166,7 @@ class Builder extends Component {
         return (
             <div>
                 <GridLayout
-                    className="layout"
+                    className="layout sheet"
                     layout={layout}
                     cols={columns}
                     rowHeight={rowHeight}

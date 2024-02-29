@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 
-
 class Settings extends Component {
     constructor(props) {
         super(props);
@@ -76,6 +75,70 @@ class Settings extends Component {
         });
     };
 
+    saveHtml = async () => {
+        const sheetContent = document.querySelector(".layout.sheet").outerHTML;
+
+        // Create a temporary element to hold the HTML content
+        const tempElement = document.createElement("div");
+        tempElement.innerHTML = sheetContent;
+
+        // Find and remove elements with class "noExport"
+        const elementsToRemove = tempElement.querySelectorAll(".deleteItem, .react-resizable-handle");
+        elementsToRemove.forEach((element) =>
+            element.parentNode.removeChild(element)
+        );
+
+        // Get the modified HTML content
+        const modifiedSheetContent = tempElement.innerHTML;
+
+        // Extract <style> tags from the document's head
+        let headContent = "";
+        const styleElements = document.head.querySelectorAll("style");
+
+        // Filter the <style> elements based on the comment
+        const filteredStyleElements = Array.from(styleElements).filter(
+            (style) => {
+                const cssText = style.textContent.trim();
+                return cssText.startsWith("/*Imported in html download*/");
+            }
+        );
+
+        // Extract CSS content from filtered <style> elements
+        filteredStyleElements.forEach((style) => {
+            const cssText = style.textContent.trim();
+            headContent += `<style>${cssText}</style>`;
+        });
+
+        const htmlWithStyles = `
+            <html>
+                <head>
+                    ${headContent}
+                </head>
+                <body>
+                    ${modifiedSheetContent}
+                </body>
+            </html>
+        `;
+
+        // Create a link element
+        const element = document.createElement("a");
+        // Set the HTML content as the href attribute
+        element.setAttribute(
+            "href",
+            "data:text/html," + encodeURIComponent(htmlWithStyles)
+        );
+        // Set the download attribute with the desired file name
+        element.setAttribute("download", "sheet.html");
+        // Hide the link element
+        element.style.display = "none";
+        // Append the element to the body
+        document.body.appendChild(element);
+        // Simulate a click on the link to trigger the download
+        element.click();
+        // Clean up by removing the element
+        document.body.removeChild(element);
+    };
+
     render() {
         return (
             <div id="settingsForm">
@@ -111,7 +174,7 @@ class Settings extends Component {
                     </select>
                 </div>
                 {this.displayCustomInputs()}
-    
+
                 <button
                     onClick={() => {
                         this.saveSettings();
@@ -119,7 +182,7 @@ class Settings extends Component {
                 >
                     Save settings
                 </button>
-    
+
                 <button
                     onClick={() => {
                         window.print();
@@ -127,10 +190,16 @@ class Settings extends Component {
                 >
                     Export as pdf
                 </button>
+                <button
+                    onClick={() => {
+                        this.saveHtml();
+                    }}
+                >
+                    Export as HTML
+                </button>
             </div>
         );
-    };
-    
+    }
 }
 
 export default Settings;
