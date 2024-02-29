@@ -77,6 +77,21 @@
             align-items: center;
             gap:20px;
 
+            &::-webkit-scrollbar {
+                width: 20px;
+                z-index: 2;
+
+            }
+
+            &::-webkit-scrollbar-thumb {
+                width:20px;
+                background-color: #dddddd98;
+                border-right: 7px solid #2C3E50;
+
+                
+            }
+
+
             .drop {
                 border: 1px solid coral;
                 width: fit-content;
