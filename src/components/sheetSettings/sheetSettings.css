@@ -1,0 +1,11 @@
+#settingsForm{
+
+    fieldset {
+
+        label{
+            display: grid;
+            gap: 10px;
+            grid-template-columns: auto 1fr;
+        }
+    }
+}

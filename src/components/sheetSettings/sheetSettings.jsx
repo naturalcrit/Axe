@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import "./sheetSettings.css";
+
 class Settings extends Component {
     constructor(props) {
         super(props);
@@ -30,26 +32,32 @@ class Settings extends Component {
         if (this.state.settings.size === "custom") {
             return (
                 <div className="formGroup">
-                    <label htmlFor="width">Width:</label>
-                    <input
-                        type="number"
-                        id="width"
-                        name="width"
-                        min={300}
-                        max={2000}
-                        defaultValue={this.state.settings.width || 816}
-                        onChange={this.handleSettingsChange}
-                    />
-                    <label htmlFor="height">Height:</label>
-                    <input
-                        type="number"
-                        id="height"
-                        name="height"
-                        min={300}
-                        max={3000}
-                        defaultValue={this.state.settings.height || 1056}
-                        onChange={this.handleSettingsChange}
-                    />
+                    <label>
+                        Width:
+                        <input
+                            type="number"
+                            id="width"
+                            name="width"
+                            min={300}
+                            max={2000}
+                            defaultValue={this.state.settings.width || 816}
+                            onChange={this.handleSettingsChange}
+                        />
+                    </label>
+
+                    <label>
+                        Height:
+                        <input
+                            type="number"
+                            id="height"
+                            name="height"
+                            min={300}
+                            max={3000}
+                            defaultValue={this.state.settings.height || 1056}
+                            onChange={this.handleSettingsChange}
+                        />
+                    </label>
+
                     <sub>Measurements in pixels.</sub>
                 </div>
             );
@@ -123,7 +131,7 @@ class Settings extends Component {
                     </div>
                     <div className="formGroup">
                         <label>
-                            Page size
+                            Page size:
                             <select
                                 id="size"
                                 defaultValue={this.state.settings.size}
@@ -150,7 +158,7 @@ class Settings extends Component {
                 <fieldset>
                     <div className="formGroup">
                         <label>
-                            Background-color
+                            Background-color:
                             <input
                                 type="color"
                                 name="background-color"
@@ -162,7 +170,7 @@ class Settings extends Component {
                     </div>
                     <div className="formGroup">
                         <label>
-                            Background-image URL
+                            Background-image URL:
                             <input
                                 type="text"
                                 id="background-image"
@@ -176,7 +184,7 @@ class Settings extends Component {
                     </div>
                     <div className="formGroup">
                         <label>
-                            Text Color
+                            Text Color:
                             <input
                                 type="color"
                                 name="textColor"
