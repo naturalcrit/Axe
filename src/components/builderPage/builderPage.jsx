@@ -8,7 +8,7 @@ import "../../../node_modules/react-resizable/css/styles.css";
 
 //CS BLOCKS
 import LabelInput from "../draggables/labelInput";
-import Textarea from "../draggables/textarea";
+import TextArea from "../draggables/textarea";
 import StatInput from "../draggables/statInput";
 import EmptySpace from "../draggables/emptySpace";
 
@@ -23,7 +23,7 @@ const buildingBlocks = [
         height: 2
     },
     {
-        name: "Textarea",
+        name: "TextArea",
         width: 6,
         height: 6
     },
@@ -111,7 +111,7 @@ class Builder extends Component {
     renderComponent = (name, key) => {
         const components = {
             LabelInput: <LabelInput key={key}/>,
-            Textarea: <Textarea key={key}/>,
+            TextArea: <TextArea key={key}/>,
             StatInput: <StatInput key={key}/>,
             EmptySpace: <EmptySpace key={key}/>
         };
@@ -124,6 +124,7 @@ class Builder extends Component {
             <div className="picker">
                 {buildingBlocks.map((block, index) => {
                         return <div className="item" key={index}>
+                            <div className='label'>{block.name}</div>
                             <div className="component">
                                 {this.renderComponent(block.name, index)}
                             </div>
