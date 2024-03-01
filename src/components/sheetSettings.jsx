@@ -107,6 +107,7 @@ class Settings extends Component {
                         name="rowHeight"
                         min={20}
                         defaultValue={this.state.settings.rowHeight}
+                        onChange={this.handleSettingsChange}
                     />
                 </div>
                 <div className="formGroup">
