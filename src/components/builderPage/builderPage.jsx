@@ -14,7 +14,7 @@ import EmptySpace from "../draggables/emptySpace";
 
 //OTHER COMPONENTS
 import Nav from "../nav/navBar";
-import Settings from "../sheetSettings.jsx";
+import Settings from "../sheetSettings/sheetSettings.jsx";
 
 const buildingBlocks = [
     {
@@ -190,34 +190,32 @@ class Builder extends Component {
         };
 
         return (
-            <div>
-                <GridLayout
-                    className="layout"
-                    layout={layout}
-                    cols={columns}
-                    rowHeight={rowHeight}
-                    width={getSize("width")}
-                    onLayoutChange={this.saveLayout}
-                    style={{
-                        width: getSize("width"),
-                        height: getSize("height"),
-                        background: background,
-                        color: textColor,
-                    }}
-                >
-                    {layout.map((item) => (
-                        <div key={item.i}>
-                            <button
-                                className="deleteItem"
-                                onClick={() => this.deleteItem(item.i)}
-                            >
-                                x
-                            </button>
-                            {this.renderComponent(item.componentName)}
-                        </div>
-                    ))}
-                </GridLayout>
-            </div>
+            <GridLayout
+                className="layout"
+                layout={layout}
+                cols={columns}
+                rowHeight={rowHeight}
+                width={getSize("width")}
+                onLayoutChange={this.saveLayout}
+                style={{
+                    width: getSize("width"),
+                    height: getSize("height"),
+                    background: background,
+                    color: textColor,
+                }}
+            >
+                {layout.map((item) => (
+                    <div key={item.i}>
+                        <button
+                            className="deleteItem"
+                            onClick={() => this.deleteItem(item.i)}
+                        >
+                            x
+                        </button>
+                        {this.renderComponent(item.componentName)}
+                    </div>
+                ))}
+            </GridLayout>
         );
     };
 
