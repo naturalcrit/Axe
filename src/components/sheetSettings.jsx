@@ -87,6 +87,7 @@ class Settings extends Component {
                         name="columns"
                         min={3}
                         defaultValue={this.state.settings.columns}
+                        onChange={this.handleSettingsChange}
                     />
                 </div>
                 <div className="formGroup">
@@ -101,7 +102,6 @@ class Settings extends Component {
                 </div>
                 <div className="formGroup">
                     <label htmlFor="size">Dimensions</label>
-                    <select id="size" defaultValue={this.state.settings.size}>
                         <option value="Letter">
                             US Letter (215.9mm x 279.4mm)
                         </option>
@@ -117,9 +117,8 @@ class Settings extends Component {
                         this.saveSettings();
                     }}
                 >
-                    Save settings
+                    Apply
                 </button>
-    
                 <button
                     onClick={() => {
                         window.print();
