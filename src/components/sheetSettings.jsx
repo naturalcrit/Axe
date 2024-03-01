@@ -14,6 +14,7 @@ class Settings extends Component {
                 background: "#ffffff",
                 textColor: "#000000",
             },
+            formChange: false,
         };
     }
 
@@ -37,6 +38,7 @@ class Settings extends Component {
                         min={300}
                         max={2000}
                         defaultValue={this.state.settings.width || 816}
+                        onChange={this.handleSettingsChange}
                     />
                     <label htmlFor="height">Height:</label>
                     <input
@@ -46,6 +48,7 @@ class Settings extends Component {
                         min={300}
                         max={3000}
                         defaultValue={this.state.settings.height || 1056}
+                        onChange={this.handleSettingsChange}
                     />
                     <sub>Measurements in pixels.</sub>
                 </div>
@@ -80,6 +83,11 @@ class Settings extends Component {
             // Callback function to notify the parent component of the state change
             this.props.onSettingsSave(settings);
         });
+        this.setState({ formChange: false });
+    };
+
+    handleSettingsChange = () => {
+        this.setState({ formChange: true });
     };
 
     render() {
@@ -96,6 +104,7 @@ class Settings extends Component {
                                 name="columns"
                                 min={3}
                                 defaultValue={this.state.settings.columns}
+                                onChange={this.handleSettingsChange}
                             />
                         </label>
                     </div>
@@ -108,6 +117,7 @@ class Settings extends Component {
                                 name="rowHeight"
                                 min={20}
                                 defaultValue={this.state.settings.rowHeight}
+                                onChange={this.handleSettingsChange}
                             />
                         </label>
                     </div>
@@ -117,6 +127,12 @@ class Settings extends Component {
                             <select
                                 id="size"
                                 defaultValue={this.state.settings.size}
+                                onChange={(e) => {
+                                    this.setState({
+                                        settings: { size: e.target.value },
+                                    });
+                                    this.handleSettingsChange();
+                                }}
                             >
                                 <option value="Letter">
                                     US Letter (215.9mm x 279.4mm)
@@ -140,13 +156,18 @@ class Settings extends Component {
                                 name="background-color"
                                 id="background-color"
                                 defaultValue={this.state.settings.background}
+                                onChange={this.handleSettingsChange}
                             />
                         </label>
                     </div>
                     <div className="formGroup">
                         <label>
                             Background-image URL
-                            <input type="text" id="background-image" />
+                            <input
+                                type="text"
+                                id="background-image"
+                                onChange={this.handleSettingsChange}
+                            />
                         </label>
                         <sub>
                             Upload your image to an image hosting service and
@@ -161,6 +182,7 @@ class Settings extends Component {
                                 name="textColor"
                                 id="text-color"
                                 defaultValue={this.state.settings.textColor}
+                                onChange={this.handleSettingsChange}
                             />
                         </label>
                     </div>
@@ -170,10 +192,11 @@ class Settings extends Component {
                     onClick={() => {
                         this.saveSettings();
                     }}
+                    disabled={!this.state.formChange}
                 >
-                    Save settings
+                    Apply
                 </button>
-
+                <hr />
                 <button
                     onClick={() => {
                         window.print();
