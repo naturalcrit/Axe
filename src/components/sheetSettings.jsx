@@ -119,6 +119,7 @@ class Settings extends Component {
                 >
                     Apply
                 </button>
+                    <hr />
                 <button
                     onClick={() => {
                         window.print();
