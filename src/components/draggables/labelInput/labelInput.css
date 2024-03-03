@@ -1,0 +1,10 @@
+.label-input {
+	height: 100%;
+	width: 100%;
+	background: blue;
+	padding: 5px;
+	border-radius: 5px;
+	& label {
+		color: red;
+	}
+}
