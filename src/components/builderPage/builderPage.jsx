@@ -173,6 +173,7 @@ class Builder extends Component {
                     width={getSize("width")}
                     onLayoutChange={this.saveLayout}
                     compactType={null}
+                    preventCollision={true}
                     style={{
                         width: getSize("width"),
                         height: getSize("height"),
