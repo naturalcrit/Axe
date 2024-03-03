@@ -103,7 +103,8 @@
 
 
                     &:is(:hover, :focus, :focus-within) {
-                        border: 1px dotted gray;
+                        outline: 1px dotted gray;
+                        outline-offset: 2px;
                         .deleteItem, .react-resizable-handle {
                             visibility: visible;
                         }
