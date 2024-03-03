@@ -36,7 +36,7 @@
                         line-height: 1m;
                     }
 
-                    .component {
+                    .component-slot {
                         border: 1px dotted gray;
                         border-radius: 5px;
                         position: relative;

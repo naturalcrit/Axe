@@ -7,7 +7,7 @@ import "../../../node_modules/react-grid-layout/css/styles.css";
 import "../../../node_modules/react-resizable/css/styles.css";
 
 //CS BLOCKS
-import LabelInput from "../draggables/labelInput";
+import LabelInput from "../draggables/labelInput/labelInput.jsx";
 import TextArea from "../draggables/textarea";
 import StatInput from "../draggables/statInput";
 import EmptySpace from "../draggables/emptySpace";
@@ -123,7 +123,7 @@ class Builder extends Component {
                 {buildingBlocks.map((block, index) => {
                         return <div className="item" key={index}>
                             <div className='label'>{block.name}</div>
-                            <div className="component">
+                            <div className="component-slot">
                                 {this.renderComponent(block.name, index)}
                             </div>
                             <button
