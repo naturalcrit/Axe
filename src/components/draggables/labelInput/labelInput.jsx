@@ -6,7 +6,7 @@ const LabelInput = () => {
     <div className='label-input'>
       <label>
         Character Name
-        <input type="text" name="name" />
+        <input type="text" name="name" size="1" />
       </label>
     </div>
   );
