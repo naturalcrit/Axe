@@ -17,7 +17,7 @@ class Settings extends Component {
     }
 
     componentDidMount() {
-        const savedSettings = localStorage.getItem("sheetSettings");
+        const savedSettings = localStorage.getItem("axeSheetSettings");
         if (savedSettings) {
             console.table(savedSettings);
             this.setState({ settings: JSON.parse(savedSettings) });
@@ -70,7 +70,7 @@ class Settings extends Component {
             rowHeight: Number(form.querySelector("#rowHeight").value) || 40,
         };
 
-        localStorage.setItem("sheetSettings", JSON.stringify(settings));
+        localStorage.setItem("axeSheetSettings", JSON.stringify(settings));
 
         this.setState({ settings: settings }, () => {
             // Callback function to notify the parent component of the state change
@@ -145,14 +145,14 @@ class Settings extends Component {
 
     saveJson = () => {
         const exportedJson = [];
-        const savedLayout = localStorage.getItem("BuilderLayout");
+        const savedLayout = localStorage.getItem("axeBuilderLayout");
         if (savedLayout) {
             exportedJson.push(JSON.parse(savedLayout));
         } else {
             alert("No layouts found.");
             return; // Stop execution if no layouts found
         }
-        const savedSettings = localStorage.getItem("sheetSettings");
+        const savedSettings = localStorage.getItem("axeSheetSettings");
         if (savedSettings) {
             exportedJson.push(JSON.parse(savedSettings));
         }
@@ -175,6 +175,31 @@ class Settings extends Component {
 
         // Clean up
         document.body.removeChild(element);
+    };
+
+    importJson = () => {
+        const localJson = document.getElementById("importJson").files[0];
+        console.log(localJson);
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+            const jsonContent = event.target.result;
+            const parsedJson = JSON.parse(jsonContent);
+            console.log(parsedJson);
+
+            // Store the JSON content in localStorage
+            window.localStorage.setItem(
+                "axeBuilderLayout",
+                JSON.stringify(parsedJson[0])
+            );
+            window.localStorage.setItem(
+                "axeSheetSettings",
+                JSON.stringify(parsedJson[1])
+            );
+        };
+
+        reader.readAsText(localJson);
+        location.reload();
     };
 
     render() {
@@ -225,6 +250,7 @@ class Settings extends Component {
                 {this.displayCustomInputs()}
 
                 <button
+                    className="applyButton"
                     onClick={() => {
                         this.saveSettings();
                     }}
@@ -234,6 +260,7 @@ class Settings extends Component {
                 </button>
                 <hr />
                 <button
+                    className="exportButton"
                     onClick={() => {
                         window.print();
                     }}
@@ -241,6 +268,7 @@ class Settings extends Component {
                     Export as pdf
                 </button>
                 <button
+                    className="exportButton"
                     onClick={() => {
                         this.saveHtml();
                     }}
@@ -248,6 +276,7 @@ class Settings extends Component {
                     Export as HTML
                 </button>
                 <button
+                    className="exportButton"
                     onClick={() => {
                         this.saveSettings();
                         this.saveJson();
@@ -255,6 +284,26 @@ class Settings extends Component {
                 >
                     Export as JSON
                 </button>
+
+                <hr />
+
+                <button
+                    onClick={() => {
+                        document.getElementById("importJson").click();
+                    }}
+                >
+                    Import a character sheet
+                </button>
+                <input
+                    type="file"
+                    accept=".json"
+                    name="importJson"
+                    id="importJson"
+                    style={{ display: "none" }}
+                    onChange={() => {
+                        this.importJson();
+                    }}
+                />
             </div>
         );
     }

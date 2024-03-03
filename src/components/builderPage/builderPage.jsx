@@ -17,27 +17,27 @@ import EmptySpace from "../draggables/emptySpace";
 import Nav from "../nav/navBar";
 import Settings from "../sheetSettings.jsx";
 
-const buildingBlocks = [ 
+const buildingBlocks = [
     {
         name: "LabelInput",
         width: 4,
-        height: 2
+        height: 2,
     },
     {
         name: "TextArea",
         width: 6,
-        height: 6
+        height: 6,
     },
     {
         name: "StatInput",
         width: 2,
-        height: 2
+        height: 2,
     },
     {
         name: "EmptySpace",
         width: 2,
-        height: 2
-    }
+        height: 2,
+    },
 ];
 
 class Builder extends Component {
@@ -57,11 +57,11 @@ class Builder extends Component {
     }
 
     componentDidMount() {
-        const savedLayout = localStorage.getItem("BuilderLayout");
+        const savedLayout = localStorage.getItem("axeBuilderLayout");
         if (savedLayout) {
             this.setState({ layout: JSON.parse(savedLayout) });
         }
-        const savedSettings = localStorage.getItem("sheetSettings");
+        const savedSettings = localStorage.getItem("axeSheetSettings");
         if (savedSettings) {
             console.table(JSON.parse(savedSettings));
             this.setState({ settings: JSON.parse(savedSettings) });
@@ -101,7 +101,7 @@ class Builder extends Component {
             i: `item-${index}`, // Reassigning IDs based on index
         }));
 
-        localStorage.setItem("BuilderLayout", JSON.stringify(updatedLayout));
+        localStorage.setItem("axeBuilderLayout", JSON.stringify(updatedLayout));
 
         //console.log("Updated Layout:", updatedLayout);
         this.setState({ layout: updatedLayout });
@@ -109,12 +109,12 @@ class Builder extends Component {
 
     renderComponent = (name, key) => {
         const components = {
-            LabelInput: <LabelInput key={key}/>,
-            TextArea: <TextArea key={key}/>,
-            StatInput: <StatInput key={key}/>,
-            EmptySpace: <EmptySpace key={key}/>
+            LabelInput: <LabelInput key={key} />,
+            TextArea: <TextArea key={key} />,
+            StatInput: <StatInput key={key} />,
+            EmptySpace: <EmptySpace key={key} />,
         };
-        
+
         return components[name] || null;
     };
 
@@ -122,19 +122,27 @@ class Builder extends Component {
         return (
             <div className="picker">
                 {buildingBlocks.map((block, index) => {
-                        return <div className="item" key={index}>
-                            <div className='label'>{block.name}</div>
+                    return (
+                        <div className="item" key={index}>
+                            <div className="label">{block.name}</div>
                             <div className="component">
                                 {this.renderComponent(block.name, index)}
                             </div>
                             <button
                                 className="addItem"
-                                onClick={() => this.addNewItem(block.name, block.width, block.height)}
+                                onClick={() =>
+                                    this.addNewItem(
+                                        block.name,
+                                        block.width,
+                                        block.height
+                                    )
+                                }
                             >
-                            Add
-                        </button>
-                        </div>                        
-                    })}
+                                Add
+                            </button>
+                        </div>
+                    );
+                })}
             </div>
         );
     };
@@ -147,22 +155,30 @@ class Builder extends Component {
             switch (side) {
                 case "height":
                     switch (size) {
-                        case "letter": return 1100;
-                        case "A4": return 1169;
-                        case "A5": return 827;
-                        default: return height !== null ? height : 1056;
+                        case "letter":
+                            return 1100;
+                        case "A4":
+                            return 1169;
+                        case "A5":
+                            return 827;
+                        default:
+                            return height !== null ? height : 1056;
                     }
                 case "width":
                     switch (size) {
-                        case "letter": return 816;
-                        case "A4": return 827;
-                        case "A5": return 583;
-                        default: return width !== null ? width : 816;
+                        case "letter":
+                            return 816;
+                        case "A4":
+                            return 827;
+                        case "A5":
+                            return 583;
+                        default:
+                            return width !== null ? width : 816;
                     }
-                default: return side === "height" ? 1100 : 816;
+                default:
+                    return side === "height" ? 1100 : 816;
             }
         };
-        
 
         return (
             <div>
@@ -198,7 +214,7 @@ class Builder extends Component {
 
     handleSettingsSave = (newSettings) => {
         // Update parent component state with new settings
-        this.setState({ settings: newSettings});
+        this.setState({ settings: newSettings });
     };
 
     render() {
