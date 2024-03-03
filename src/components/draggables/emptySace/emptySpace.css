@@ -1,0 +1,7 @@
+.empty-space {
+	height: 100%;
+	width: 100%;
+	background: rgb(198, 198, 212);
+	padding: 5px;
+	border-radius: 5px;
+}

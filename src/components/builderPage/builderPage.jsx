@@ -8,9 +8,9 @@ import "../../../node_modules/react-resizable/css/styles.css";
 
 //CS BLOCKS
 import LabelInput from "../draggables/labelInput/labelInput.jsx";
-import TextArea from "../draggables/textarea";
-import StatInput from "../draggables/statInput";
-import EmptySpace from "../draggables/emptySpace";
+import TextArea from "../draggables/textArea/textarea.jsx";
+import StatInput from "../draggables/statInput/statInput.jsx";
+import EmptySpace from "../draggables/emptySace/emptySpace.jsx";
 
 //OTHER COMPONENTS
 import Nav from "../nav/navBar";
