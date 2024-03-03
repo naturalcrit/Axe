@@ -21,23 +21,30 @@
                 .item {
                     position: relative;
                     border-bottom: 2px solid grey;
-                    padding-bottom: 5px;
-                    max-height: 100px;
                     padding-block: 10px;
-                    height: 100px;
+                    height: auto;
                     display: flex;
+                    flex-wrap: wrap;
                     align-items: center;
-                    gap: 15px;
+                    row-gap: 0;
+                    column-gap: 10px;
+
+                    .label {
+                        flex: 1 0 100%;
+                        font-size: .7em;
+                        font-variant: small-caps;
+                        line-height: 1m;
+                    }
 
                     .component {
                         border: 1px dotted gray;
                         border-radius: 5px;
                         position: relative;
-                        height: 100%;
-                        flex: 1 1 auto;
-
+                        height: 100px;
+                        flex: 1 1 80%;
                         textarea {
                             width: 100%;
+                            height: 100%;
                         }
 
                         .addItem {

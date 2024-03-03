@@ -12,6 +12,7 @@ class Settings extends Component {
                 height: null,
                 width: null,
             },
+            formChange: false,
         };
     }
 
@@ -35,6 +36,7 @@ class Settings extends Component {
                         min={300}
                         max={2000}
                         defaultValue={this.state.settings.width || 816}
+                        onChange={this.handleSettingsChange}
                     />
                     <label htmlFor="height">Height:</label>
                     <input
@@ -44,6 +46,7 @@ class Settings extends Component {
                         min={300}
                         max={3000}
                         defaultValue={this.state.settings.height || 1056}
+                        onChange={this.handleSettingsChange}
                     />
                     <sub>Measurements in pixels.</sub>
                 </div>
@@ -73,6 +76,12 @@ class Settings extends Component {
             // Callback function to notify the parent component of the state change
             this.props.onSettingsSave(settings);
         });
+
+        this.setState({ formChange: false });
+    };
+
+    handleSettingsChange = () => {
+        this.setState({ formChange: true });
     };
 
     saveHtml = async () => {
@@ -147,27 +156,26 @@ class Settings extends Component {
         if (savedSettings) {
             exportedJson.push(JSON.parse(savedSettings));
         }
-    
+
         // Convert exportedJson to a JSON string
         const jsonContent = JSON.stringify(exportedJson, null, 2);
-    
+
         // Create a blob containing the JSON data
-        const blob = new Blob([jsonContent], { type: 'application/json' });
-    
+        const blob = new Blob([jsonContent], { type: "application/json" });
+
         // Create an anchor element to trigger the download
         const element = document.createElement("a");
         element.href = window.URL.createObjectURL(blob);
         element.download = "exportedData.json";
-    
+
         // Hide the anchor element and trigger the download
         element.style.display = "none";
         document.body.appendChild(element);
         element.click();
-    
+
         // Clean up
         document.body.removeChild(element);
     };
-    
 
     render() {
         return (
@@ -180,6 +188,7 @@ class Settings extends Component {
                         name="columns"
                         min={3}
                         defaultValue={this.state.settings.columns}
+                        onChange={this.handleSettingsChange}
                     />
                 </div>
                 <div className="formGroup">
@@ -190,11 +199,21 @@ class Settings extends Component {
                         name="rowHeight"
                         min={20}
                         defaultValue={this.state.settings.rowHeight}
+                        onChange={this.handleSettingsChange}
                     />
                 </div>
                 <div className="formGroup">
                     <label htmlFor="size">Dimensions</label>
-                    <select id="size" defaultValue={this.state.settings.size}>
+                    <select
+                        id="size"
+                        value={this.state.settings.size}
+                        onChange={(e) => {
+                            this.setState({
+                                settings: { size: e.target.value },
+                            });
+                            this.handleSettingsChange();
+                        }}
+                    >
                         <option value="Letter">
                             US Letter (215.9mm x 279.4mm)
                         </option>
@@ -209,10 +228,11 @@ class Settings extends Component {
                     onClick={() => {
                         this.saveSettings();
                     }}
+                    disabled={!this.state.formChange}
                 >
-                    Save settings
+                    Apply
                 </button>
-
+                <hr />
                 <button
                     onClick={() => {
                         window.print();
