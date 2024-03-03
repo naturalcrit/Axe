@@ -182,6 +182,7 @@ class Builder extends Component {
                             <button
                                 className="deleteItem"
                                 onClick={() => this.deleteItem(item.i)}
+                                onMouseDown={(event) => event.stopPropagation()}
                             >
                                 x
                             </button>
