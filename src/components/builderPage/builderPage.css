@@ -42,18 +42,20 @@
                         position: relative;
                         height: 100px;
                         flex: 1 1 80%;
+
                         textarea {
                             width: 100%;
                             height: 100%;
                         }
+
                         .addItem {
                             flex: 1 0 auto;
                         }
                     }
 
-                    
 
-                    
+
+
                 }
             }
 
@@ -81,6 +83,7 @@
                 border-radius: 7px;
                 margin-bottom: 20px;
                 background: white;
+                overflow: hidden;
 
                 .react-grid-layout {}
 
@@ -110,6 +113,7 @@
 
                     &:is(:hover, :focus, :focus-within) {
                         border: 1px dotted gray;
+
                         .deleteItem, .react-resizable-handle {
                             visibility: visible;
                         }
@@ -130,6 +134,7 @@
                         height: 100% !important;
                         border: none;
                     }
+
                     &.react-draggable-dragging {
                         box-shadow: 0 5px 15px gray;
                     }
@@ -140,25 +145,6 @@
                 }
             }
         }
-
-        #sheetSettings {
-            padding-inline: 20px;
-            background: lightgrey;
-            height: 96.8vh;
-            color: black;
-
-            .formGroup {
-                display: grid;
-                gap: 0;
-                margin-bottom: 20px;
-
-                label {
-                    font-weight: 900;
-                    margin-top: 5px;
-                }
-            }
-        }
-
     }
 }
 
