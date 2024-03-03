@@ -172,6 +172,7 @@ class Builder extends Component {
                     rowHeight={rowHeight}
                     width={getSize("width")}
                     onLayoutChange={this.saveLayout}
+                    compactType={null}
                     style={{
                         width: getSize("width"),
                         height: getSize("height"),
