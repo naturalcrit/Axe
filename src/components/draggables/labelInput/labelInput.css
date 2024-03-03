@@ -6,7 +6,7 @@
 	border-radius: 5px;
 	display: flex;
 	align-items: center;
-	& label {
+	& .label {
 		display: flex;
 		flex: 1;
 		flex-wrap: wrap;
@@ -15,8 +15,13 @@
 		color: rgb(228, 228, 228);
 		font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 		& input {
-			flex: 1 1 10ch !important;
-
+			flex: 2 0 10ch ;
+			&:first-child {
+				flex: 1 1 auto;
+				background: none;
+				border: none;
+				color:inherit;
+			}
 		}
 	}
 }
