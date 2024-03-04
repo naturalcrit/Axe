@@ -7,31 +7,40 @@ const Nav = () => {
     return (
         <nav className="nav">
             <div className="navSection">
-                <div>
-                    <a className="navButton" href="https://www.naturalcrit.com">
-                        <NaturalCritIcon />
-                        <span className="name">
-                            Natural<span className="crit">Crit</span>
-                        </span>
-                    </a>
-                </div>
                 <a
-                    className="navButton"
+                    className="navButton logo"
+                    href="https://www.naturalcrit.com"
+                >
+                    <NaturalCritIcon />
+                    <span className="name">
+                        Natural<span className="crit">Crit</span>
+                    </span>
+                </a>
+                <a
+                    className="navButton HBLogo"
                     href="https://homebrewery.naturalcrit.com/"
                 >
-                    The Homebrewery
+                    <span>The Homebrewery</span>
+                </a>
+                <a
+                    className="navButton patreon"
+                    newTab={true}
+                    href="https://www.patreon.com/NaturalCrit"
+                >
+                    help out
+                    <i class="fa-solid fa-heart"></i>
                 </a>
             </div>
 
             <div className="navSection">
                 <Link to="/" className="navButton">
-                    Home
+                    Home <i class="fa-solid fa-house"></i>
                 </Link>
                 <Link to="/builder" className="navButton">
-                    Builder
+                    Builder <i class="fa-solid fa-trowel-bricks"></i>
                 </Link>
                 <Link to="/sheets" className="navButton">
-                    Sheets
+                    Sheets <i class="fa-regular fa-folder-open"></i>
                 </Link>
             </div>
         </nav>

@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Code Bold';
+    src: url('./Code\ Bold.otf') format("opentype");
+}
+
+@font-face {
+    font-family: 'Code Light';
+    src: url('./Code\ Light.otf');
+}

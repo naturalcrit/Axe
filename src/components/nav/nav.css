@@ -7,11 +7,11 @@
     .navSection {
         display: flex;
         align-items: center;
-        padding-inline: 10px;
+        padding-inline: 8px;
 
         .navButton {
             text-decoration: unset;
-            border-right:1px solid #666;
+            border-right: 1px solid #666;
             color: white;
             border-radius: 2px;
             text-align: center;
@@ -25,31 +25,64 @@
             text-decoration: none;
             text-transform: uppercase;
             line-height: 13px;
+            display: flex;
+            align-content: center;
+            justify-content: space-between;
+            gap: 8px;
 
             &:first-child {
                 border-left: 1px solid #666;
             }
+
             &:last-child {
-                border:unset;
+                border: unset;
             }
 
             &:hover {
-                background-color:#666;
+                background-color: #666;
             }
-    
+
             svg {
                 height: 13px;
                 margin-right: .2em;
                 cursor: pointer;
                 fill: white;
             }
-            span.name {
-                font-family: 'CodeLight';
-                font-size: 15px;
+
+            &.logo {
+                border: 0;
+                padding-block: 0;
+                height: 100%;
+                align-items: center;
+                gap: 0;
+
+                span.name {
+                    font-family: 'Code Light';
+                    font-size: 15px;
+                    font-weight: 100;
+                    translate: 0 2px;
+                }
+
+                span.crit {
+                    font-family: 'Code Bold';
+                }
             }
+
+            &.HBLogo {
+                border: 0;
+                font-family: 'Code Bold';
+                font-size: 12px;
+
+                span {
+                    display: block;
+                    margin-top: 2px;
+                    margin-bottom: -2px;
+                }
+            }
+
         }
     }
 
-    
-    
+
+
 }
