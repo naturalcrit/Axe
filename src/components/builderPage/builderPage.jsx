@@ -49,7 +49,7 @@ class Builder extends Component {
                 name: "Character sheet",
                 columns: 12,
                 rowHeight: 40,
-                size: "Letter",
+                size: "letter",
                 height: null,
                 width: null,
             },
@@ -151,34 +151,16 @@ class Builder extends Component {
         const layout = this.state.layout;
         const { columns, rowHeight, size, width, height } = this.state.settings;
 
-        const getSize = (side) => {
-            switch (side) {
-                case "height":
-                    switch (size) {
-                        case "letter":
-                            return 1100;
-                        case "A4":
-                            return 1169;
-                        case "A5":
-                            return 827;
-                        default:
-                            return height || 1056;
-                    }
-                case "width":
-                    switch (size) {
-                        case "letter":
-                            return 816;
-                        case "A4":
-                            return 827;
-                        case "A5":
-                            return 583;
-                        default:
-                            return width || 816;
-                    }
-                default:
-                    return;
-            }
+        const size_map = {
+            'A4': { width: 827, height: 1169 },
+            'A5': { width: 583, height: 827 },
+            'letter': { width: 816, height: 1100 },
+            'custom': { width: width, height: height },
         };
+
+        const defaultHeight = 1169, defaultWidth = 827;
+        const pageHeight = size_map[size]?.height || defaultHeight;
+        const pageWidth = size_map[size]?.width || defaultWidth;
 
         return (
             <div>
@@ -187,13 +169,13 @@ class Builder extends Component {
                     layout={layout}
                     cols={columns}
                     rowHeight={rowHeight}
-                    width={getSize("width")}
+                    width={pageWidth}
                     onLayoutChange={this.saveLayout}
                     compactType={null}
                     preventCollision={true}
                     style={{
-                        width: getSize("width"),
-                        height: getSize("height"),
+                        width: pageWidth,
+                        height: pageHeight,
                     }}
                 >
                     {layout.map((item) => (
