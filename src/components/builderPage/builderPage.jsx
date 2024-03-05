@@ -1,40 +1,40 @@
-import React, { Component } from "react";
-import GridLayout from "react-grid-layout";
+import React, { Component } from 'react';
+import GridLayout from 'react-grid-layout';
 
 //STYLES
-import "./builderPage.css";
-import "../../../node_modules/react-grid-layout/css/styles.css";
-import "../../../node_modules/react-resizable/css/styles.css";
-import "./sheet.css";
+import './builderPage.css';
+import '../../../node_modules/react-grid-layout/css/styles.css';
+import '../../../node_modules/react-resizable/css/styles.css';
+import './sheet.css';
 
 //CS BLOCKS
-import LabelInput from "../draggables/labelInput";
-import TextArea from "../draggables/textarea";
-import StatInput from "../draggables/statInput";
-import EmptySpace from "../draggables/emptySpace";
+import LabelInput from '../draggables/labelInput';
+import TextArea from '../draggables/textarea';
+import StatInput from '../draggables/statInput';
+import EmptySpace from '../draggables/emptySpace';
 
 //OTHER COMPONENTS
-import Nav from "../nav/navBar";
-import Settings from "../sheetSettings.jsx";
+import Nav from '../nav/navBar';
+import Settings from '../sheetSettings.jsx';
 
 const buildingBlocks = [
     {
-        name: "LabelInput",
+        name: 'LabelInput',
         width: 4,
         height: 2,
     },
     {
-        name: "TextArea",
+        name: 'TextArea',
         width: 6,
         height: 6,
     },
     {
-        name: "StatInput",
+        name: 'StatInput',
         width: 2,
         height: 2,
     },
     {
-        name: "EmptySpace",
+        name: 'EmptySpace',
         width: 2,
         height: 2,
     },
@@ -46,10 +46,10 @@ class Builder extends Component {
         this.state = {
             layout: [],
             settings: {
-                name: "Character sheet",
+                name: 'Character sheet',
                 columns: 12,
                 rowHeight: 40,
-                size: "letter",
+                size: 'letter',
                 height: null,
                 width: null,
             },
@@ -57,11 +57,11 @@ class Builder extends Component {
     }
 
     componentDidMount() {
-        const savedLayout = localStorage.getItem("axeBuilderLayout");
+        const savedLayout = localStorage.getItem('axeBuilderLayout');
         if (savedLayout) {
             this.setState({ layout: JSON.parse(savedLayout) });
         }
-        const savedSettings = localStorage.getItem("axeSheetSettings");
+        const savedSettings = localStorage.getItem('axeSheetSettings');
         if (savedSettings) {
             console.table(JSON.parse(savedSettings));
             this.setState({ settings: JSON.parse(savedSettings) });
@@ -101,7 +101,7 @@ class Builder extends Component {
             i: `item-${index}`, // Reassigning IDs based on index
         }));
 
-        localStorage.setItem("axeBuilderLayout", JSON.stringify(updatedLayout));
+        localStorage.setItem('axeBuilderLayout', JSON.stringify(updatedLayout));
 
         //console.log("Updated Layout:", updatedLayout);
         this.setState({ layout: updatedLayout });
@@ -158,7 +158,8 @@ class Builder extends Component {
             'custom': { width: width, height: height },
         };
 
-        const defaultHeight = 1169, defaultWidth = 827;
+        const defaultHeight = 1169,
+            defaultWidth = 827;
         const pageHeight = size_map[size]?.height || defaultHeight;
         const pageWidth = size_map[size]?.width || defaultWidth;
 
