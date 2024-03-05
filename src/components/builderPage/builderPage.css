@@ -1,7 +1,11 @@
 .page.Builder {
     .content {
         display: grid;
-        grid-template-columns: 1fr 2fr 1fr;
+        grid-template-columns: 450px 3fr 1fr;
+
+        h2 {
+            margin-bottom: 20px;
+        }
 
         .sidebar {
 
@@ -36,44 +40,61 @@
                         line-height: 1m;
                     }
 
-                    .component {
+                    .component-slot {
                         border: 1px dotted gray;
                         border-radius: 5px;
                         position: relative;
                         height: 100px;
                         flex: 1 1 80%;
+
                         textarea {
                             width: 100%;
                             height: 100%;
                         }
+
                         .addItem {
                             flex: 1 0 auto;
                         }
                     }
 
-                    
 
-                    
+
+
                 }
             }
 
             .item {
 
-                textarea {
-                    height: 90%;
-                    resize: none;
-                }
-
                 input, textarea {
                     display: block;
                     pointer-events: none;
+                    resize: none;
                 }
             }
         }
 
         #create {
-            overflow-y: scroll;
+            overflow-y: auto;
             height: 96.8vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+
+            &::-webkit-scrollbar {
+                width: 20px;
+                z-index: 2;
+
+            }
+
+            &::-webkit-scrollbar-thumb {
+                width: 20px;
+                background-color: #dddddd98;
+                border-right: 7px solid #2C3E50;
+
+
+            }
+
 
             .drop {
                 border: 1px solid coral;
@@ -82,64 +103,6 @@
                 margin-bottom: 20px;
                 background: white;
                 color: black;
-
-                .react-grid-layout {}
-
-                .react-grid-item {
-                    position: relative;
-                    display: grid;
-                    place-items: center;
-                    background-color: white;
-                    box-sizing: border-box;
-
-                    .deleteItem {
-                        background: unset;
-                        border: unset;
-                        color: white;
-                        font-weight: 900;
-                        filter: drop-shadow(1px 1px 2px black);
-                        position: absolute;
-                        top: 0;
-                        right: 0;
-                        visibility: hidden;
-                    }
-
-                    .react-resizable-handle {
-                        visibility: hidden;
-                    }
-
-
-
-                    &:is(:hover, :focus, :focus-within) {
-                        border: 1px dotted gray;
-                        .deleteItem, .react-resizable-handle {
-                            visibility: visible;
-                        }
-                    }
-
-                    input[type="text"] {
-                        width: 90%;
-                        margin-left: 5%;
-                    }
-
-                    input[type="number"] {
-                        width: 5ch;
-                    }
-
-                    textarea {
-                        resize: none;
-                        width: 100% !important;
-                        height: 100% !important;
-                        border: none;
-                    }
-                    &.react-draggable-dragging {
-                        box-shadow: 0 5px 15px gray;
-                    }
-
-                    &.react-grid-placeholder {
-                        background-color: #CCC
-                    }
-                }
             }
         }
 
@@ -148,6 +111,7 @@
             background: lightgrey;
             height: 96.8vh;
             color: black;
+            z-index: 2;
 
             .formGroup {
                 display: grid;
@@ -163,8 +127,6 @@
 
     }
 }
-
-
 
 
 
