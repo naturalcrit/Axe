@@ -10,7 +10,7 @@ class Settings extends Component {
                 name: "Character sheet",
                 columns: 12,
                 rowHeight: 40,
-                size: "Letter",
+                size: "letter",
                 height: null,
                 width: null,
                 background: "#ffffff",
@@ -70,7 +70,7 @@ class Settings extends Component {
         const form = document.getElementById("settingsForm");
         const settings = {
             columns: Number(form.querySelector("#columns").value) || 12,
-            size: form.querySelector("#size").value || "Letter",
+            size: form.querySelector("#size").value || "letter",
             width: form.querySelector("#width")
                 ? Number(form.querySelector("#width").value)
                 : null,
@@ -142,7 +142,7 @@ class Settings extends Component {
                                     this.handleSettingsChange();
                                 }}
                             >
-                                <option value="Letter">
+                                <option value="letter">
                                     US Letter (215.9mm x 279.4mm)
                                 </option>
                                 <option value="A4">A4 (297mm x 210mm)</option>
