@@ -162,7 +162,7 @@ class Builder extends Component {
                         case "A5":
                             return 827;
                         default:
-                            return height !== null ? height : 1056;
+                            return height || 1056;
                     }
                 case "width":
                     switch (size) {
@@ -173,10 +173,10 @@ class Builder extends Component {
                         case "A5":
                             return 583;
                         default:
-                            return width !== null ? width : 816;
+                            return width || 816;
                     }
                 default:
-                    return side === "height" ? 1100 : 816;
+                    return;
             }
         };
 
