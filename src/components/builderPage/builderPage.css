@@ -40,12 +40,12 @@
                         line-height: 1m;
                     }
 
-                    .component {
+                    .component-slot {
                         border: 1px dotted gray;
                         border-radius: 5px;
                         position: relative;
-                        height: 100%;
-                        flex: 1 1 auto;
+                        height: 100px;
+                        flex: 1 1 80%;
 
                         textarea {
                             width: 100%;
@@ -65,14 +65,10 @@
 
             .item {
 
-                textarea {
-                    height: 90%;
-                    resize: none;
-                }
-
                 input, textarea {
                     display: block;
                     pointer-events: none;
+                    resize: none;
                 }
             }
         }
@@ -83,7 +79,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap:20px;
+            gap: 20px;
 
             &::-webkit-scrollbar {
                 width: 20px;
@@ -92,11 +88,11 @@
             }
 
             &::-webkit-scrollbar-thumb {
-                width:20px;
+                width: 20px;
                 background-color: #dddddd98;
                 border-right: 7px solid #2C3E50;
 
-                
+
             }
 
 
@@ -135,7 +131,8 @@
 
 
                     &:is(:hover, :focus, :focus-within) {
-                        border: 1px dotted gray;
+                        outline: 1px dotted gray;
+                        outline-offset: 2px;
 
                         .deleteItem, .react-resizable-handle {
                             visibility: visible;
