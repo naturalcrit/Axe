@@ -36,16 +36,12 @@
                         line-height: 1m;
                     }
 
-                    .component {
+                    .component-slot {
                         border: 1px dotted gray;
                         border-radius: 5px;
                         position: relative;
                         height: 100px;
                         flex: 1 1 80%;
-                        textarea {
-                            width: 100%;
-                            height: 100%;
-                        }
                         .addItem {
                             flex: 1 0 auto;
                         }
@@ -59,14 +55,10 @@
 
             .item {
 
-                textarea {
-                    height: 90%;
-                    resize: none;
-                }
-
                 input, textarea {
                     display: block;
                     pointer-events: none;
+                    resize: none;
                 }
             }
         }
@@ -111,27 +103,14 @@
 
 
                     &:is(:hover, :focus, :focus-within) {
-                        border: 1px dotted gray;
+                        outline: 1px dotted gray;
+                        outline-offset: 2px;
                         .deleteItem, .react-resizable-handle {
                             visibility: visible;
                         }
                     }
 
-                    input[type="text"] {
-                        width: 90%;
-                        margin-left: 5%;
-                    }
-
-                    input[type="number"] {
-                        width: 5ch;
-                    }
-
-                    textarea {
-                        resize: none;
-                        width: 100% !important;
-                        height: 100% !important;
-                        border: none;
-                    }
+ 
                     &.react-draggable-dragging {
                         box-shadow: 0 5px 15px gray;
                     }
