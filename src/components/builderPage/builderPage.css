@@ -1,26 +1,27 @@
 .page.Builder {
     .content {
         display: grid;
-        grid-template-columns: 450px 3fr 1fr;
+        grid-template-columns: 420px 3fr 400px;
+        height: calc(100% - 29px);
 
         h2 {
             margin-bottom: 20px;
         }
 
         .sidebar {
-
-            height: 85vh;
+            height: 100%;
             width: 400px;
             padding-left: 20px;
             z-index: 10;
+            overflow-y: auto;
 
             .picker {
                 background: #333;
                 border: 1px solid #666;
                 border-radius: 10px;
                 padding: 10px;
-                height: 100%;
-                overflow: auto;
+                margin-bottom: 5vh;
+
 
                 .item {
                     position: relative;
@@ -32,6 +33,10 @@
                     align-items: center;
                     row-gap: 0;
                     column-gap: 10px;
+
+                    &:last-child {
+                        border-bottom: none;
+                    }
 
                     .label {
                         flex: 1 0 100%;
@@ -75,7 +80,7 @@
 
         #create {
             overflow-y: auto;
-            height: 96.8vh;
+            height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -99,32 +104,11 @@
             .drop {
                 border: 1px solid coral;
                 width: fit-content;
-                border-radius: 7px;
                 margin-bottom: 20px;
                 background: white;
                 color: black;
             }
         }
-
-        #sheetSettings {
-            padding-inline: 20px;
-            background: lightgrey;
-            height: 96.8vh;
-            color: black;
-            z-index: 2;
-
-            .formGroup {
-                display: grid;
-                gap: 0;
-                margin-bottom: 20px;
-
-                label {
-                    font-weight: 900;
-                    margin-top: 5px;
-                }
-            }
-        }
-
     }
 }
 

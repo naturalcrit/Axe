@@ -1,10 +1,14 @@
 #sheetSettings {
     padding-inline: 20px;
     background: #d3d3d3;
-    height: 96.8vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width:400px;
     color: black;
+    z-index: 2;
 
     #settingsForm {
+        width:100%;
 
         fieldset {
             border:1px solid;

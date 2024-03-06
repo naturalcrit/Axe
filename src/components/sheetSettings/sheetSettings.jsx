@@ -1,35 +1,34 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import "./sheetSettings.css";
+import './sheetSettings.css';
 
 class Settings extends Component {
     constructor(props) {
         super(props);
         this.state = {
             settings: {
-                name: "Character sheet",
                 columns: 12,
                 rowHeight: 40,
-                size: "letter",
+                size: 'letter',
                 height: null,
                 width: null,
-                background: "#ffffff",
-                textColor: "#000000",
+                backgroundColor: '#00f',
+                backgroundImage: "",
+                textColor: '#000000',
             },
             formChange: false,
         };
     }
 
     componentDidMount() {
-        const savedSettings = localStorage.getItem("sheetSettings");
+        const savedSettings = localStorage.getItem('axeSheetSettings');
         if (savedSettings) {
-            console.table(savedSettings);
             this.setState({ settings: JSON.parse(savedSettings) });
         }
     }
 
     displayCustomInputs = () => {
-        if (this.state.settings.size === "custom") {
+        if (this.state.settings.size === 'custom') {
             return (
                 <div className="formGroup">
                     <label>
@@ -40,8 +39,8 @@ class Settings extends Component {
                             name="width"
                             min={300}
                             max={2000}
-                            defaultValue={this.state.settings.width || 816}
-                            onChange={this.handleSettingsChange}
+                            value={this.state.settings.width || 816}
+                            onChange={(e) => this.handleInputChange(e, 'width')}
                         />
                     </label>
 
@@ -53,8 +52,8 @@ class Settings extends Component {
                             name="height"
                             min={300}
                             max={3000}
-                            defaultValue={this.state.settings.height || 1056}
-                            onChange={this.handleSettingsChange}
+                            value={this.state.settings.height || 1056}
+                            onChange={(e) => this.handleInputChange(e, 'height')}
                         />
                     </label>
 
@@ -67,35 +66,40 @@ class Settings extends Component {
     };
 
     saveSettings = () => {
-        const form = document.getElementById("settingsForm");
+        const form = document.getElementById('settingsForm');
         const settings = {
-            columns: Number(form.querySelector("#columns").value) || 12,
-            size: form.querySelector("#size").value || "letter",
-            width: form.querySelector("#width")
-                ? Number(form.querySelector("#width").value)
+            columns: Number(form.querySelector('#columns').value) || 12,
+            rowHeight: Number(form.querySelector('#rowHeight').value) || 40,
+            size: form.querySelector('#size').value || 'letter',
+            height: form.querySelector('#height')
+                ? Number(form.querySelector('#height').value)
                 : null,
-            height: form.querySelector("#height")
-                ? Number(form.querySelector("#height").value)
+            width: form.querySelector('#width')
+                ? Number(form.querySelector('#width').value)
                 : null,
-            rowHeight: Number(form.querySelector("#rowHeight").value) || 40,
-            background:
-                form.querySelector("#background-image").value !== ""
-                    ? `url('${form.querySelector("#background-image").value}')`
-                    : form.querySelector("#background-color").value,
-            textColor: form.querySelector("#text-color").value,
+
+            backgroundColor: form.querySelector('#background-color').value || "#0f0",
+            backgroundImage: form.querySelector('#background-image').value || "",
+            textColor: form.querySelector('#text-color').value,
         };
 
-        localStorage.setItem("sheetSettings", JSON.stringify(settings));
+        localStorage.setItem('axeSheetSettings', JSON.stringify(settings));
 
         this.setState({ settings: settings }, () => {
             // Callback function to notify the parent component of the state change
             this.props.onSettingsSave(settings);
         });
-        this.setState({ formChange: false });
     };
 
-    handleSettingsChange = () => {
-        this.setState({ formChange: true });
+    handleInputChange = (e, field) => {
+        const { value } = e.target;
+        this.setState((prevState) => ({
+            settings: {
+                ...prevState.settings,
+                [field]: value,
+            },
+            formChange: true,
+        }));
     };
 
     render() {
@@ -111,8 +115,10 @@ class Settings extends Component {
                                 type="number"
                                 name="columns"
                                 min={3}
-                                defaultValue={this.state.settings.columns}
-                                onChange={this.handleSettingsChange}
+                                value={this.state.settings.columns}
+                                onChange={(e) =>
+                                    this.handleInputChange(e, 'columns')
+                                }
                             />
                         </label>
                     </div>
@@ -124,8 +130,8 @@ class Settings extends Component {
                                 type="number"
                                 name="rowHeight"
                                 min={20}
-                                defaultValue={this.state.settings.rowHeight}
-                                onChange={this.handleSettingsChange}
+                                value={this.state.settings.rowHeight}
+                                onChange={(e) => this.handleInputChange(e, 'rowHeight')}
                             />
                         </label>
                     </div>
@@ -134,13 +140,8 @@ class Settings extends Component {
                             Page size:
                             <select
                                 id="size"
-                                defaultValue={this.state.settings.size}
-                                onChange={(e) => {
-                                    this.setState({
-                                        settings: { size: e.target.value },
-                                    });
-                                    this.handleSettingsChange();
-                                }}
+                                value={this.state.settings.size}
+                                onChange={(e) => this.handleInputChange(e, 'size')}
                             >
                                 <option value="letter">
                                     US Letter (215.9mm x 279.4mm)
@@ -163,8 +164,8 @@ class Settings extends Component {
                                 type="color"
                                 name="background-color"
                                 id="background-color"
-                                defaultValue={this.state.settings.background}
-                                onChange={this.handleSettingsChange}
+                                value={this.state.settings.backgroundColor}
+                                onChange={(e) => this.handleInputChange(e, 'backgroundColor')}
                             />
                         </label>
                     </div>
@@ -174,7 +175,8 @@ class Settings extends Component {
                             <input
                                 type="text"
                                 id="background-image"
-                                onChange={this.handleSettingsChange}
+                                value={this.state.settings.backgroundImage}
+                                onChange={(e) => this.handleInputChange(e, 'backgroundImage')}
                             />
                         </label>
                         <sub>
@@ -189,8 +191,8 @@ class Settings extends Component {
                                 type="color"
                                 name="textColor"
                                 id="text-color"
-                                defaultValue={this.state.settings.textColor}
-                                onChange={this.handleSettingsChange}
+                                value={this.state.settings.textColor}
+                                onChange={(e) => this.handleInputChange(e, 'textColor')}
                             />
                         </label>
                     </div>

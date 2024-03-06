@@ -52,7 +52,8 @@ class Builder extends Component {
                 size: 'letter',
                 height: null,
                 width: null,
-                background: '#ffffff',
+                backgroundColor: '#ffffff',
+                backgroundImage: '',
                 textColor: '#000000',
             },
         };
@@ -65,13 +66,11 @@ class Builder extends Component {
         }
         const savedSettings = localStorage.getItem('axeSheetSettings');
         if (savedSettings) {
-            console.table(JSON.parse(savedSettings));
             this.setState({ settings: JSON.parse(savedSettings) });
         }
     }
 
     addNewItem = (componentName, width, height) => {
-        //console.log(component);
         const layout = this.state.layout;
         const newItem = {
             i: `item-${layout.length + 1}`,
@@ -105,7 +104,6 @@ class Builder extends Component {
 
         localStorage.setItem('axeBuilderLayout', JSON.stringify(updatedLayout));
 
-        //console.log("Updated Layout:", updatedLayout);
         this.setState({ layout: updatedLayout });
     };
 
@@ -150,6 +148,7 @@ class Builder extends Component {
     };
 
     renderDropDiv = () => {
+        //console.log(this.state.settings);
         const layout = this.state.layout;
         const {
             columns,
@@ -157,7 +156,8 @@ class Builder extends Component {
             size,
             width,
             height,
-            background,
+            backgroundColor,
+            backgroundImage,
             textColor,
         } = this.state.settings;
 
@@ -174,34 +174,36 @@ class Builder extends Component {
         const pageWidth = size_map[size]?.width || defaultWidth;
 
         return (
-            <div>
-                <GridLayout
-                    className="layout sheet"
-                    layout={layout}
-                    cols={columns}
-                    rowHeight={rowHeight}
-                    width={pageWidth}
-                    onLayoutChange={this.saveLayout}
-                    compactType={null}
-                    preventCollision={true}
-                    style={{
-                        width: pageWidth,
-                        height: pageHeight,
-                    }}
-                >
-                    {layout.map((item) => (
-                        <div key={item.i}>
-                            <button
-                                className="deleteItem"
-                                onClick={() => this.deleteItem(item.i)}
-                            >
-                                x
-                            </button>
-                            {this.renderComponent(item.componentName)}
-                        </div>
-                    ))}
-                </GridLayout>
-            </div>
+            <GridLayout
+                className="layout sheet"
+                layout={layout}
+                cols={columns}
+                rowHeight={rowHeight}
+                width={pageWidth}
+                onLayoutChange={this.saveLayout}
+                compactType={null}
+                preventCollision={true}
+                style={{
+                    width: pageWidth,
+                    height: pageHeight,
+                    backgroundColor: backgroundColor,
+                    backgroundImage: `url('${backgroundImage}')`,
+                    color: textColor,
+                }}
+            >
+                {layout.map((item) => (
+                    <div key={item.i}>
+                        <button
+                            className="deleteItem"
+                            onClick={() => this.deleteItem(item.i)}
+                            onMouseDown={(event) => event.stopPropagation()}
+                        >
+                            x
+                        </button>
+                        {this.renderComponent(item.componentName)}
+                    </div>
+                ))}
+            </GridLayout>
         );
     };
 

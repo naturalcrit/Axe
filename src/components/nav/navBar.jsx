@@ -24,23 +24,22 @@ const Nav = () => {
                 </a>
                 <a
                     className="navButton patreon"
-                    newTab={true}
                     href="https://www.patreon.com/NaturalCrit"
                 >
                     help out
-                    <i class="fa-solid fa-heart"></i>
+                    <i className="fa-solid fa-heart"></i>
                 </a>
             </div>
 
             <div className="navSection">
                 <Link to="/" className="navButton">
-                    Home <i class="fa-solid fa-house"></i>
+                    Home <i className="fa-solid fa-house"></i>
                 </Link>
                 <Link to="/builder" className="navButton">
-                    Builder <i class="fa-solid fa-trowel-bricks"></i>
+                    Builder <i className="fa-solid fa-trowel-bricks"></i>
                 </Link>
                 <Link to="/sheets" className="navButton">
-                    Sheets <i class="fa-regular fa-folder-open"></i>
+                    Sheets <i className="fa-regular fa-folder-open"></i>
                 </Link>
             </div>
         </nav>
