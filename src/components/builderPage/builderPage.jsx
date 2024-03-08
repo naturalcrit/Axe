@@ -63,7 +63,6 @@ class Builder extends Component {
         }
         const savedSettings = localStorage.getItem('axeSheetSettings');
         if (savedSettings) {
-            console.table(JSON.parse(savedSettings));
             this.setState({ settings: JSON.parse(savedSettings) });
         }
     }

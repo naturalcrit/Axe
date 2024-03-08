@@ -3,6 +3,7 @@ import React, { Component } from "react";
 class Settings extends Component {
     constructor(props) {
         super(props);
+        this.importJsonRef = React.createRef();
         this.state = {
             settings: {
                 name: "Character sheet",
@@ -19,7 +20,6 @@ class Settings extends Component {
     componentDidMount() {
         const savedSettings = localStorage.getItem("axeSheetSettings");
         if (savedSettings) {
-            console.table(savedSettings);
             this.setState({ settings: JSON.parse(savedSettings) });
         }
     }
@@ -157,37 +157,25 @@ class Settings extends Component {
             exportedJson.push(JSON.parse(savedSettings));
         }
 
-        // Convert exportedJson to a JSON string
         const jsonContent = JSON.stringify(exportedJson, null, 2);
-
-        // Create a blob containing the JSON data
         const blob = new Blob([jsonContent], { type: "application/json" });
-
-        // Create an anchor element to trigger the download
         const element = document.createElement("a");
         element.href = window.URL.createObjectURL(blob);
         element.download = "exportedData.json";
-
-        // Hide the anchor element and trigger the download
         element.style.display = "none";
         document.body.appendChild(element);
         element.click();
-
-        // Clean up
         document.body.removeChild(element);
     };
 
     importJson = () => {
-        const localJson = document.getElementById("importJson").files[0];
-        console.log(localJson);
+        const localJson = this.importJsonRef.current.files[0];
         const reader = new FileReader();
 
         reader.onload = function (event) {
             const jsonContent = event.target.result;
             const parsedJson = JSON.parse(jsonContent);
-            console.log(parsedJson);
 
-            // Store the JSON content in localStorage
             window.localStorage.setItem(
                 "axeBuilderLayout",
                 JSON.stringify(parsedJson[0])
@@ -196,10 +184,9 @@ class Settings extends Component {
                 "axeSheetSettings",
                 JSON.stringify(parsedJson[1])
             );
-        };
-
+        };s
         reader.readAsText(localJson);
-        location.reload();
+        window.reload();
     };
 
     render() {
@@ -248,7 +235,6 @@ class Settings extends Component {
                     </select>
                 </div>
                 {this.displayCustomInputs()}
-
                 <button
                     className="applyButton"
                     onClick={() => {
@@ -284,21 +270,19 @@ class Settings extends Component {
                 >
                     Export as JSON
                 </button>
-
-                <hr />
-
+                <hr/>
                 <button
                     onClick={() => {
-                        document.getElementById("importJson").click();
+                        this.importJsonRef.current.click();
                     }}
                 >
                     Import a character sheet
                 </button>
                 <input
+                    ref={this.importJsonRef}
                     type="file"
                     accept=".json"
                     name="importJson"
-                    id="importJson"
                     style={{ display: "none" }}
                     onChange={() => {
                         this.importJson();
