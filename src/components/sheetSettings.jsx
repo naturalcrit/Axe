@@ -123,10 +123,12 @@ class Settings extends Component {
         const htmlWithStyles = `
             <html>
                 <head>
+                    <title>Custom Character Sheet</title>
                     ${headContent}
                 </head>
                 <body>
                     ${modifiedSheetContent}
+                    <div style="display:none">Character sheet made with axe.naturalcrit.com</div>
                 </body>
             </html>
         `;
