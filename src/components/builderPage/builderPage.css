@@ -91,10 +91,10 @@
             .drop {
                 border: 1px solid coral;
                 width: fit-content;
-                border-radius: 7px;
                 margin-bottom: 20px;
                 background: white;
-                overflow: hidden;
+                box-shadow: 0 5px 15px #000;
+
 
                 .react-grid-item {
                     position: relative;
@@ -165,21 +165,17 @@
     }
 }
 
-
-
-
-
 @media print {
     *:not(:has(.drop), .drop, .drop *) {
         display: none;
     }
-
+    
     .drop {
-        position: fixed;
-        top: 0;
-        left: 0;
-        border: 0px solid transparent;
-        border-radius: 0;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        border: unset !important;
+        border-radius: 0 !important;
 
         .react-grid-item {
             .react-resizable-handle {
