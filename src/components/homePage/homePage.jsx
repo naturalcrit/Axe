@@ -41,8 +41,10 @@ const Home = () => {
                     </div>
                     <div className="image">
                         <img
+                            className="displayImage"
                             src={require("../../assets/images/HB_homepage.png")}
                             alt="Homebrewery Home Page"
+                            title="Homebrewery Home Page"
                         />
                     </div>
                 </section>
@@ -52,8 +54,10 @@ const Home = () => {
                 <section id="howToUse">
                     <div className="image">
                         <img
+                            className="displayImage"
                             src={require("../../assets/images/Axe_Builder.png")}
-                            alt="Homebrewery Home Page"
+                            alt="Builder Page"
+                            title="Builder Page"
                         />
                     </div>
                     <div className="text">

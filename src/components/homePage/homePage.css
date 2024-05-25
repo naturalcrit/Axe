@@ -23,6 +23,9 @@
                 color:white;
             }
             
+            .displayImage {
+                box-shadow: 0 0 7px black;
+            }
         }
 
         hr {

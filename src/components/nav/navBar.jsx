@@ -8,7 +8,7 @@ const Nav = () => {
         <nav className="nav">
             <div className="navSection">
                 <div>
-                    <a className="navButton" href="https://www.naturalcrit.com">
+                    <a className="navItem logo" href="https://www.naturalcrit.com">
                         <NaturalCritIcon />
                         <span className="name">
                             Natural<span className="crit">Crit</span>
@@ -16,7 +16,7 @@ const Nav = () => {
                     </a>
                 </div>
                 <a
-                    className="navButton"
+                    className="navItem logo"
                     href="https://homebrewery.naturalcrit.com/"
                 >
                     The Homebrewery
@@ -24,13 +24,13 @@ const Nav = () => {
             </div>
 
             <div className="navSection">
-                <Link to="/" className="navButton">
+                <Link to="/" className="navItem">
                     Home
                 </Link>
-                <Link to="/builder" className="navButton">
+                <Link to="/builder" className="navItem">
                     Builder
                 </Link>
-                <Link to="/sheets" className="navButton">
+                <Link to="/sheets" className="navItem">
                     Sheets
                 </Link>
             </div>
