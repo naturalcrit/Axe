@@ -197,6 +197,7 @@ class Settings extends Component {
                 </fieldset>
 
                 <button
+                    className="button"
                     onClick={() => {
                         this.saveSettings();
                     }}
@@ -206,6 +207,7 @@ class Settings extends Component {
                 </button>
                 <hr />
                 <button
+                    className="button"
                     onClick={() => {
                         window.print();
                     }}
