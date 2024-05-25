@@ -44,8 +44,8 @@
                         border: 1px dotted gray;
                         border-radius: 5px;
                         position: relative;
-                        height: 100%;
-                        flex: 1 1 auto;
+                        height: 100px;
+                        flex: 1 1 80%;
 
                         textarea {
                             width: 100%;
@@ -106,7 +106,7 @@
                 border-radius: 7px;
                 margin-bottom: 20px;
                 background: white;
-                color: black;
+                overflow: hidden;
 
                 .react-grid-layout {}
 
@@ -114,7 +114,6 @@
                     position: relative;
                     display: grid;
                     place-items: center;
-                    background-color: white;
                     box-sizing: border-box;
 
                     .deleteItem {
@@ -169,25 +168,6 @@
                 }
             }
         }
-
-        #sheetSettings {
-            padding-inline: 20px;
-            background: lightgrey;
-            height: 96.8vh;
-            color: black;
-
-            .formGroup {
-                display: grid;
-                gap: 0;
-                margin-bottom: 20px;
-
-                label {
-                    font-weight: 900;
-                    margin-top: 5px;
-                }
-            }
-        }
-
     }
 }
 
