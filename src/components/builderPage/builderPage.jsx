@@ -130,7 +130,7 @@ class Builder extends Component {
                                 {this.renderComponent(block.name, index)}
                             </div>
                             <button
-                                className="addItem"
+                                className="button addItem"
                                 onClick={() =>
                                     this.addNewItem(
                                         block.name,
