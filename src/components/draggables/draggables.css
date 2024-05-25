@@ -1,0 +1,26 @@
+.draggable {
+    input {
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+
+        &.draggableTitle {
+            background: none;
+            border: none;
+
+            &::placeholder {
+                color: inherit;
+            }
+
+        }
+    }
+
+    label {
+        font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+
+        input {
+            display: inline-block;
+            color: inherit;
+            font-family: inherit;
+            min-width: fit-content;
+        }
+    }
+}

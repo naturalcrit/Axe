@@ -1,0 +1,30 @@
+@import url('../draggables.css');
+
+.label-input {
+	flex-grow:1;
+	background: rgb(123, 115, 106);
+	padding: 5px;
+	border-radius: 5px;
+	display: flex;
+	align-items: center;
+
+	& label {
+		display: flex;
+		flex-wrap: wrap;
+		column-gap: 10px;
+		align-items: center;
+		width:100%;
+
+		& input {
+			display:block;
+			width:100%;
+
+			&:first-child {
+				flex: 1 1 auto;
+				background: none;
+				border: none;
+				height: 20px;
+			}
+		}
+	}
+}

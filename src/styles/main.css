@@ -42,6 +42,10 @@ html, body, #reactRoot {
 }
 
 
+*:not(p, h1, h2, h3, h4, h5, a, dl, dt, ol, ul, li, td, th, input, textarea, :has(p, h1, h2, h3, h4, h5, a, dl, dt, ol, ul, li, td, th, input, textarea)) {
+    user-select: none;
+}
+
 .page {
     background-color: #2C3E50;
     display: flex;

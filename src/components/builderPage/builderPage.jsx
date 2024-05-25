@@ -1,39 +1,39 @@
-import React, { Component } from "react";
-import GridLayout from "react-grid-layout";
+import React, { Component } from 'react';
+import GridLayout from 'react-grid-layout';
 
 //STYLES
-import "./builderPage.css";
-import "../../../node_modules/react-grid-layout/css/styles.css";
-import "../../../node_modules/react-resizable/css/styles.css";
+import './builderPage.css';
+import '../../../node_modules/react-grid-layout/css/styles.css';
+import '../../../node_modules/react-resizable/css/styles.css';
 
 //CS BLOCKS
-import LabelInput from "../draggables/labelInput";
-import TextArea from "../draggables/textarea";
-import StatInput from "../draggables/statInput";
-import EmptySpace from "../draggables/emptySpace";
+import LabelInput from '../draggables/labelInput/labelInput.jsx';
+import TextArea from '../draggables/textArea/textarea.jsx';
+import StatInput from '../draggables/statInput/statInput.jsx';
+import EmptySpace from '../draggables/emptySace/emptySpace.jsx';
 
 //OTHER COMPONENTS
-import Nav from "../nav/navBar";
-import Settings from "../sheetSettings/sheetSettings.jsx";
+import Nav from '../nav/navBar';
+import Settings from '../sheetSettings/sheetSettings.jsx';
 
 const buildingBlocks = [
     {
-        name: "LabelInput",
+        name: 'LabelInput',
         width: 4,
         height: 2,
     },
     {
-        name: "TextArea",
+        name: 'TextArea',
         width: 6,
         height: 6,
     },
     {
-        name: "StatInput",
+        name: 'StatInput',
         width: 2,
         height: 2,
     },
     {
-        name: "EmptySpace",
+        name: 'EmptySpace',
         width: 2,
         height: 2,
     },
@@ -45,24 +45,24 @@ class Builder extends Component {
         this.state = {
             layout: [],
             settings: {
-                name: "Character sheet",
+                name: 'Character sheet',
                 columns: 12,
                 rowHeight: 40,
-                size: "Letter",
+                size: 'Letter',
                 height: null,
                 width: null,
-                background: "#ffffff",
-                textColor: "#000000",
+                background: '#ffffff',
+                textColor: '#000000',
             },
         };
     }
 
     componentDidMount() {
-        const savedLayout = localStorage.getItem("BuilderLayout");
+        const savedLayout = localStorage.getItem('BuilderLayout');
         if (savedLayout) {
             this.setState({ layout: JSON.parse(savedLayout) });
         }
-        const savedSettings = localStorage.getItem("sheetSettings");
+        const savedSettings = localStorage.getItem('sheetSettings');
         if (savedSettings) {
             console.table(JSON.parse(savedSettings));
             this.setState({ settings: JSON.parse(savedSettings) });
@@ -102,7 +102,7 @@ class Builder extends Component {
             i: `item-${index}`, // Reassigning IDs based on index
         }));
 
-        localStorage.setItem("BuilderLayout", JSON.stringify(updatedLayout));
+        localStorage.setItem('BuilderLayout', JSON.stringify(updatedLayout));
 
         //console.log("Updated Layout:", updatedLayout);
         this.setState({ layout: updatedLayout });
@@ -125,8 +125,8 @@ class Builder extends Component {
                 {buildingBlocks.map((block, index) => {
                     return (
                         <div className="item" key={index}>
-                            <div className="label">{block.name}</div>
-                            <div className="component">
+                            <div className="label">{block.name.replace(/([A-Z])/g, ' $1').trim()}</div>
+                            <div className="draggable-slot">
                                 {this.renderComponent(block.name, index)}
                             </div>
                             <button
@@ -162,30 +162,30 @@ class Builder extends Component {
 
         const getSize = (side) => {
             switch (side) {
-                case "height":
+                case 'height':
                     switch (size) {
-                        case "letter":
+                        case 'letter':
                             return 1100;
-                        case "A4":
+                        case 'A4':
                             return 1169;
-                        case "A5":
+                        case 'A5':
                             return 827;
                         default:
                             return height !== null ? height : 1056;
                     }
-                case "width":
+                case 'width':
                     switch (size) {
-                        case "letter":
+                        case 'letter':
                             return 816;
-                        case "A4":
+                        case 'A4':
                             return 827;
-                        case "A5":
+                        case 'A5':
                             return 583;
                         default:
                             return width !== null ? width : 816;
                     }
                 default:
-                    return side === "height" ? 1100 : 816;
+                    return side === 'height' ? 1100 : 816;
             }
         };
 
@@ -195,13 +195,13 @@ class Builder extends Component {
                 layout={layout}
                 cols={columns}
                 rowHeight={rowHeight}
-                width={getSize("width")}
+                width={getSize('width')}
                 onLayoutChange={this.saveLayout}
                 compactType={null}
                 preventCollision={true}
                 style={{
-                    width: getSize("width"),
-                    height: getSize("height"),
+                    width: getSize('width'),
+                    height: getSize('height'),
                     background: background,
                     color: textColor,
                 }}
