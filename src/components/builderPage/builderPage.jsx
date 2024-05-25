@@ -14,7 +14,7 @@ import EmptySpace from '../draggables/emptySace/emptySpace.jsx';
 
 //OTHER COMPONENTS
 import Nav from '../nav/navBar';
-import Settings from '../sheetSettings/sheetSettings';
+import Settings from '../sheetSettings/sheetSettings.jsx';
 
 const buildingBlocks = [
     {

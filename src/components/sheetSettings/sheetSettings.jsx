@@ -5,6 +5,7 @@ import "./sheetSettings.css";
 class Settings extends Component {
     constructor(props) {
         super(props);
+        this.importJsonRef = React.createRef();
         this.state = {
             settings: {
                 name: "Character sheet",
@@ -85,17 +86,125 @@ class Settings extends Component {
             textColor: form.querySelector("#text-color").value,
         };
 
-        localStorage.setItem("sheetSettings", JSON.stringify(settings));
+        localStorage.setItem("axeSheetSettings", JSON.stringify(settings));
 
         this.setState({ settings: settings }, () => {
             // Callback function to notify the parent component of the state change
             this.props.onSettingsSave(settings);
         });
+        
         this.setState({ formChange: false });
     };
 
     handleSettingsChange = () => {
         this.setState({ formChange: true });
+    };
+
+    saveHtml = async () => {
+        const sheetContent = document.querySelector(".layout.sheet").outerHTML;
+
+        // Create a temporary element to hold the HTML content
+        const tempElement = document.createElement("div");
+        tempElement.innerHTML = sheetContent;
+
+        // Find and remove elements with class "noExport"
+        const elementsToRemove = tempElement.querySelectorAll(
+            ".deleteItem, .react-resizable-handle"
+        );
+        elementsToRemove.forEach((element) =>
+            element.parentNode.removeChild(element)
+        );
+
+        // Get the modified HTML content
+        const modifiedSheetContent = tempElement.innerHTML;
+
+        // Extract <style> tags from the document's head
+        let headContent = "";
+        const styleElements = document.head.querySelectorAll("style");
+
+        // Filter the <style> elements based on the comment
+        const filteredStyleElements = Array.from(styleElements).filter(
+            (style) => {
+                const cssText = style.textContent.trim();
+                return cssText.startsWith("/*Imported in html download*/");
+            }
+        );
+
+        // Extract CSS content from filtered <style> elements
+        filteredStyleElements.forEach((style) => {
+            const cssText = style.textContent.trim();
+            headContent += `<style>${cssText}</style>`;
+        });
+
+        const htmlWithStyles = `
+            <html>
+                <head>
+                    <title>Custom Character Sheet</title>
+                    ${headContent}
+                </head>
+                <body>
+                    ${modifiedSheetContent}
+                    <div style="display:none">Character sheet made with axe.naturalcrit.com</div>
+                </body>
+            </html>
+        `;
+
+        const element = document.createElement("a");
+        element.setAttribute(
+            "href",
+            "data:text/html," + encodeURIComponent(htmlWithStyles)
+        );
+        element.setAttribute("download", "sheet.html");
+        element.style.display = "none";
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    };
+
+    saveJson = () => {
+        const exportedJson = [];
+        const savedLayout = localStorage.getItem("axeBuilderLayout");
+        if (savedLayout) {
+            exportedJson.push(JSON.parse(savedLayout));
+        } else {
+            alert("No layouts found.");
+            return; // Stop execution if no layouts found
+        }
+        const savedSettings = localStorage.getItem("axeSheetSettings");
+        if (savedSettings) {
+            exportedJson.push(JSON.parse(savedSettings));
+        }
+
+        const jsonContent = JSON.stringify(exportedJson, null, 2);
+        const blob = new Blob([jsonContent], { type: "application/json" });
+        const element = document.createElement("a");
+        element.href = window.URL.createObjectURL(blob);
+        element.download = "exportedData.json";
+        element.style.display = "none";
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+    };
+
+    importJson = () => {
+        const localJson = this.importJsonRef.current.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+            const jsonContent = event.target.result;
+            const parsedJson = JSON.parse(jsonContent);
+
+            window.localStorage.setItem(
+                "axeBuilderLayout",
+                JSON.stringify(parsedJson[0])
+            );
+            window.localStorage.setItem(
+                "axeSheetSettings",
+                JSON.stringify(parsedJson[1])
+            );
+        };s
+        reader.readAsText(localJson);
+        window.reload();
     };
 
     render() {
@@ -214,6 +323,41 @@ class Settings extends Component {
                 >
                     Export as pdf
                 </button>
+                <button
+                    className="exportButton"
+                    onClick={() => {
+                        this.saveHtml();
+                    }}
+                >
+                    Export as HTML
+                </button>
+                <button
+                    className="exportButton"
+                    onClick={() => {
+                        this.saveSettings();
+                        this.saveJson();
+                    }}
+                >
+                    Export as JSON
+                </button>
+                <hr/>
+                <button
+                    onClick={() => {
+                        this.importJsonRef.current.click();
+                    }}
+                >
+                    Import a character sheet
+                </button>
+                <input
+                    ref={this.importJsonRef}
+                    type="file"
+                    accept=".json"
+                    name="importJson"
+                    style={{ display: "none" }}
+                    onChange={() => {
+                        this.importJson();
+                    }}
+                />
             </div>
         );
     }
