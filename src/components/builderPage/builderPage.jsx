@@ -125,8 +125,8 @@ class Builder extends Component {
                 {buildingBlocks.map((block, index) => {
                     return (
                         <div className="item" key={index}>
-                            <div className="label">{block.name}</div>
-                            <div className="component-slot">
+                            <div className="label">{block.name.replace(/([A-Z])/g, ' $1').trim()}</div>
+                            <div className="draggable-slot">
                                 {this.renderComponent(block.name, index)}
                             </div>
                             <button

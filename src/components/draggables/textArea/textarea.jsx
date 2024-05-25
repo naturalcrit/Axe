@@ -4,9 +4,9 @@ import './textarea.css';
 
 const LabelInput = () => {
   return (
-    <div className='text-area-input'>
+    <div className='draggable text-area-input'>
       <label>
-        Text Area
+        <input className='draggableTitle' type="text" size="1" placeholder='Text Area Name'/>
         <textarea name="" id="" cols="30" rows="1"></textarea>
       </label>
     </div>

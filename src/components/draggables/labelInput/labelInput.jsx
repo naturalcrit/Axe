@@ -3,11 +3,11 @@ import './labelInput.css';
 
 const LabelInput = () => {
   return (
-    <div className='label-input'>   
-      <div className='label'>
-        <input type="text" size="1" aria-label='property name' placeholder='Character Name'/>
+    <div className='draggable label-input'>   
+      <label>
+        <input className='draggableTitle' type="text" size="1" aria-label='property name' placeholder='Character Name'/>
         <input type="text" size="1" aria-label='property value' />
-      </div>    
+      </label>    
     </div>
   );
 };

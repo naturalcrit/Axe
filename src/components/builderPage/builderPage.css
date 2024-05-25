@@ -8,7 +8,6 @@
         }
 
         .sidebar {
-
             height: 85vh;
             width: 400px;
             padding-left: 20px;
@@ -35,16 +34,17 @@
 
                     .label {
                         flex: 1 0 100%;
-                        font-size: .7em;
+                        font-size: 1rem;
                         font-variant: small-caps;
-                        line-height: 1m;
+                        line-height: 1em;
+                        padding-bottom: 10px;
                     }
 
-                    .component-slot {
-                        border: 1px dotted gray;
+                    .draggable-slot {
                         border-radius: 5px;
                         position: relative;
                         height: 100px;
+                        display: flex;
                         flex: 1 1 80%;
 
                         textarea {
@@ -56,10 +56,6 @@
                             flex: 1 0 auto;
                         }
                     }
-
-
-
-
                 }
             }
 
@@ -79,22 +75,18 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap:20px;
+            gap: 20px;
 
             &::-webkit-scrollbar {
                 width: 20px;
                 z-index: 2;
-
             }
 
             &::-webkit-scrollbar-thumb {
-                width:20px;
+                width: 20px;
                 background-color: #dddddd98;
                 border-right: 7px solid #2C3E50;
-
-                
             }
-
 
             .drop {
                 border: 1px solid coral;
@@ -106,9 +98,15 @@
 
                 .react-grid-item {
                     position: relative;
-                    display: grid;
+                    display: flex;
+                    grid-template-columns: 1fr;
                     place-items: center;
                     box-sizing: border-box;
+
+                    .draggable {
+                        width: 100%;
+                        height: 100%;
+                    }
 
                     .deleteItem {
                         background: unset;
@@ -131,7 +129,7 @@
                     &:is(:hover, :focus, :focus-within) {
                         outline: 1px dotted gray;
                         outline-offset: 2px;
-                        
+
                         .deleteItem, .react-resizable-handle {
                             visibility: visible;
                         }
@@ -181,7 +179,7 @@
         position: fixed;
         top: 0;
         left: 0;
-        border: unset;
+        border: 0px solid transparent;
         border-radius: 0;
 
         .react-grid-item {
