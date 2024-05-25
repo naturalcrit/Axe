@@ -11,6 +11,7 @@
         padding-inline: 10px;
 
         .navItem {
+            height: 100%;
             text-decoration: unset;
             border-right: 1px solid #666;
             color: white;
@@ -18,13 +19,13 @@
             text-align: center;
             text-transform: uppercase;
             transition: background-color .25s ease;
-            padding: 8px 12px;
+            padding-inline: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             cursor: pointer;
             font-size: 11px;
             font-weight: 800;
-            color: white;
-            text-decoration: none;
-            text-transform: uppercase;
             line-height: 13px;
 
 
@@ -41,15 +42,15 @@
             }
 
             svg {
-                height: 13px;
-                margin-right: .2em;
+                height: 15px;
+                margin-right: .3em;
                 cursor: pointer;
                 fill: white;
             }
 
             span.name {
                 font-family: 'CodeLight';
-                font-size: 15px;
+                font-size: 16px;
 
                 span.crit {
                     font-family: 'CodeBold';
@@ -59,7 +60,7 @@
             &.logo {
                 font-family: 'CodeBold';
                 font-size: 14px;
-                padding-top: 13px;
+                border: unset;
             }
         }
     }
