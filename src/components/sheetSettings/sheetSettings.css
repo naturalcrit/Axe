@@ -1,0 +1,28 @@
+#sheetSettings {
+    padding-inline: 20px;
+    background: #d3d3d3;
+    height: 96.8vh;
+    color: black;
+
+    #settingsForm {
+
+        fieldset {
+            border:1px solid;
+            margin-bottom: 20px;
+
+            .formGroup {
+                display: grid;
+                gap: 0;
+                margin-bottom: 20px;
+
+                label {
+                    font-weight: 900;
+                    margin-top: 5px;
+                    display: grid;
+                    gap: 10px;
+                    grid-template-columns: auto 1fr;
+                }
+            }
+        }
+    }
+}

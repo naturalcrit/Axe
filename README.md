@@ -2,7 +2,8 @@
 This project was built to integrate with NaturalCrit.com
 
 With it, you can create a character sheet to suit your needs
-Still in development
+
+This website is still in development, all feedback is appreciated
 
 ## Available Scripts
 
