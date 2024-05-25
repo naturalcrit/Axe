@@ -5,17 +5,16 @@ import GridLayout from 'react-grid-layout';
 import './builderPage.css';
 import '../../../node_modules/react-grid-layout/css/styles.css';
 import '../../../node_modules/react-resizable/css/styles.css';
-import './sheet.css';
 
 //CS BLOCKS
-import LabelInput from '../draggables/labelInput';
-import TextArea from '../draggables/textarea';
-import StatInput from '../draggables/statInput';
-import EmptySpace from '../draggables/emptySpace';
+import LabelInput from '../draggables/labelInput/labelInput.jsx';
+import TextArea from '../draggables/textArea/textarea.jsx';
+import StatInput from '../draggables/statInput/statInput.jsx';
+import EmptySpace from '../draggables/emptySace/emptySpace.jsx';
 
 //OTHER COMPONENTS
 import Nav from '../nav/navBar';
-import Settings from '../sheetSettings.jsx';
+import Settings from '../sheetSettings/sheetSettings';
 
 const buildingBlocks = [
     {
@@ -49,19 +48,21 @@ class Builder extends Component {
                 name: 'Character sheet',
                 columns: 12,
                 rowHeight: 40,
-                size: 'letter',
+                size: 'Letter',
                 height: null,
                 width: null,
+                background: '#ffffff',
+                textColor: '#000000',
             },
         };
     }
 
     componentDidMount() {
-        const savedLayout = localStorage.getItem('axeBuilderLayout');
+        const savedLayout = localStorage.getItem('BuilderLayout');
         if (savedLayout) {
             this.setState({ layout: JSON.parse(savedLayout) });
         }
-        const savedSettings = localStorage.getItem('axeSheetSettings');
+        const savedSettings = localStorage.getItem('sheetSettings');
         if (savedSettings) {
             this.setState({ settings: JSON.parse(savedSettings) });
         }
@@ -100,7 +101,7 @@ class Builder extends Component {
             i: `item-${index}`, // Reassigning IDs based on index
         }));
 
-        localStorage.setItem('axeBuilderLayout', JSON.stringify(updatedLayout));
+        localStorage.setItem('BuilderLayout', JSON.stringify(updatedLayout));
 
         //console.log("Updated Layout:", updatedLayout);
         this.setState({ layout: updatedLayout });
@@ -123,12 +124,12 @@ class Builder extends Component {
                 {buildingBlocks.map((block, index) => {
                     return (
                         <div className="item" key={index}>
-                            <div className="label">{block.name}</div>
-                            <div className="component">
+                            <div className="label">{block.name.replace(/([A-Z])/g, ' $1').trim()}</div>
+                            <div className="draggable-slot">
                                 {this.renderComponent(block.name, index)}
                             </div>
                             <button
-                                className="addItem"
+                                className="button addItem"
                                 onClick={() =>
                                     this.addNewItem(
                                         block.name,
@@ -148,50 +149,75 @@ class Builder extends Component {
 
     renderDropDiv = () => {
         const layout = this.state.layout;
-        const { columns, rowHeight, size, width, height } = this.state.settings;
+        const {
+            columns,
+            rowHeight,
+            size,
+            width,
+            height,
+            background,
+            textColor,
+        } = this.state.settings;
 
-        const size_map = {
-            'A4': { width: 827, height: 1169 },
-            'A5': { width: 583, height: 827 },
-            'letter': { width: 816, height: 1100 },
-            'custom': { width: width, height: height },
+        const getSize = (side) => {
+            switch (side) {
+                case 'height':
+                    switch (size) {
+                        case 'letter':
+                            return 1100;
+                        case 'A4':
+                            return 1169;
+                        case 'A5':
+                            return 827;
+                        default:
+                            return height !== null ? height : 1056;
+                    }
+                case 'width':
+                    switch (size) {
+                        case 'letter':
+                            return 816;
+                        case 'A4':
+                            return 827;
+                        case 'A5':
+                            return 583;
+                        default:
+                            return width !== null ? width : 816;
+                    }
+                default:
+                    return side === 'height' ? 1100 : 816;
+            }
         };
 
-        const defaultHeight = 1169,
-            defaultWidth = 827;
-        const pageHeight = size_map[size]?.height || defaultHeight;
-        const pageWidth = size_map[size]?.width || defaultWidth;
-
         return (
-            <div>
-                <GridLayout
-                    className="layout sheet"
-                    layout={layout}
-                    cols={columns}
-                    rowHeight={rowHeight}
-                    width={pageWidth}
-                    onLayoutChange={this.saveLayout}
-                    compactType={null}
-                    preventCollision={true}
-                    style={{
-                        width: pageWidth,
-                        height: pageHeight,
-                    }}
-                >
-                    {layout.map((item) => (
-                        <div key={item.i}>
-                            <button
-                                className="deleteItem"
-                                onClick={() => this.deleteItem(item.i)}
-                                onMouseDown={(event) => event.stopPropagation()}
-                            >
-                                x
-                            </button>
-                            {this.renderComponent(item.componentName)}
-                        </div>
-                    ))}
-                </GridLayout>
-            </div>
+            <GridLayout
+                className="layout"
+                layout={layout}
+                cols={columns}
+                rowHeight={rowHeight}
+                width={getSize('width')}
+                onLayoutChange={this.saveLayout}
+                compactType={null}
+                preventCollision={true}
+                style={{
+                    width: getSize('width'),
+                    height: getSize('height'),
+                    background: background,
+                    color: textColor,
+                }}
+            >
+                {layout.map((item) => (
+                    <div key={item.i}>
+                        <button
+                            className="deleteItem"
+                            onClick={() => this.deleteItem(item.i)}
+                            onMouseDown={(event) => event.stopPropagation()}
+                        >
+                            x
+                        </button>
+                        {this.renderComponent(item.componentName)}
+                    </div>
+                ))}
+            </GridLayout>
         );
     };
 
@@ -211,11 +237,10 @@ class Builder extends Component {
                         {this.renderPicker()}
                     </aside>
                     <section id="create">
-                        <h1>Create your own</h1>
+                        <h1>Create your own character sheet</h1>
                         <div className="drop">{this.renderDropDiv()}</div>
                     </section>
                     <section id="sheetSettings">
-                        <h2>Sheet Settings</h2>
                         <Settings onSettingsSave={this.handleSettingsSave} />
                     </section>
                 </main>

@@ -1,10 +1,13 @@
 .page.Builder {
     .content {
         display: grid;
-        grid-template-columns: 1fr 2fr 1fr;
+        grid-template-columns: 450px 3fr 1fr;
+
+        h2 {
+            margin-bottom: 20px;
+        }
 
         .sidebar {
-
             height: 85vh;
             width: 400px;
             padding-left: 20px;
@@ -31,17 +34,19 @@
 
                     .label {
                         flex: 1 0 100%;
-                        font-size: .7em;
+                        font-size: 1rem;
                         font-variant: small-caps;
-                        line-height: 1m;
+                        line-height: 1em;
+                        padding-bottom: 10px;
                     }
 
-                    .component {
-                        border: 1px dotted gray;
+                    .draggable-slot {
                         border-radius: 5px;
                         position: relative;
                         height: 100px;
+                        display: flex;
                         flex: 1 1 80%;
+
                         textarea {
                             width: 100%;
                             height: 100%;
@@ -51,23 +56,15 @@
                             flex: 1 0 auto;
                         }
                     }
-
-
-
-
                 }
             }
 
             .item {
 
-                textarea {
-                    height: 90%;
-                    resize: none;
-                }
-
                 input, textarea {
                     display: block;
                     pointer-events: none;
+                    resize: none;
                 }
             }
         }
@@ -75,6 +72,21 @@
         #create {
             overflow-y: auto;
             height: 96.8vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+
+            &::-webkit-scrollbar {
+                width: 20px;
+                z-index: 2;
+            }
+
+            &::-webkit-scrollbar-thumb {
+                width: 20px;
+                background-color: #dddddd98;
+                border-right: 7px solid #2C3E50;
+            }
 
             .drop {
                 border: 1px solid coral;
@@ -82,29 +94,73 @@
                 border-radius: 7px;
                 margin-bottom: 20px;
                 background: white;
-                color: black;
-            }
-        }
+                overflow: hidden;
 
-        #sheetSettings {
-            padding-inline: 20px;
-            background: lightgrey;
-            height: 96.8vh;
-            color: black;
-            z-index: 2;
+                .react-grid-item {
+                    position: relative;
+                    display: flex;
+                    grid-template-columns: 1fr;
+                    place-items: center;
+                    box-sizing: border-box;
 
-            .formGroup {
-                display: grid;
-                gap: 0;
-                margin-bottom: 20px;
+                    .draggable {
+                        width: 100%;
+                        height: 100%;
+                    }
 
-                label {
-                    font-weight: 900;
-                    margin-top: 5px;
+                    .deleteItem {
+                        background: unset;
+                        border: unset;
+                        color: white;
+                        font-weight: 900;
+                        filter: drop-shadow(1px 1px 2px black);
+                        position: absolute;
+                        top: 0;
+                        right: 0;
+                        visibility: hidden;
+                    }
+
+                    .react-resizable-handle {
+                        visibility: hidden;
+                    }
+
+
+
+                    &:is(:hover, :focus, :focus-within) {
+                        outline: 1px dotted gray;
+                        outline-offset: 2px;
+
+                        .deleteItem, .react-resizable-handle {
+                            visibility: visible;
+                        }
+                    }
+
+                    input[type="text"] {
+                        width: 90%;
+                        margin-left: 5%;
+                    }
+
+                    input[type="number"] {
+                        width: 5ch;
+                    }
+
+                    textarea {
+                        resize: none;
+                        width: 100% !important;
+                        height: 100% !important;
+                        border: none;
+                    }
+
+                    &.react-draggable-dragging {
+                        box-shadow: 0 5px 15px gray;
+                    }
+
+                    &.react-grid-placeholder {
+                        background-color: #CCC
+                    }
                 }
             }
         }
-
     }
 }
 
@@ -121,7 +177,7 @@
         position: fixed;
         top: 0;
         left: 0;
-        border: unset;
+        border: 0px solid transparent;
         border-radius: 0;
 
         .react-grid-item {
