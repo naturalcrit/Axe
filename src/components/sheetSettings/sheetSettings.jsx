@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import "./sheetSettings.css";
+import './sheetSettings.css';
 
 class Settings extends Component {
     constructor(props) {
@@ -8,21 +8,21 @@ class Settings extends Component {
         this.importJsonRef = React.createRef();
         this.state = {
             settings: {
-                name: "Character sheet",
+                name: 'Character sheet',
                 columns: 12,
                 rowHeight: 40,
-                size: "Letter",
+                size: 'Letter',
                 height: null,
                 width: null,
-                background: "#ffffff",
-                textColor: "#000000",
+                background: '#ffffff',
+                textColor: '#000000',
             },
             formChange: false,
         };
     }
 
     componentDidMount() {
-        const savedSettings = localStorage.getItem("sheetSettings");
+        const savedSettings = localStorage.getItem('sheetSettings');
         if (savedSettings) {
             console.table(savedSettings);
             this.setState({ settings: JSON.parse(savedSettings) });
@@ -30,7 +30,7 @@ class Settings extends Component {
     }
 
     displayCustomInputs = () => {
-        if (this.state.settings.size === "custom") {
+        if (this.state.settings.size === 'custom') {
             return (
                 <div className="formGroup">
                     <label>
@@ -68,31 +68,31 @@ class Settings extends Component {
     };
 
     saveSettings = () => {
-        const form = document.getElementById("settingsForm");
+        const form = document.getElementById('settingsForm');
         const settings = {
-            columns: Number(form.querySelector("#columns").value) || 12,
-            size: form.querySelector("#size").value || "Letter",
-            width: form.querySelector("#width")
-                ? Number(form.querySelector("#width").value)
+            columns: Number(form.querySelector('#columns').value) || 12,
+            size: form.querySelector('#size').value || 'Letter',
+            width: form.querySelector('#width')
+                ? Number(form.querySelector('#width').value)
                 : null,
-            height: form.querySelector("#height")
-                ? Number(form.querySelector("#height").value)
+            height: form.querySelector('#height')
+                ? Number(form.querySelector('#height').value)
                 : null,
-            rowHeight: Number(form.querySelector("#rowHeight").value) || 40,
+            rowHeight: Number(form.querySelector('#rowHeight').value) || 40,
             background:
-                form.querySelector("#background-image").value !== ""
-                    ? `url('${form.querySelector("#background-image").value}')`
-                    : form.querySelector("#background-color").value,
-            textColor: form.querySelector("#text-color").value,
+                form.querySelector('#background-image').value !== ''
+                    ? `url('${form.querySelector('#background-image').value}')`
+                    : form.querySelector('#background-color').value,
+            textColor: form.querySelector('#text-color').value,
         };
 
-        localStorage.setItem("SheetSettings", JSON.stringify(settings));
+        localStorage.setItem('SheetSettings', JSON.stringify(settings));
 
         this.setState({ settings: settings }, () => {
             // Callback function to notify the parent component of the state change
             this.props.onSettingsSave(settings);
         });
-        
+
         this.setState({ formChange: false });
     };
 
@@ -101,15 +101,15 @@ class Settings extends Component {
     };
 
     saveHtml = async () => {
-        const sheetContent = document.querySelector(".layout.sheet").outerHTML;
+        const sheetContent = document.querySelector('.layout.sheet').outerHTML;
 
         // Create a temporary element to hold the HTML content
-        const tempElement = document.createElement("div");
+        const tempElement = document.createElement('div');
         tempElement.innerHTML = sheetContent;
 
         // Find and remove elements with class "noExport"
         const elementsToRemove = tempElement.querySelectorAll(
-            ".deleteItem, .react-resizable-handle"
+            '.deleteItem, .react-resizable-handle'
         );
         elementsToRemove.forEach((element) =>
             element.parentNode.removeChild(element)
@@ -119,14 +119,14 @@ class Settings extends Component {
         const modifiedSheetContent = tempElement.innerHTML;
 
         // Extract <style> tags from the document's head
-        let headContent = "";
-        const styleElements = document.head.querySelectorAll("style");
+        let headContent = '';
+        const styleElements = document.head.querySelectorAll('style');
 
         // Filter the <style> elements based on the comment
         const filteredStyleElements = Array.from(styleElements).filter(
             (style) => {
                 const cssText = style.textContent.trim();
-                return cssText.startsWith("/*Imported in html download*/");
+                return cssText.startsWith('/*Imported in html download*/');
             }
         );
 
@@ -149,13 +149,13 @@ class Settings extends Component {
             </html>
         `;
 
-        const element = document.createElement("a");
+        const element = document.createElement('a');
         element.setAttribute(
-            "href",
-            "data:text/html," + encodeURIComponent(htmlWithStyles)
+            'href',
+            'data:text/html,' + encodeURIComponent(htmlWithStyles)
         );
-        element.setAttribute("download", "sheet.html");
-        element.style.display = "none";
+        element.setAttribute('download', 'sheet.html');
+        element.style.display = 'none';
         document.body.appendChild(element);
         element.click();
         document.body.removeChild(element);
@@ -163,24 +163,24 @@ class Settings extends Component {
 
     saveJson = () => {
         const exportedJson = [];
-        const savedLayout = localStorage.getItem("BuilderLayout");
+        const savedLayout = localStorage.getItem('BuilderLayout');
         if (savedLayout) {
             exportedJson.push(JSON.parse(savedLayout));
         } else {
-            alert("No layouts found.");
+            alert('No layouts found.');
             return; // Stop execution if no layouts found
         }
-        const savedSettings = localStorage.getItem("SheetSettings");
+        const savedSettings = localStorage.getItem('SheetSettings');
         if (savedSettings) {
             exportedJson.push(JSON.parse(savedSettings));
         }
 
         const jsonContent = JSON.stringify(exportedJson, null, 2);
-        const blob = new Blob([jsonContent], { type: "application/json" });
-        const element = document.createElement("a");
+        const blob = new Blob([jsonContent], { type: 'application/json' });
+        const element = document.createElement('a');
         element.href = window.URL.createObjectURL(blob);
-        element.download = "exportedData.json";
-        element.style.display = "none";
+        element.download = 'exportedData.json';
+        element.style.display = 'none';
         document.body.appendChild(element);
         element.click();
         document.body.removeChild(element);
@@ -195,11 +195,11 @@ class Settings extends Component {
             const parsedJson = JSON.parse(jsonContent);
 
             window.localStorage.setItem(
-                "BuilderLayout",
+                'BuilderLayout',
                 JSON.stringify(parsedJson[0])
             );
             window.localStorage.setItem(
-                "SheetSettings",
+                'SheetSettings',
                 JSON.stringify(parsedJson[1])
             );
         };
@@ -340,8 +340,9 @@ class Settings extends Component {
                 >
                     Export as JSON
                 </button>
-                <hr/>
+                <hr />
                 <button
+                    className="button"
                     onClick={() => {
                         this.importJsonRef.current.click();
                     }}
@@ -353,7 +354,7 @@ class Settings extends Component {
                     type="file"
                     accept=".json"
                     name="importJson"
-                    style={{ display: "none" }}
+                    style={{ display: 'none' }}
                     onChange={() => {
                         this.importJson();
                     }}
