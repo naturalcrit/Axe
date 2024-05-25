@@ -190,7 +190,7 @@ class Builder extends Component {
 
         return (
             <GridLayout
-                className="layout"
+                className="layout sheet"
                 layout={layout}
                 cols={columns}
                 rowHeight={rowHeight}

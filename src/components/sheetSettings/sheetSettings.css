@@ -22,7 +22,13 @@
                     gap: 10px;
                     grid-template-columns: auto 1fr;
                 }
+
+                
             }
+        }
+        
+        .button {
+            margin:5px;
         }
     }
 }

@@ -86,7 +86,7 @@ class Settings extends Component {
             textColor: form.querySelector("#text-color").value,
         };
 
-        localStorage.setItem("axeSheetSettings", JSON.stringify(settings));
+        localStorage.setItem("SheetSettings", JSON.stringify(settings));
 
         this.setState({ settings: settings }, () => {
             // Callback function to notify the parent component of the state change
@@ -163,14 +163,14 @@ class Settings extends Component {
 
     saveJson = () => {
         const exportedJson = [];
-        const savedLayout = localStorage.getItem("axeBuilderLayout");
+        const savedLayout = localStorage.getItem("BuilderLayout");
         if (savedLayout) {
             exportedJson.push(JSON.parse(savedLayout));
         } else {
             alert("No layouts found.");
             return; // Stop execution if no layouts found
         }
-        const savedSettings = localStorage.getItem("axeSheetSettings");
+        const savedSettings = localStorage.getItem("SheetSettings");
         if (savedSettings) {
             exportedJson.push(JSON.parse(savedSettings));
         }
@@ -195,16 +195,16 @@ class Settings extends Component {
             const parsedJson = JSON.parse(jsonContent);
 
             window.localStorage.setItem(
-                "axeBuilderLayout",
+                "BuilderLayout",
                 JSON.stringify(parsedJson[0])
             );
             window.localStorage.setItem(
-                "axeSheetSettings",
+                "SheetSettings",
                 JSON.stringify(parsedJson[1])
             );
-        };s
+        };
         reader.readAsText(localJson);
-        window.reload();
+        window.location.reload();
     };
 
     render() {
@@ -324,7 +324,7 @@ class Settings extends Component {
                     Export as pdf
                 </button>
                 <button
-                    className="exportButton"
+                    className="button"
                     onClick={() => {
                         this.saveHtml();
                     }}
@@ -332,7 +332,7 @@ class Settings extends Component {
                     Export as HTML
                 </button>
                 <button
-                    className="exportButton"
+                    className="button"
                     onClick={() => {
                         this.saveSettings();
                         this.saveJson();
