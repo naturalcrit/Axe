@@ -7,25 +7,15 @@
     color: black;
 
     .react-grid-item {
-        display: grid;
+        position: relative;
+        display: flex;
+        grid-template-columns: 1fr;
         place-items: center;
-        background-color: white;
         box-sizing: border-box;
 
-        .deleteItem {
-            background: unset;
-            border: unset;
-            color: white;
-            font-weight: 900;
-            filter: drop-shadow(1px 1px 2px black);
-            position: absolute;
-            top: 0;
-            right: 0;
-            visibility: hidden;
-        }
-
-        .react-resizable-handle {
-            visibility: hidden;
+        .draggable {
+            width: 100%;
+            height: 100%;
         }
 
         input[type="text"] {
@@ -42,26 +32,6 @@
             width: 100%;
             height: 100%;
             border: none;
-        }
-
-        &.react-draggable-dragging {
-            box-shadow: 0 5px 15px gray;
-        }
-
-        &.react-grid-placeholder {
-            background-color: #CCC
-        }
-    }
-}
-
-/*place in this rule all CSS you don't want to work when exported into HTML, such as interactable stuff*/
-#create {
-    
-    .react-grid-item:is(:hover, :focus, :focus-within) {
-        border: 1px dotted gray;
-
-        .deleteItem, .react-resizable-handle {
-            visibility: visible;
         }
     }
 }

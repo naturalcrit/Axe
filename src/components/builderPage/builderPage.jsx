@@ -3,6 +3,7 @@ import GridLayout from 'react-grid-layout';
 
 //STYLES
 import './builderPage.css';
+import './sheet.css';
 import '../../../node_modules/react-grid-layout/css/styles.css';
 import '../../../node_modules/react-resizable/css/styles.css';
 
@@ -124,7 +125,9 @@ class Builder extends Component {
                 {buildingBlocks.map((block, index) => {
                     return (
                         <div className="item" key={index}>
-                            <div className="label">{block.name.replace(/([A-Z])/g, ' $1').trim()}</div>
+                            <div className="label">
+                                {block.name.replace(/([A-Z])/g, ' $1').trim()}
+                            </div>
                             <div className="draggable-slot">
                                 {this.renderComponent(block.name, index)}
                             </div>
@@ -206,7 +209,7 @@ class Builder extends Component {
                 }}
             >
                 {layout.map((item) => (
-                    <div key={item.i}>
+                    <div className="draggable-item" key={item.i}>
                         <button
                             className="deleteItem"
                             onClick={() => this.deleteItem(item.i)}

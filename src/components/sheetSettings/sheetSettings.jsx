@@ -107,7 +107,7 @@ class Settings extends Component {
         const tempElement = document.createElement('div');
         tempElement.innerHTML = sheetContent;
 
-        // Find and remove elements with class "noExport"
+        // Find and remove elements we don't want to export
         const elementsToRemove = tempElement.querySelectorAll(
             '.deleteItem, .react-resizable-handle'
         );
@@ -121,7 +121,7 @@ class Settings extends Component {
         // Extract <style> tags from the document's head
         let headContent = '';
         const styleElements = document.head.querySelectorAll('style');
-
+        
         // Filter the <style> elements based on the comment
         const filteredStyleElements = Array.from(styleElements).filter(
             (style) => {
@@ -129,13 +129,14 @@ class Settings extends Component {
                 return cssText.startsWith('/*Imported in html download*/');
             }
         );
+        
 
         // Extract CSS content from filtered <style> elements
         filteredStyleElements.forEach((style) => {
             const cssText = style.textContent.trim();
             headContent += `<style>${cssText}</style>`;
         });
-
+        console.log(headContent);
         const htmlWithStyles = `
             <html>
                 <head>
