@@ -46,6 +46,10 @@ html, body, #reactRoot {
     user-select: none;
 }
 
+button:disabled {
+    cursor: not-allowed;
+}
+
 .page {
     background-color: #2C3E50;
     display: flex;
@@ -74,11 +78,11 @@ html, body, #reactRoot {
     outline: none;
 
     &:hover {
-        background-color: var(--lightergreen);
+        background-color: var(--greenLight);
     }
 
     &:active {
-        background-color: var(--lightergreen);
+        background-color: var(--greenLight);
     }
 
     &:disabled {
