@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-
 import './sheetSettings.css';
+
+const SETTINGSKEY = 'sheetSettings';
+const LAYOUTKEY = 'BuilderLayout';
 
 class Settings extends Component {
     constructor(props) {
@@ -22,7 +24,7 @@ class Settings extends Component {
     }
 
     componentDidMount() {
-        const savedSettings = localStorage.getItem('sheetSettings');
+        const savedSettings = localStorage.getItem(SETTINGSKEY);
         if (savedSettings) {
             console.table(savedSettings);
             this.setState({ settings: JSON.parse(savedSettings) });
@@ -86,7 +88,7 @@ class Settings extends Component {
             textColor: form.querySelector('#text-color').value,
         };
 
-        localStorage.setItem('SheetSettings', JSON.stringify(settings));
+        localStorage.setItem(SETTINGSKEY, JSON.stringify(settings));
 
         this.setState({ settings: settings }, () => {
             // Callback function to notify the parent component of the state change
@@ -121,7 +123,7 @@ class Settings extends Component {
         // Extract <style> tags from the document's head
         let headContent = '';
         const styleElements = document.head.querySelectorAll('style');
-        
+
         // Filter the <style> elements based on the comment
         const filteredStyleElements = Array.from(styleElements).filter(
             (style) => {
@@ -129,7 +131,6 @@ class Settings extends Component {
                 return cssText.startsWith('/*Imported in html download*/');
             }
         );
-        
 
         // Extract CSS content from filtered <style> elements
         filteredStyleElements.forEach((style) => {
@@ -164,14 +165,14 @@ class Settings extends Component {
 
     saveJson = () => {
         const exportedJson = [];
-        const savedLayout = localStorage.getItem('BuilderLayout');
+        const savedLayout = localStorage.getItem(LAYOUTKEY);
         if (savedLayout) {
             exportedJson.push(JSON.parse(savedLayout));
         } else {
             alert('No layouts found.');
             return; // Stop execution if no layouts found
         }
-        const savedSettings = localStorage.getItem('SheetSettings');
+        const savedSettings = localStorage.getItem(SETTINGSKEY);
         if (savedSettings) {
             exportedJson.push(JSON.parse(savedSettings));
         }
@@ -196,11 +197,11 @@ class Settings extends Component {
             const parsedJson = JSON.parse(jsonContent);
 
             window.localStorage.setItem(
-                'BuilderLayout',
+                LAYOUTKEY,
                 JSON.stringify(parsedJson[0])
             );
             window.localStorage.setItem(
-                'SheetSettings',
+                SETTINGSKEY,
                 JSON.stringify(parsedJson[1])
             );
         };
