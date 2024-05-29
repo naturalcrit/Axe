@@ -19,7 +19,7 @@
     label {
         font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
 
-        input {
+        input[type="text"] {
             display: inline-block;
             color: inherit;
             font-family: inherit;

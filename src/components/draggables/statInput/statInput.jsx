@@ -3,7 +3,7 @@ import './statInput.css';
 
 const StatInput = () => {
   return (
-    <div className='stat-input'>
+    <div className='draggable stat-input'>
       <label>
         Ability
         <input type="number" name="ability"/>

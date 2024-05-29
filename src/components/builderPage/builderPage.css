@@ -46,6 +46,7 @@
                         height: 100px;
                         display: flex;
                         flex: 1 1 80%;
+                        justify-content: center;
 
                         textarea {
                             width: 100%;
@@ -105,18 +106,39 @@
                         filter: drop-shadow(1px 1px 2px black);
                         position: absolute;
                         top: 0;
-                        right: 0;
+                        left: 0;
                         visibility: hidden;
-                        z-index:10;
+                        z-index: 10;
                     }
 
                     .react-resizable-handle {
                         visibility: hidden;
                     }
 
+                    .draggable::before {
+                        font-size: 12px;
+                        ;
+                        position: absolute;
+                        top: -2.5em;
+                        left: -2px;
+                        background: #ccc;
+                        opacity: 0;
+                        content: attr(class);
+                        padding: 2px 5px;
+                        color: black;
+                        transition: opacity 0.2s;
+                        white-space: nowrap;
+                        border-radius: 5px;
+                        border: 2px solid #444;
+                    }
+
                     &:is(:hover, :focus, :focus-within) {
                         outline: 1px dotted gray;
                         outline-offset: 2px;
+
+                        .draggable::before {
+                            opacity: 1;
+                        }
 
                         .deleteItem, .react-resizable-handle {
                             visibility: visible;
@@ -140,7 +162,7 @@
     *:not(:has(.drop), .drop, .drop *) {
         display: none;
     }
-    
+
     .drop {
         position: fixed !important;
         top: 0 !important;
