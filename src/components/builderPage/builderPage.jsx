@@ -17,28 +17,7 @@ import EmptySpace from '../draggables/emptySace/emptySpace.jsx';
 import Nav from '../nav/navBar';
 import Settings from '../sheetSettings/sheetSettings.jsx';
 
-const buildingBlocks = [
-    {
-        name: 'LabelInput',
-        width: 4,
-        height: 2,
-    },
-    {
-        name: 'TextArea',
-        width: 6,
-        height: 6,
-    },
-    {
-        name: 'StatInput',
-        width: 2,
-        height: 2,
-    },
-    {
-        name: 'EmptySpace',
-        width: 2,
-        height: 2,
-    },
-];
+import buildingBlocks from '../draggables/draggables.json';
 
 class Builder extends Component {
     constructor(props) {
