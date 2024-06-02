@@ -1,38 +1,34 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import './sheetSettings.css';
 
 const SETTINGSKEY = 'sheetSettings';
 const LAYOUTKEY = 'BuilderLayout';
 
-class Settings extends Component {
-    constructor(props) {
-        super(props);
-        this.importJsonRef = React.createRef();
-        this.state = {
-            settings: {
-                name: 'Character sheet',
-                columns: 12,
-                rowHeight: 40,
-                size: 'Letter',
-                height: null,
-                width: null,
-                background: '#ffffff',
-                textColor: '#000000',
-            },
-            formChange: false,
-        };
-    }
+const Settings = ({ onSettingsSave, onSave }) => {
+    const importJsonRef = useRef();
+    const saveSheetRef = useRef();
 
-    componentDidMount() {
+    const [settings, setSettings] = useState({
+        name: 'Character sheet',
+        columns: 12,
+        rowHeight: 40,
+        size: 'Letter',
+        height: null,
+        width: null,
+        background: '#ffffff',
+        textColor: '#000000',
+    });
+
+    useEffect(() => {
         const savedSettings = localStorage.getItem(SETTINGSKEY);
         if (savedSettings) {
             console.table(savedSettings);
-            this.setState({ settings: JSON.parse(savedSettings) });
+            setSettings(JSON.parse(savedSettings));
         }
-    }
+    }, []);
 
-    displayCustomInputs = () => {
-        if (this.state.settings.size === 'custom') {
+    const displayCustomInputs = () => {
+        if (settings.size === 'custom') {
             return (
                 <div className="formGroup">
                     <label>
@@ -43,8 +39,8 @@ class Settings extends Component {
                             name="width"
                             min={300}
                             max={2000}
-                            defaultValue={this.state.settings.width || 816}
-                            onChange={this.handleSettingsChange}
+                            defaultValue={settings.width || 816}
+                            onChange={handleSettingsChange}
                         />
                     </label>
 
@@ -56,8 +52,8 @@ class Settings extends Component {
                             name="height"
                             min={300}
                             max={3000}
-                            defaultValue={this.state.settings.height || 1056}
-                            onChange={this.handleSettingsChange}
+                            defaultValue={settings.height || 1056}
+                            onChange={handleSettingsChange}
                         />
                     </label>
 
@@ -65,51 +61,45 @@ class Settings extends Component {
                 </div>
             );
         } else {
-            return;
+            return null;
         }
     };
 
-    saveSettings = () => {
-        const form = document.getElementById('settingsForm');
-        const settings = {
-            columns: Number(form.querySelector('#columns').value) || 12,
-            size: form.querySelector('#size').value || 'Letter',
-            width: form.querySelector('#width')
-                ? Number(form.querySelector('#width').value)
-                : null,
-            height: form.querySelector('#height')
-                ? Number(form.querySelector('#height').value)
-                : null,
-            rowHeight: Number(form.querySelector('#rowHeight').value) || 40,
+    const handleSettingsChange = () => {
+        const newSettings = {
+            columns: Number(columnsRef.current.value) || 12,
+            size: sizeRef.current.value || 'Letter',
+            width: widthRef.current ? Number(widthRef.current.value) : null,
+            height: heightRef.current ? Number(heightRef.current.value) : null,
+            rowHeight: Number(rowHeightRef.current.value) || 40,
             background:
-                form.querySelector('#background-image').value !== ''
-                    ? `url('${form.querySelector('#background-image').value}')`
-                    : form.querySelector('#background-color').value,
-            textColor: form.querySelector('#text-color').value,
+                backgroundImageRef.current.value !== ''
+                    ? `url('${backgroundImageRef.current.value}')`
+                    : backgroundColorRef.current.value,
+            textColor: textColorRef.current.value,
         };
 
-        localStorage.setItem(SETTINGSKEY, JSON.stringify(settings));
-
-        this.setState({ settings: settings }, () => {
-            // Callback function to notify the parent component of the state change
-            this.props.onSettingsSave(settings);
-        });
-
-        this.setState({ formChange: false });
+        localStorage.setItem(SETTINGSKEY, JSON.stringify(newSettings));
+        setSettings(newSettings);
+        onSettingsSave(newSettings);
     };
 
-    handleSettingsChange = () => {
-        this.setState({ formChange: true });
-    };
+    // Define refs outside the component
+    const columnsRef = useRef(null);
+    const sizeRef = useRef(null);
+    const widthRef = useRef(null);
+    const heightRef = useRef(null);
+    const rowHeightRef = useRef(null);
+    const backgroundImageRef = useRef(null);
+    const backgroundColorRef = useRef(null);
+    const textColorRef = useRef(null);
 
-    saveHtml = async () => {
+    const saveHtml = async () => {
         const sheetContent = document.querySelector('.layout.sheet').outerHTML;
 
-        // Create a temporary element to hold the HTML content
         const tempElement = document.createElement('div');
         tempElement.innerHTML = sheetContent;
 
-        // Find and remove elements we don't want to export
         const elementsToRemove = tempElement.querySelectorAll(
             '.deleteItem, .react-resizable-handle'
         );
@@ -117,14 +107,11 @@ class Settings extends Component {
             element.parentNode.removeChild(element)
         );
 
-        // Get the modified HTML content
         const modifiedSheetContent = tempElement.innerHTML;
 
-        // Extract <style> tags from the document's head
         let headContent = '';
         const styleElements = document.head.querySelectorAll('style');
 
-        // Filter the <style> elements based on the comment
         const filteredStyleElements = Array.from(styleElements).filter(
             (style) => {
                 const cssText = style.textContent.trim();
@@ -132,12 +119,11 @@ class Settings extends Component {
             }
         );
 
-        // Extract CSS content from filtered <style> elements
         filteredStyleElements.forEach((style) => {
             const cssText = style.textContent.trim();
             headContent += `<style>${cssText}</style>`;
         });
-        console.log(headContent);
+
         const htmlWithStyles = `
             <html>
                 <head>
@@ -163,14 +149,14 @@ class Settings extends Component {
         document.body.removeChild(element);
     };
 
-    saveJson = () => {
+    const saveJson = () => {
         const exportedJson = [];
         const savedLayout = localStorage.getItem(LAYOUTKEY);
         if (savedLayout) {
             exportedJson.push(JSON.parse(savedLayout));
         } else {
             alert('No layouts found.');
-            return; // Stop execution if no layouts found
+            return;
         }
         const savedSettings = localStorage.getItem(SETTINGSKEY);
         if (savedSettings) {
@@ -188,8 +174,8 @@ class Settings extends Component {
         document.body.removeChild(element);
     };
 
-    importJson = () => {
-        const localJson = this.importJsonRef.current.files[0];
+    const importJson = () => {
+        const localJson = importJsonRef.current.files[0];
         const reader = new FileReader();
 
         reader.onload = function (event) {
@@ -209,161 +195,167 @@ class Settings extends Component {
         window.location.reload();
     };
 
-    render() {
+    const renderLayoutForm = () => {
         return (
-            <div id="settingsForm">
-                <h2>Layout settings</h2>
-                <fieldset className="styleForm">
-                    <div className="formGroup">
-                        <label>
-                            Columns:
-                            <input
-                                id="columns"
-                                type="number"
-                                name="columns"
-                                min={3}
-                                defaultValue={this.state.settings.columns}
-                                onChange={this.handleSettingsChange}
-                            />
-                        </label>
-                    </div>
-                    <div className="formGroup">
-                        <label>
-                            Row height:
-                            <input
-                                id="rowHeight"
-                                type="number"
-                                name="rowHeight"
-                                min={20}
-                                defaultValue={this.state.settings.rowHeight}
-                                onChange={this.handleSettingsChange}
-                            />
-                        </label>
-                    </div>
-                    <div className="formGroup">
-                        <label>
-                            Page size:
-                            <select
-                                id="size"
-                                defaultValue={this.state.settings.size}
-                                onChange={(e) => {
-                                    this.setState({
-                                        settings: { size: e.target.value },
-                                    });
-                                    this.handleSettingsChange();
-                                }}
-                            >
-                                <option value="Letter">
-                                    US Letter (215.9mm x 279.4mm)
-                                </option>
-                                <option value="A4">A4 (297mm x 210mm)</option>
-                                <option value="A5">A5 148mm x 210mm</option>
-                                <option value="custom">Custom</option>
-                            </select>
-                        </label>
-                    </div>
-                    {this.displayCustomInputs()}
-                </fieldset>
+            <>
+                <div className="formGroup">
+                    <label>
+                        Columns:
+                        <input
+                            ref={columnsRef}
+                            id="columns"
+                            type="number"
+                            name="columns"
+                            min={3}
+                            defaultValue={settings.columns}
+                            onChange={handleSettingsChange}
+                        />
+                    </label>
+                </div>
+                <div className="formGroup">
+                    <label>
+                        Row height:
+                        <input
+                            ref={rowHeightRef}
+                            id="rowHeight"
+                            type="number"
+                            name="rowHeight"
+                            min={20}
+                            defaultValue={settings.rowHeight}
+                            onChange={handleSettingsChange}
+                        />
+                    </label>
+                </div>
+                <div className="formGroup">
+                    <label>
+                        Page size:
+                        <select
+                            ref={sizeRef}
+                            id="size"
+                            defaultValue={settings.size}
+                            onChange={(e) => {
+                                setSettings({
+                                    size: e.target.value,
+                                });
+                                handleSettingsChange();
+                            }}
+                        >
+                            <option value="Letter">
+                                US Letter (215.9mm x 279.4mm)
+                            </option>
+                            <option value="A4">A4 (297mm x 210mm)</option>
+                            <option value="A5">A5 148mm x 210mm</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </label>
+                </div>
+                {displayCustomInputs()}
+            </>
+        );
+    };
 
-                <h2>Style settings</h2>
-                <fieldset>
-                    <div className="formGroup">
-                        <label>
-                            Background-color:
-                            <input
-                                type="color"
-                                name="background-color"
-                                id="background-color"
-                                defaultValue={this.state.settings.background}
-                                onChange={this.handleSettingsChange}
-                            />
-                        </label>
-                    </div>
-                    <div className="formGroup">
-                        <label>
-                            Background-image URL:
-                            <input
-                                type="text"
-                                id="background-image"
-                                onChange={this.handleSettingsChange}
-                            />
-                        </label>
-                        <sub>
-                            Upload your image to an image hosting service and
-                            paste here the image link
-                        </sub>
-                    </div>
-                    <div className="formGroup">
-                        <label>
-                            Text Color:
-                            <input
-                                type="color"
-                                name="textColor"
-                                id="text-color"
-                                defaultValue={this.state.settings.textColor}
-                                onChange={this.handleSettingsChange}
-                            />
-                        </label>
-                    </div>
-                </fieldset>
+    const renderStyleForm = () => {
+        return (
+            <>
+                <div className="formGroup">
+                    <label>
+                        Background-color:
+                        <input
+                            ref={backgroundColorRef}
+                            type="color"
+                            name="background-color"
+                            id="background-color"
+                            defaultValue={settings.background}
+                            onChange={handleSettingsChange}
+                        />
+                    </label>
+                </div>
+                <div className="formGroup">
+                    <label>
+                        Background-image URL:
+                        <input
+                            ref={backgroundImageRef}
+                            type="text"
+                            id="background-image"
+                            onChange={handleSettingsChange}
+                        />
+                    </label>
+                    <sub>
+                        Upload your image to an image hosting service and paste
+                        here the image link
+                    </sub>
+                </div>
+                <div className="formGroup">
+                    <label>
+                        Text Color:
+                        <input
+                            ref={textColorRef}
+                            type="color"
+                            name="textColor"
+                            id="text-color"
+                            defaultValue={settings.textColor}
+                            onChange={handleSettingsChange}
+                        />
+                    </label>
+                </div>
+            </>
+        );
+    };
 
-                <button
-                    className="button"
-                    onClick={() => {
-                        this.saveSettings();
-                    }}
-                    disabled={!this.state.formChange}
-                >
-                    Apply
-                </button>
-                <hr />
-                <button
-                    className="button"
-                    onClick={() => {
-                        window.print();
-                    }}
-                >
+    const handleSaveSheet = () => {
+        onSave();
+    };
+
+    return (
+        <div id="settingsForm">
+            <h2>Layout settings</h2>
+            <fieldset className="formSquare">{renderLayoutForm()}</fieldset>
+
+            <h2>Style settings</h2>
+            <fieldset className="formSquare">{renderStyleForm()}</fieldset>
+
+            <hr />
+            <fieldset>
+                <button className="button" onClick={() => window.print()}>
                     Export as pdf
                 </button>
-                <button
-                    className="button"
-                    onClick={() => {
-                        this.saveHtml();
-                    }}
-                >
+                <button className="button" onClick={saveHtml}>
                     Export as HTML
                 </button>
                 <button
                     className="button"
                     onClick={() => {
-                        this.saveSettings();
-                        this.saveJson();
+                        saveJson();
                     }}
                 >
                     Export as JSON
                 </button>
-                <hr />
-                <button
-                    className="button"
-                    onClick={() => {
-                        this.importJsonRef.current.click();
-                    }}
-                >
-                    Import a character sheet
-                </button>
-                <input
-                    ref={this.importJsonRef}
-                    type="file"
-                    accept=".json"
-                    name="importJson"
-                    style={{ display: 'none' }}
-                    onChange={() => {
-                        this.importJson();
-                    }}
-                />
-            </div>
-        );
-    }
-}
+            </fieldset>
+
+            <hr />
+            <button
+                className="button"
+                onClick={() => importJsonRef.current.click()}
+            >
+                Import a character sheet
+            </button>
+            <input
+                ref={importJsonRef}
+                type="file"
+                accept=".json"
+                name="importJson"
+                style={{ display: 'none' }}
+                onChange={importJson}
+            />
+            <button
+                ref={saveSheetRef}
+                className="button"
+                onClick={handleSaveSheet}
+            >
+                Save
+            </button>
+        </div>
+    );
+};
 
 export default Settings;

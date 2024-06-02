@@ -7,7 +7,7 @@ const Home = () => {
     const [sheets, setSheets] = useState([]);
 
     useEffect(() => {
-        fetch('/api/sheets')
+        fetch('http://localhost:3050/api/sheetCollection')
             .then((response) => response.json())
             .then((data) => setSheets(data))
             .catch((error) => console.error('Error fetching sheets:', error));

@@ -210,6 +210,27 @@ class Builder extends Component {
         this.setState({ settings: newSettings });
     };
 
+    saveSheet = async () => {
+        const sheet = {
+            id : 'abc',
+            title: 'yesTitle',
+            layout: JSON.stringify(this.state.layout),
+            settings: JSON.stringify(this.state.settings),
+        };
+        try {
+            const response = await fetch('http://localhost:3050/api/sheet', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(sheet)
+            });
+            const data = await response.json();
+            console.log('Sheet created:', data);
+        } catch (error) {
+            console.error('Error creating sheet:', error);
+            console.error(sheet);
+        }
+    };
+
     render() {
         return (
             <div className="Builder page">
@@ -225,7 +246,7 @@ class Builder extends Component {
                         <div className="drop">{this.renderDropDiv()}</div>
                     </section>
                     <section id="sheetSettings">
-                        <Settings onSettingsSave={this.handleSettingsSave} />
+                        <Settings onSettingsSave={this.handleSettingsSave} onSave={this.saveSheet} />
                     </section>
                 </main>
             </div>

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const sheetSchema = new mongoose.Schema({
     id: { type: String, required: true, unique: true },
@@ -8,4 +8,5 @@ const sheetSchema = new mongoose.Schema({
     author: { type: String, required: true },
 });
 
-module.exports = mongoose.model('sheet', sheetSchema);
+const Sheet = mongoose.model('Sheet', sheetSchema);
+export default Sheet;

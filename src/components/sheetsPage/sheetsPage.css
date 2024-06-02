@@ -1,5 +1,5 @@
 .sheets {
-    color: black;
+    color: black !important;
     background: url('https://i.imgur.com/84cupji.png') repeat;
     display: flex;
 
