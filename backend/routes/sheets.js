@@ -1,7 +1,6 @@
 import express from 'express';
 import { nanoid } from 'nanoid';
 import Sheet from '../models/sheetModel.js';
-
 const router = express.Router();
 
 // Get all sheets
@@ -11,6 +10,26 @@ router.get('/sheetCollection', async (req, res) => {
         res.json(sheets);
     } catch (err) {
         res.status(500).json({ message: err.message });
+    }
+});
+
+router.get('/sheet/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        // Validate the ID format
+        if (id.length !== 10) {
+            return res.status(400).json({ message: 'Invalid sheet ID length' });
+        }
+
+        const sheet = await Sheet.findOne({ id });
+
+        if (!sheet) {
+            return res.status(404).json({ message: 'Sheet not found' });
+        }
+        res.json(sheet);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: error.message });
     }
 });
 

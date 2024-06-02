@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import GridLayout from 'react-grid-layout';
+import { useParams } from 'react-router-dom'; // Import the useParams hook
 
 //STYLES
 import './builderPage.css';
@@ -32,13 +33,42 @@ class Builder extends Component {
     }
 
     componentDidMount() {
-        const savedLayout = localStorage.getItem('BuilderLayout');
-        if (savedLayout) {
-            this.setState({ layout: JSON.parse(savedLayout) });
-        }
-        const savedSettings = localStorage.getItem('sheetSettings');
-        if (savedSettings) {
-            this.setState({ settings: JSON.parse(savedSettings) });
+        // Get the current URL
+        const currentUrl = window.location.pathname;
+
+        // Extract the id parameter from the URL
+        const id = currentUrl.split('/').pop();
+
+        // Check if id is not 'new'
+        if (id !== 'new') {
+            // Fetch the sheet data based on the ID
+            fetch(`http://localhost:3050/api/sheet/${id}`)
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch sheet data');
+                    }
+                    return response.json();
+                })
+                .then((sheetData) => {
+                    // Update state with the fetched sheet data
+                    this.setState({
+                        layout: JSON.parse(sheetData.layout),
+                        settings: JSON.parse(sheetData.settings),
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error fetching sheet data:', error);
+                });
+        } else {
+            // If id is 'new', load layout and settings from local storage
+            const savedLayout = localStorage.getItem('BuilderLayout');
+            if (savedLayout) {
+                this.setState({ layout: JSON.parse(savedLayout) });
+            }
+            const savedSettings = localStorage.getItem('sheetSettings');
+            if (savedSettings) {
+                this.setState({ settings: JSON.parse(savedSettings) });
+            }
         }
     }
 
@@ -106,7 +136,11 @@ class Builder extends Component {
                     return (
                         <div className="item" key={index}>
                             <div className="label">
-                                {item.name.replace(/([A-Z])/g, ' $1').trim() /*format "ComponentName" into "Component Name" */}
+                                {
+                                    item.name
+                                        .replace(/([A-Z])/g, ' $1')
+                                        .trim() /*format "ComponentName" into "Component Name" */
+                                }
                             </div>
                             <div className="draggable-slot">
                                 {this.renderComponent(item.name, index)}
@@ -118,7 +152,7 @@ class Builder extends Component {
                                         item.name,
                                         item.width,
                                         item.height,
-                                        item.label,
+                                        item.label
                                     )
                                 }
                             >
@@ -212,16 +246,19 @@ class Builder extends Component {
 
     saveSheet = async () => {
         const sheet = {
-            id : 'abc',
+            id: 'abc',
             title: 'yesTitle',
             layout: JSON.stringify(this.state.layout),
             settings: JSON.stringify(this.state.settings),
+            author: localStorage.getItem('author')
+                ? localStorage.getItem('author')
+                : '',
         };
         try {
             const response = await fetch('http://localhost:3050/api/sheet', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(sheet)
+                body: JSON.stringify(sheet),
             });
             const data = await response.json();
             console.log('Sheet created:', data);
@@ -246,7 +283,10 @@ class Builder extends Component {
                         <div className="drop">{this.renderDropDiv()}</div>
                     </section>
                     <section id="sheetSettings">
-                        <Settings onSettingsSave={this.handleSettingsSave} onSave={this.saveSheet} />
+                        <Settings
+                            onSettingsSave={this.handleSettingsSave}
+                            onSave={this.saveSheet}
+                        />
                     </section>
                 </main>
             </div>

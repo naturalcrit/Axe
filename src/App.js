@@ -10,7 +10,8 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/sheets" element={<Sheets />} />
-        <Route path='/builder' element={<Builder />}/>
+        <Route path='/builder/new' element={<Builder />}/>
+        <Route path='/builder/:id' element={<Builder />}/>
         {/* Define more routes here if needed */}
       </Routes>
     </Router>
