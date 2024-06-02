@@ -209,6 +209,10 @@ class Settings extends Component {
         window.location.reload();
     };
 
+    saveSheet = () => {
+        
+    };
+
     render() {
         return (
             <div id="settingsForm">
@@ -361,6 +365,15 @@ class Settings extends Component {
                         this.importJson();
                     }}
                 />
+                <button
+                    ref={this.saveSheetRef}
+                    className="button"
+                    onClick={() => {
+                        this.saveSheet();
+                    }}
+                >
+                    Save
+                </button>
             </div>
         );
     }

@@ -23,6 +23,7 @@ const Nav = () => {
             </div>
 
             <div className="navSection">
+                
                 <Link to="/" className="navItem">
                     Home
                 </Link>
