@@ -3,7 +3,9 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
-const PORT = process.env.PORT || 8050;
+const PORT = process.env.PORT || 3050;
+
+const sheetRoutes = require('./routes/sheets');
 
 app.use(cors());
 app.use(express.json());
@@ -19,5 +21,9 @@ mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
 app.get('/', (req, res) => {
   res.send('Hello from Express!');
 });
+
+
+app.use('/api', sheetRoutes);
+
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
