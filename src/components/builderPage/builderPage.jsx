@@ -7,38 +7,11 @@ import './sheet.css';
 import '../../../node_modules/react-grid-layout/css/styles.css';
 import '../../../node_modules/react-resizable/css/styles.css';
 
-//CS BLOCKS
-import LabelInput from '../draggables/labelInput/labelInput.jsx';
-import TextArea from '../draggables/textArea/textarea.jsx';
-import StatInput from '../draggables/statInput/statInput.jsx';
-import EmptySpace from '../draggables/emptySace/emptySpace.jsx';
-
-//OTHER COMPONENTS
+//COMPONENTS
 import Nav from '../nav/navBar';
 import Settings from '../sheetSettings/sheetSettings.jsx';
 
-const buildingBlocks = [
-    {
-        name: 'LabelInput',
-        width: 4,
-        height: 2,
-    },
-    {
-        name: 'TextArea',
-        width: 6,
-        height: 6,
-    },
-    {
-        name: 'StatInput',
-        width: 2,
-        height: 2,
-    },
-    {
-        name: 'EmptySpace',
-        width: 2,
-        height: 2,
-    },
-];
+import draggableComponents from '../draggables/draggables.json';
 
 class Builder extends Component {
     constructor(props) {
@@ -69,7 +42,7 @@ class Builder extends Component {
         }
     }
 
-    addNewItem = (componentName, width, height) => {
+    addNewItem = (componentName, width, height, label) => {
         //console.log(component);
         const layout = this.state.layout;
         const newItem = {
@@ -79,6 +52,7 @@ class Builder extends Component {
             w: width,
             h: height,
             componentName: componentName,
+            label: label,
         };
         this.setState({ layout: [...layout, newItem] });
     };
@@ -109,35 +83,42 @@ class Builder extends Component {
     };
 
     renderComponent = (name, key) => {
-        const components = {
-            LabelInput: <LabelInput key={key} />,
-            TextArea: <TextArea key={key} />,
-            StatInput: <StatInput key={key} />,
-            EmptySpace: <EmptySpace key={key} />,
-        };
+        const components = {};
 
-        return components[name] || null;
+        // Dynamically import components based on the draggables JSON
+        draggableComponents.forEach((item) => {
+            components[item.name] = React.lazy(() =>
+                import(`../draggables/${item.name}/${item.name}.jsx`)
+            );
+        });
+        const Component = components[name];
+        return (
+            <React.Suspense fallback={<div>Loading...</div>}>
+                <Component key={key} />
+            </React.Suspense>
+        );
     };
 
     renderPicker = () => {
         return (
             <div className="picker">
-                {buildingBlocks.map((block, index) => {
+                {draggableComponents.map((item, index) => {
                     return (
                         <div className="item" key={index}>
                             <div className="label">
-                                {block.name.replace(/([A-Z])/g, ' $1').trim()}
+                                {item.name.replace(/([A-Z])/g, ' $1').trim() /*format "ComponentName" into "Component Name" */}
                             </div>
                             <div className="draggable-slot">
-                                {this.renderComponent(block.name, index)}
+                                {this.renderComponent(item.name, index)}
                             </div>
                             <button
                                 className="button addItem"
                                 onClick={() =>
                                     this.addNewItem(
-                                        block.name,
-                                        block.width,
-                                        block.height
+                                        item.name,
+                                        item.width,
+                                        item.height,
+                                        item.label,
                                     )
                                 }
                             >

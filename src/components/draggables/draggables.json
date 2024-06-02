@@ -1,0 +1,22 @@
+[
+    {
+        "name": "LabelInput",
+        "width": 4,
+        "height": 2
+    },
+    {
+        "name": "TextArea",
+        "width": 6,
+        "height": 6
+    },
+    {
+        "name": "StatInput",
+        "width": 2,
+        "height": 2
+    },
+    {
+        "name": "EmptySpace",
+        "width": 2,
+        "height": 2
+    }
+]
