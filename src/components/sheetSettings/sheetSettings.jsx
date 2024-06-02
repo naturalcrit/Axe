@@ -18,7 +18,6 @@ const Settings = ({ onSettingsSave }) => {
         background: '#ffffff',
         textColor: '#000000',
     });
-    const [formChange, setFormChange] = useState(false);
 
     useEffect(() => {
         const savedSettings = localStorage.getItem(SETTINGSKEY);
@@ -66,34 +65,34 @@ const Settings = ({ onSettingsSave }) => {
         }
     };
 
-    const saveSettings = () => {
-        const form = document.getElementById('settingsForm');
+    const handleSettingsChange = () => {
         const newSettings = {
-            columns: Number(form.querySelector('#columns').value) || 12,
-            size: form.querySelector('#size').value || 'Letter',
-            width: form.querySelector('#width')
-                ? Number(form.querySelector('#width').value)
-                : null,
-            height: form.querySelector('#height')
-                ? Number(form.querySelector('#height').value)
-                : null,
-            rowHeight: Number(form.querySelector('#rowHeight').value) || 40,
+            columns: Number(columnsRef.current.value) || 12,
+            size: sizeRef.current.value || 'Letter',
+            width: widthRef.current ? Number(widthRef.current.value) : null,
+            height: heightRef.current ? Number(heightRef.current.value) : null,
+            rowHeight: Number(rowHeightRef.current.value) || 40,
             background:
-                form.querySelector('#background-image').value !== ''
-                    ? `url('${form.querySelector('#background-image').value}')`
-                    : form.querySelector('#background-color').value,
-            textColor: form.querySelector('#text-color').value,
+                backgroundImageRef.current.value !== ''
+                    ? `url('${backgroundImageRef.current.value}')`
+                    : backgroundColorRef.current.value,
+            textColor: textColorRef.current.value,
         };
 
         localStorage.setItem(SETTINGSKEY, JSON.stringify(newSettings));
         setSettings(newSettings);
-        setFormChange(false);
         onSettingsSave(newSettings);
     };
 
-    const handleSettingsChange = () => {
-        setFormChange(true);
-    };
+    // Define refs outside the component
+    const columnsRef = useRef(null);
+    const sizeRef = useRef(null);
+    const widthRef = useRef(null);
+    const heightRef = useRef(null);
+    const rowHeightRef = useRef(null);
+    const backgroundImageRef = useRef(null);
+    const backgroundColorRef = useRef(null);
+    const textColorRef = useRef(null);
 
     const saveHtml = async () => {
         const sheetContent = document.querySelector('.layout.sheet').outerHTML;
@@ -203,6 +202,7 @@ const Settings = ({ onSettingsSave }) => {
                     <label>
                         Columns:
                         <input
+                            ref={columnsRef}
                             id="columns"
                             type="number"
                             name="columns"
@@ -216,6 +216,7 @@ const Settings = ({ onSettingsSave }) => {
                     <label>
                         Row height:
                         <input
+                            ref={rowHeightRef}
                             id="rowHeight"
                             type="number"
                             name="rowHeight"
@@ -229,6 +230,7 @@ const Settings = ({ onSettingsSave }) => {
                     <label>
                         Page size:
                         <select
+                            ref={sizeRef}
                             id="size"
                             defaultValue={settings.size}
                             onChange={(e) => {
@@ -259,6 +261,7 @@ const Settings = ({ onSettingsSave }) => {
                     <label>
                         Background-color:
                         <input
+                            ref={backgroundColorRef}
                             type="color"
                             name="background-color"
                             id="background-color"
@@ -271,6 +274,7 @@ const Settings = ({ onSettingsSave }) => {
                     <label>
                         Background-image URL:
                         <input
+                            ref={backgroundImageRef}
                             type="text"
                             id="background-image"
                             onChange={handleSettingsChange}
@@ -285,6 +289,7 @@ const Settings = ({ onSettingsSave }) => {
                     <label>
                         Text Color:
                         <input
+                            ref={textColorRef}
                             type="color"
                             name="textColor"
                             id="text-color"
@@ -302,34 +307,29 @@ const Settings = ({ onSettingsSave }) => {
     return (
         <div id="settingsForm">
             <h2>Layout settings</h2>
-            <fieldset className="styleForm">{renderLayoutForm()}</fieldset>
+            <fieldset className="formSquare">{renderLayoutForm()}</fieldset>
 
             <h2>Style settings</h2>
-            <fieldset>{renderStyleForm()}</fieldset>
+            <fieldset className="formSquare">{renderStyleForm()}</fieldset>
 
-            <button
-                className="button"
-                onClick={saveSettings}
-                disabled={!formChange}
-            >
-                Apply
-            </button>
             <hr />
-            <button className="button" onClick={() => window.print()}>
-                Export as pdf
-            </button>
-            <button className="button" onClick={saveHtml}>
-                Export as HTML
-            </button>
-            <button
-                className="button"
-                onClick={() => {
-                    saveSettings();
-                    saveJson();
-                }}
-            >
-                Export as JSON
-            </button>
+            <fieldset>
+                <button className="button" onClick={() => window.print()}>
+                    Export as pdf
+                </button>
+                <button className="button" onClick={saveHtml}>
+                    Export as HTML
+                </button>
+                <button
+                    className="button"
+                    onClick={() => {
+                        saveJson();
+                    }}
+                >
+                    Export as JSON
+                </button>
+            </fieldset>
+
             <hr />
             <button
                 className="button"

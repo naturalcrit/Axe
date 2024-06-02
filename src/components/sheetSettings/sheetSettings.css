@@ -7,7 +7,7 @@
     #settingsForm {
 
         fieldset {
-            border:1px solid;
+            border: none;
             margin-bottom: 20px;
 
             .formGroup {
@@ -23,15 +23,20 @@
                     grid-template-columns: auto 1fr;
                     text-wrap: nowrap;
                 }
-                input,select {
-                    font-size:12px;
+
+                input, select {
+                    font-size: 12px;
                 }
-                
+
+            }
+
+            &.formSquare {
+                border: 1px solid;
             }
         }
 
         .button {
-            margin:5px;
+            margin: 5px;
         }
     }
 }
