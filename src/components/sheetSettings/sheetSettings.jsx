@@ -4,7 +4,7 @@ import './sheetSettings.css';
 const SETTINGSKEY = 'sheetSettings';
 const LAYOUTKEY = 'BuilderLayout';
 
-const Settings = ({ onSettingsSave }) => {
+const Settings = ({ onSettingsSave, onSave }) => {
     const importJsonRef = useRef();
     const saveSheetRef = useRef();
 
@@ -302,7 +302,9 @@ const Settings = ({ onSettingsSave }) => {
         );
     };
 
-    const saveSheet = () => {};
+    const handleSaveSheet = () => {
+        onSave();
+    };
 
     return (
         <div id="settingsForm">
@@ -348,9 +350,7 @@ const Settings = ({ onSettingsSave }) => {
             <button
                 ref={saveSheetRef}
                 className="button"
-                onClick={() => {
-                    saveSheet();
-                }}
+                onClick={handleSaveSheet}
             >
                 Save
             </button>
