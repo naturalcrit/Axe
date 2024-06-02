@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import './sheetsPage.css';
 
 import Nav from '../nav/navBar';
 
@@ -31,10 +32,10 @@ const Home = () => {
     };
 
     return (
-        <div className="home page">
+        <div className="sheets page">
             <Nav />
             <main className="content">
-                <section id="about">
+                <section id="sheetList">
                     <h1>Your sheets</h1>
                     {renderSheets()}
                 </section>
