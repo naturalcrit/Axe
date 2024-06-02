@@ -1,0 +1,9 @@
+.sheets {
+    color: black;
+    background: url('https://i.imgur.com/84cupji.png') repeat;
+    display: flex;
+
+    #sheetList {
+        padding:50px;
+    }
+}
