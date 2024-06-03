@@ -18,8 +18,8 @@
             height: 100%;
             text-decoration: unset;
             border-right: 1px solid #666;
+            background: none;
             color: white;
-            border-radius: 2px;
             text-align: center;
             text-transform: uppercase;
             transition: background-color .25s ease;

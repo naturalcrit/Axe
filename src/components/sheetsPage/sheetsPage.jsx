@@ -25,7 +25,7 @@ const Home = () => {
         return (
             <ul>
                 {sheets.map((sheet) => (
-                    <li key={sheet.id}>{sheet.title}</li>
+                    <li><a href={`/builder/${sheet.id}`} key={sheet.id}>{sheet.title}</a> by {sheet.author}</li>
                 ))}
             </ul>
         );
