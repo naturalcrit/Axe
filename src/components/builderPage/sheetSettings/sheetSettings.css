@@ -1,9 +1,5 @@
-#sheetSettings {
-    padding-inline: 20px;
-    background: #d3d3d3;
-    height: 96.8vh;
-    color: black;
-
+#sheetOptions {
+    
     #settingsForm {
 
         fieldset {

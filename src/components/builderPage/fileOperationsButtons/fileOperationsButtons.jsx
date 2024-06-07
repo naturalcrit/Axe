@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 const SETTINGSKEY = 'sheetSettings';
 const LAYOUTKEY = 'BuilderLayout';
 
-const FileOperationsButtons = ({ onSettingsSave, onSave, onRender }) => {
+const FileOperationsButtons = ({ onSave }) => {
     const importJsonRef = useRef();
     const saveSheetRef = useRef();
 
@@ -25,7 +25,7 @@ const FileOperationsButtons = ({ onSettingsSave, onSave, onRender }) => {
         } else {
             localStorage.setItem(SETTINGSKEY, JSON.stringify(settings));
         }
-    }, []);
+    },[]);
 
     const saveHtml = async () => {
         const sheetContent = document.querySelector('.layout.sheet').outerHTML;

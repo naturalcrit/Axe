@@ -1,4 +1,11 @@
-import React, { useState, useCallback, useEffect, lazy, Suspense } from 'react';
+import React, {
+    useState,
+    useCallback,
+    useEffect,
+    lazy,
+    Suspense,
+    useRef,
+} from 'react';
 import GridLayout from 'react-grid-layout';
 
 // STYLES
@@ -12,6 +19,7 @@ import Nav from '../nav/navBar';
 import Settings from './sheetSettings/sheetSettings';
 import draggableComponents from '../draggables/draggables.json';
 import FileOperationsButtons from './fileOperationsButtons/fileOperationsButtons';
+import StyleEditor from './styleEditor/styleEditor';
 
 const Builder = () => {
     const [layout, setLayout] = useState([]);
@@ -209,6 +217,24 @@ const Builder = () => {
         );
     };
 
+    const settingsTabButton = useRef(null);
+    const styleEditorTabButton = useRef(null);
+    const settingsTab = useRef(null);
+    const styleEditorTab = useRef(null);
+
+    const changeTab = (e) => {
+        const tab = e.target.className.split(' ')[0];
+
+        if (tab === 'settings') {
+            settingsTab.current.classList.add('active');
+            styleEditorTab.current.classList.remove('active');
+        }
+        if (tab === 'styleEditor') {
+            styleEditorTab.current.classList.add('active');
+            settingsTab.current.classList.remove('active');
+        }
+    };
+
     return (
         <div className="Builder page">
             <Nav />
@@ -221,11 +247,34 @@ const Builder = () => {
                     <h1>Create your own character sheet</h1>
                     <div className="drop">{renderDropDiv()}</div>
                 </section>
-                <aside id="sheetSettings">
-                    <Settings
-                        settings={settings}
-                        onSettingsSave={handleSettingsSave}
-                    />
+                <aside id="sheetOptions">
+                    <nav className="tabButtons">
+                        <button
+                            className="settings button"
+                            ref={settingsTabButton}
+                            onClick={changeTab}
+                        >
+                            Settings
+                        </button>
+                        <button
+                            className="styleEditor button"
+                            ref={styleEditorTabButton}
+                            onClick={changeTab}
+                        >
+                            Styles
+                        </button>
+                    </nav>
+                    <div className="tabs">
+                        <div className="tab settings active" ref={settingsTab}>
+                            <Settings
+                                settings={settings}
+                                onSettingsSave={handleSettingsSave}
+                            />
+                        </div>
+                        <div className="tab styleEditor" ref={styleEditorTab}>
+                            <StyleEditor />
+                        </div>
+                    </div>
                     <FileOperationsButtons onSave={saveSheet} />
                 </aside>
             </main>
