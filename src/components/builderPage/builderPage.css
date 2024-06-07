@@ -30,7 +30,7 @@
                     flex-wrap: wrap;
                     align-items: center;
                     row-gap: 0;
-                    column-gap: 10px;
+                    column-gap: 0;
 
                     .label {
                         flex: 1 0 100%;
@@ -53,9 +53,11 @@
                             height: 100%;
                         }
 
-                        .addItem {
-                            flex: 1 0 auto;
-                        }
+
+                    }
+
+                    .addItem {
+                        flex: 1 0 auto;
                     }
                 }
             }
@@ -150,6 +152,47 @@
 
                     &.react-grid-placeholder {
                         background-color: #CCC
+                    }
+                }
+            }
+        }
+
+        #sheetOptions {
+            padding-inline: 20px;
+            background: #d3d3d3;
+            height: 96.8vh;
+            color: black;
+            width: 450px;
+            display: grid;
+            grid-template-rows: 50px 1fr 150px;
+
+            .tabs {
+                .tab {
+                    display: none;
+
+                    &.active {
+                        display: block;
+                    }
+
+                    height: 95%;
+                }
+
+            }
+
+            .codeEditor {
+                background: white;
+                border: 2px solid black;
+                height: 100%;
+                overflow-y:auto;
+
+                .cm-focused {
+                    outline:none;
+
+                    .cm-activeLine {
+                        filter: brightness(50%);
+                    }
+                    .cm-activeLineGutter {
+                        filter: brightness(80%);
                     }
                 }
             }

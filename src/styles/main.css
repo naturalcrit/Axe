@@ -75,6 +75,7 @@ button:disabled {
     text-transform: uppercase;
     border: none;
     outline: none;
+    margin: 5px;
 
     &:hover {
         background-color: var(--greenLight);

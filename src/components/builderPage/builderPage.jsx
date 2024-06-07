@@ -1,47 +1,48 @@
-import React, { Component } from 'react';
+import React, {
+    useState,
+    useCallback,
+    useEffect,
+    lazy,
+    Suspense,
+    useRef,
+} from 'react';
 import GridLayout from 'react-grid-layout';
-import { useParams } from 'react-router-dom'; // Import the useParams hook
 
-//STYLES
+// STYLES
 import './builderPage.css';
 import './sheet.css';
 import '../../../node_modules/react-grid-layout/css/styles.css';
 import '../../../node_modules/react-resizable/css/styles.css';
 
-//COMPONENTS
+// COMPONENTS
 import Nav from '../nav/navBar';
-import Settings from '../sheetSettings/sheetSettings.jsx';
-
+import Settings from './sheetSettings/sheetSettings';
 import draggableComponents from '../draggables/draggables.json';
+import FileOperationsButtons from './fileOperationsButtons/fileOperationsButtons';
+import StyleEditor from './styleEditor/styleEditor';
 
-class Builder extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            layout: [],
-            settings: {
-                name: 'Character sheet',
-                columns: 12,
-                rowHeight: 40,
-                size: 'Letter',
-                height: null,
-                width: null,
-                background: '#ffffff',
-                textColor: '#000000',
-            },
-        };
-    }
+const Builder = () => {
+    const [layout, setLayout] = useState([]);
+    const [settings, setSettings] = useState({
+        name: 'Character sheet',
+        columns: 12,
+        rowHeight: 40,
+        size: 'letter',
+        height: 1056,
+        width: 816,
+        background: '#ffffff',
+        textColor: '#000000',
+    });
 
-    componentDidMount() {
-        // Get the current URL
+    const handleSettingsSave = useCallback((newSettings) => {
+        setSettings(newSettings);
+    }, []);
+
+    useEffect(() => {
         const currentUrl = window.location.pathname;
-
-        // Extract the id parameter from the URL
         const id = currentUrl.split('/').pop();
 
-        // Check if id is not 'new'
         if (id !== 'new') {
-            // Fetch the sheet data based on the ID
             fetch(`http://localhost:3050/api/sheet/${id}`)
                 .then((response) => {
                     if (!response.ok) {
@@ -50,209 +51,121 @@ class Builder extends Component {
                     return response.json();
                 })
                 .then((sheetData) => {
-                    // Update state with the fetched sheet data
-                    this.setState({
-                        layout: JSON.parse(sheetData.layout),
-                        settings: JSON.parse(sheetData.settings),
-                    });
+                    setLayout(JSON.parse(sheetData.layout));
+                    setSettings(JSON.parse(sheetData.settings));
                 })
                 .catch((error) => {
                     console.error('Error fetching sheet data:', error);
                 });
         } else {
-            // If id is 'new', load layout and settings from local storage
             const savedLayout = localStorage.getItem('BuilderLayout');
             if (savedLayout) {
-                this.setState({ layout: JSON.parse(savedLayout) });
+                setLayout(JSON.parse(savedLayout));
             }
             const savedSettings = localStorage.getItem('sheetSettings');
             if (savedSettings) {
-                this.setState({ settings: JSON.parse(savedSettings) });
+                setSettings(JSON.parse(savedSettings));
             }
         }
-    }
+    }, []);
 
-    addNewItem = (componentName, width, height, label) => {
-        //console.log(component);
-        const layout = this.state.layout;
+    const addNewItem = (componentName, width, height, label) => {
         const newItem = {
             i: `item-${layout.length + 1}`,
             x: 0,
             y: 0,
             w: width,
             h: height,
-            componentName: componentName,
-            label: label,
+            componentName,
+            label,
         };
-        this.setState({ layout: [...layout, newItem] });
+        setLayout([...layout, newItem]);
     };
 
-    deleteItem = (itemId) => {
-        const { layout } = this.state;
+    const deleteItem = (itemId) => {
         const updatedLayout = layout
             .filter((item) => item.i !== itemId)
             .map((item, index) => ({
                 ...item,
-                i: `item-${index}`, // Reassigning IDs based on index
+                i: `item-${index}`,
             }));
-        this.setState({ layout: updatedLayout });
+        setLayout(updatedLayout);
     };
 
-    saveLayout = (newLayout) => {
-        const { layout } = this.state;
+    const saveLayout = (newLayout) => {
         const updatedLayout = newLayout.map((item, index) => ({
             ...layout[index],
             ...item,
-            i: `item-${index}`, // Reassigning IDs based on index
+            i: `item-${index}`,
         }));
 
         localStorage.setItem('BuilderLayout', JSON.stringify(updatedLayout));
-
-        //console.log("Updated Layout:", updatedLayout);
-        this.setState({ layout: updatedLayout });
+        setLayout(updatedLayout);
     };
 
-    renderComponent = (name, key) => {
+    const renderComponent = (name, key) => {
         const components = {};
 
-        // Dynamically import components based on the draggables JSON
         draggableComponents.forEach((item) => {
-            components[item.name] = React.lazy(() =>
+            components[item.name] = lazy(() =>
                 import(`../draggables/${item.name}/${item.name}.jsx`)
             );
         });
         const Component = components[name];
         return (
-            <React.Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<div>Loading...</div>}>
                 <Component key={key} />
-            </React.Suspense>
+            </Suspense>
         );
     };
 
-    renderPicker = () => {
-        return (
-            <div className="picker">
-                {draggableComponents.map((item, index) => {
-                    return (
-                        <div className="item" key={index}>
-                            <div className="label">
-                                {
-                                    item.name
-                                        .replace(/([A-Z])/g, ' $1')
-                                        .trim() /*format "ComponentName" into "Component Name" */
-                                }
-                            </div>
-                            <div className="draggable-slot">
-                                {this.renderComponent(item.name, index)}
-                            </div>
-                            <button
-                                className="button addItem"
-                                onClick={() =>
-                                    this.addNewItem(
-                                        item.name,
-                                        item.width,
-                                        item.height,
-                                        item.label
-                                    )
-                                }
-                            >
-                                Add
-                            </button>
-                        </div>
-                    );
-                })}
-            </div>
-        );
-    };
+    const renderPicker = () => (
+        <div className="picker">
+            {draggableComponents.map((item, index) => (
+                <div className="item" key={index}>
+                    <div className="label">
+                        {item.name.replace(/([A-Z])/g, ' $1').trim()}
+                    </div>
+                    <div className="draggable-slot">
+                        {renderComponent(item.name, index)}
+                    </div>
+                    <button
+                        className="button addItem"
+                        onClick={() =>
+                            addNewItem(
+                                item.name,
+                                item.width,
+                                item.height,
+                                item.label
+                            )
+                        }
+                    >
+                        Add
+                    </button>
+                </div>
+            ))}
+        </div>
+    );
 
-    renderDropDiv = () => {
-        const layout = this.state.layout;
-        const {
-            columns,
-            rowHeight,
-            size,
-            width,
-            height,
-            background,
-            textColor,
-        } = this.state.settings;
-
-        const getSize = (side) => {
-            switch (side) {
-                case 'height':
-                    switch (size) {
-                        case 'letter':
-                            return 1100;
-                        case 'A4':
-                            return 1169;
-                        case 'A5':
-                            return 827;
-                        default:
-                            return height !== null ? height : 1056;
-                    }
-                case 'width':
-                    switch (size) {
-                        case 'letter':
-                            return 816;
-                        case 'A4':
-                            return 827;
-                        case 'A5':
-                            return 583;
-                        default:
-                            return width !== null ? width : 816;
-                    }
-                default:
-                    return side === 'height' ? 1100 : 816;
-            }
+    const getSize = (side) => {
+        const { size, height, width } = settings;
+        const sizes = {
+            letter: { width: 816, height: 1100 },
+            A4: { width: 827, height: 1169 },
+            A5: { width: 583, height: 827 },
+            custom: { width: width, height: height },
         };
 
-        return (
-            <GridLayout
-                className="layout sheet"
-                layout={layout}
-                cols={columns}
-                rowHeight={rowHeight}
-                width={getSize('width')}
-                onLayoutChange={this.saveLayout}
-                compactType={null}
-                preventCollision={true}
-                style={{
-                    width: getSize('width'),
-                    height: getSize('height'),
-                    background: background,
-                    color: textColor,
-                }}
-            >
-                {layout.map((item) => (
-                    <div className="draggable-item" key={item.i}>
-                        <button
-                            className="deleteItem"
-                            onClick={() => this.deleteItem(item.i)}
-                            onMouseDown={(event) => event.stopPropagation()}
-                        >
-                            x
-                        </button>
-                        {this.renderComponent(item.componentName)}
-                    </div>
-                ))}
-            </GridLayout>
-        );
+        return sizes[size] ? sizes[size][side] : side === 'height' ? 1056 : 816;
     };
 
-    handleSettingsSave = (newSettings) => {
-        // Update parent component state with new settings
-        this.setState({ settings: newSettings });
-    };
-
-    saveSheet = async () => {
+    const saveSheet = async () => {
         const sheet = {
             id: 'abc',
             title: 'yesTitle',
-            layout: JSON.stringify(this.state.layout),
-            settings: JSON.stringify(this.state.settings),
-            author: localStorage.getItem('author')
-                ? localStorage.getItem('author')
-                : '',
+            layout: JSON.stringify(layout),
+            settings: JSON.stringify(settings),
+            author: localStorage.getItem('author') || '',
         };
         try {
             const response = await fetch('http://localhost:3050/api/sheet', {
@@ -268,30 +181,105 @@ class Builder extends Component {
         }
     };
 
-    render() {
-        return (
-            <div className="Builder page">
-                <Nav />
+    const renderDropDiv = () => {
+        const { columns, rowHeight, background, textColor } = settings;
 
-                <main className="content">
-                    <aside className="sidebar">
-                        <h2>Pick your component</h2>
-                        {this.renderPicker()}
-                    </aside>
-                    <section id="create">
-                        <h1>Create your own character sheet</h1>
-                        <div className="drop">{this.renderDropDiv()}</div>
-                    </section>
-                    <section id="sheetSettings">
-                        <Settings
-                            onSettingsSave={this.handleSettingsSave}
-                            onSave={this.saveSheet}
-                        />
-                    </section>
-                </main>
-            </div>
+        return (
+            <GridLayout
+                className="layout sheet"
+                layout={layout}
+                cols={columns}
+                rowHeight={rowHeight}
+                width={getSize('width')}
+                onLayoutChange={saveLayout}
+                compactType={null}
+                preventCollision
+                style={{
+                    width: getSize('width'),
+                    height: getSize('height'),
+                    background,
+                    color: textColor,
+                }}
+            >
+                {layout.map((item) => (
+                    <div className="draggable-item" key={item.i}>
+                        <button
+                            className="deleteItem"
+                            onClick={() => deleteItem(item.i)}
+                            onMouseDown={(event) => event.stopPropagation()}
+                        >
+                            x
+                        </button>
+                        {renderComponent(item.componentName)}
+                    </div>
+                ))}
+            </GridLayout>
         );
-    }
-}
+    };
+
+    const settingsTabButton = useRef(null);
+    const styleEditorTabButton = useRef(null);
+    const settingsTab = useRef(null);
+    const styleEditorTab = useRef(null);
+
+    const changeTab = (e) => {
+        const tab = e.target.className.split(' ')[0];
+
+        if (tab === 'settings') {
+            settingsTab.current.classList.add('active');
+            styleEditorTab.current.classList.remove('active');
+        }
+        if (tab === 'styleEditor') {
+            styleEditorTab.current.classList.add('active');
+            settingsTab.current.classList.remove('active');
+        }
+    };
+
+    return (
+        <div className="Builder page">
+            <Nav />
+            <main className="content">
+                <aside className="sidebar">
+                    <h2>Pick your component</h2>
+                    {renderPicker()}
+                </aside>
+                <section id="create">
+                    <h1>Create your own character sheet</h1>
+                    <div className="drop">{renderDropDiv()}</div>
+                </section>
+                <aside id="sheetOptions">
+                    <nav className="tabButtons">
+                        <button
+                            className="settings button"
+                            ref={settingsTabButton}
+                            onClick={changeTab}
+                        >
+                            Settings
+                        </button>
+                        <button
+                            className="styleEditor button"
+                            ref={styleEditorTabButton}
+                            onClick={changeTab}
+                        >
+                            Styles
+                        </button>
+                    </nav>
+                    <div className="tabs">
+                        <div className="tab settings active" ref={settingsTab}>
+                            <Settings
+                                settings={settings}
+                                onSettingsSave={handleSettingsSave}
+                            />
+                        </div>
+                        <div className="tab styleEditor" ref={styleEditorTab}>
+                            <StyleEditor />
+                        </div>
+                    </div>
+                    <FileOperationsButtons onSave={saveSheet} />
+                </aside>
+            </main>
+        </div>
+    );
+};
 
 export default Builder;
