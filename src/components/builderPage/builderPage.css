@@ -30,7 +30,7 @@
                     flex-wrap: wrap;
                     align-items: center;
                     row-gap: 0;
-                    column-gap: 10px;
+                    column-gap: 0;
 
                     .label {
                         flex: 1 0 100%;
@@ -53,9 +53,10 @@
                             height: 100%;
                         }
 
-                        .addItem {
-                            flex: 1 0 auto;
-                        }
+                        
+                    }
+                    .addItem {
+                        flex: 1 0 auto;
                     }
                 }
             }
