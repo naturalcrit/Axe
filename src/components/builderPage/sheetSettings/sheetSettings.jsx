@@ -11,23 +11,9 @@ import './sheetSettings.css';
 
 import { BuilderContext } from '../builderContext';
 
-const SETTINGSKEY = 'sheetSettings';
-
 const Settings = ({}) => {
-    const {
-        layout,
-        style,
-        settings,
-        setLayout,
-        setStyle,
-        setSettings,
-        addNewItem,
-        deleteItem,
-        saveLayout,
-        STYLEKEY,
-        SETTINGSKEY,
-        LAYOUTKEY,
-    } = useContext(BuilderContext);
+    const { id, settings, setSettings, SETTINGSKEY } =
+        useContext(BuilderContext);
 
     const handleSettingsChange = (event) => {
         const { name, value } = event.target;
@@ -39,7 +25,10 @@ const Settings = ({}) => {
                         ? Number(value)
                         : value,
             };
-            localStorage.setItem(SETTINGSKEY, JSON.stringify(newSettings));
+            if (!id) {
+                localStorage.setItem(SETTINGSKEY, JSON.stringify(newSettings));
+            }
+
             return newSettings;
         });
     };
@@ -51,19 +40,20 @@ const Settings = ({}) => {
                 ...prevSettings,
                 [name]: Number(value) >= 300 ? Number(value) : null,
             };
-            localStorage.setItem(SETTINGSKEY, JSON.stringify(newSettings));
+            if (!id) {
+                localStorage.setItem(SETTINGSKEY, JSON.stringify(newSettings));
+            }
+
             return newSettings;
         });
     };
 
+    const titleRef = useRef(null);
     const columnsRef = useRef(null);
     const sizeRef = useRef(null);
     const widthRef = useRef(null);
     const heightRef = useRef(null);
     const rowHeightRef = useRef(null);
-    const backgroundImageRef = useRef(null);
-    const backgroundColorRef = useRef(null);
-    const textColorRef = useRef(null);
 
     const displayCustomInputs = () => {
         if (settings.size === 'custom') {
@@ -160,61 +150,25 @@ const Settings = ({}) => {
         );
     };
 
-    const renderStyleForm = () => {
-        return (
-            <>
-                <div className="formGroup">
-                    <label>
-                        Background-color:
-                        <input
-                            ref={backgroundColorRef}
-                            type="color"
-                            name="background-color"
-                            id="background-color"
-                            defaultValue={settings.background}
-                            onChange={handleSettingsChange}
-                        />
-                    </label>
-                </div>
-                <div className="formGroup">
-                    <label>
-                        Background-image URL:
-                        <input
-                            ref={backgroundImageRef}
-                            type="text"
-                            id="background-image"
-                            onChange={handleSettingsChange}
-                        />
-                    </label>
-                    <sub>
-                        Upload your image to an image hosting service and paste
-                        here the image link
-                    </sub>
-                </div>
-                <div className="formGroup">
-                    <label>
-                        Text Color:
-                        <input
-                            ref={textColorRef}
-                            type="color"
-                            name="textColor"
-                            id="text-color"
-                            defaultValue={settings.textColor}
-                            onChange={handleSettingsChange}
-                        />
-                    </label>
-                </div>
-            </>
-        );
-    };
-
     return (
         <div id="settingsForm">
-            <h2>Layout settings</h2>
+            <h3>Properties</h3>
+            <div className="formGroup">
+                    <label>
+                        Title:
+                        <input
+                            ref={titleRef}
+                            id="title"
+                            type="text"
+                            name="title"
+                            min={3}
+                            defaultValue={settings.title}
+                            onChange={handleSettingsChange}
+                        />
+                    </label>
+                </div>
+            <h3>Layout settings</h3>
             <fieldset className="formSquare">{renderLayoutForm()}</fieldset>
-
-            <h2>Style settings</h2>
-            <fieldset className="formSquare">{renderStyleForm()}</fieldset>
         </div>
     );
 };

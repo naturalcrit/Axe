@@ -8,13 +8,12 @@ const FileOperationsButtons = ({ onSave }) => {
     const saveSheetRef = useRef();
 
     const {
+        id,
         layout,
+        setLayout,
         style,
         settings,
         setSettings,
-        STYLEKEY,
-        SETTINGSKEY,
-        LAYOUTKEY,
     } = useContext(BuilderContext);
 
     const { logged, setLogged, author, setAuthor, login, logout } =
@@ -56,7 +55,7 @@ const FileOperationsButtons = ({ onSave }) => {
         const htmlWithStyles = `
             <html>
                 <head>
-                    <title>Custom Character Sheet</title>
+                    <title>${settings.title}</title>
                     ${headContent}
                 </head>
                 <body>
@@ -89,7 +88,7 @@ const FileOperationsButtons = ({ onSave }) => {
         const blob = new Blob([jsonContent], { type: 'application/json' });
         const element = document.createElement('a');
         element.href = window.URL.createObjectURL(blob);
-        element.download = 'exportedData.json';
+        element.download = `${settings.title}.json`;
         element.style.display = 'none';
         document.body.appendChild(element);
         element.click();
@@ -104,27 +103,18 @@ const FileOperationsButtons = ({ onSave }) => {
             const jsonContent = event.target.result;
             const parsedJson = JSON.parse(jsonContent);
 
-            window.localStorage.setItem(
-                LAYOUTKEY,
-                JSON.stringify(parsedJson[0])
-            );
-            window.localStorage.setItem(
-                SETTINGSKEY,
-                JSON.stringify(parsedJson[1])
-            );
+            setLayout(JSON.stringify(parsedJson[0]));
+            setSettings(JSON.stringify(parsedJson[1]));
         };
         reader.readAsText(localJson);
         window.location.reload();
     };
 
     const saveSheet = async () => {
-        const styleInStorage = window.localStorage.getItem(STYLEKEY);
-
         const sheet = {
-            id: 'abc',
-            title: 'yesTitle',
+            id: id,
             layout: JSON.stringify(layout),
-            style: styleInStorage,
+            style: style,
             settings: JSON.stringify(settings),
             author: localStorage.getItem('author') || '',
         };

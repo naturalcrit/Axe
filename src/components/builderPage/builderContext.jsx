@@ -7,11 +7,12 @@ const SETTINGSKEY = 'sheetSettings';
 const LAYOUTKEY = 'builderLayout';
 
 export const BuilderProvider = ({ children }) => {
-    const [id, setId] = useState(null);
+    const urlId = window.location.pathname.match(/\/([^/]+)\/?$/)[1];
+    const [id, setId] = useState(urlId);
     const [layout, setLayout] = useState([]);
     const [style, setStyle] = useState(null);
     const [settings, setSettings] = useState({
-        name: 'Character sheet',
+        title: 'Character sheet',
         columns: 12,
         rowHeight: 40,
         size: 'letter',
@@ -51,8 +52,9 @@ export const BuilderProvider = ({ children }) => {
             ...item,
             i: `item-${index}`,
         }));
-
-        localStorage.setItem(LAYOUTKEY, JSON.stringify(updatedLayout));
+        if (!id) {
+            localStorage.setItem(LAYOUTKEY, JSON.stringify(updatedLayout));
+        }
         setLayout(updatedLayout);
     };
 

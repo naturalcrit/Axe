@@ -57,13 +57,7 @@ const Builder = () => {
     });
 
     useEffect(() => {
-        const urlId = window.location.pathname.match(/\/([^/]+)\/?$/)[1];
-
-        if (id !== logged) {
-            setId(urlId);
-        }
-
-        if (urlId === 'new') {
+         if (id === 'new') {
             fetchNew();
         } else {
             if (!logged) {

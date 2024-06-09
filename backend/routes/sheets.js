@@ -37,7 +37,6 @@ router.post('/sheet', async (req, res) => {
     console.log(req.body);
     const sheet = new Sheet({
         id: nanoid(10),
-        title: req.body.title || 'noTitle',
         layout: req.body.layout,
         style: req.body.style,
         settings: req.body.settings,
