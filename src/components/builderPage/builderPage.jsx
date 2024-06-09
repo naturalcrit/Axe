@@ -50,14 +50,13 @@ const Builder = () => {
     const { logged, setLogged, author, setAuthor, login, logout } =
         useContext(AuthContext);
 
-
     const [error, setError] = useState({
         code: null,
         message: '',
     });
 
     useEffect(() => {
-         if (id === 'new') {
+        if (id === 'new') {
             fetchNew();
         } else {
             if (!logged) {
@@ -136,16 +135,15 @@ const Builder = () => {
 
         draggableComponents.forEach((item) => {
             components[item.name] = lazy(() =>
-            components[item.name] = lazy(() =>
                 import(`../draggables/${item.name}/${item.name}.jsx`)
             );
         });
         const Component = components[name];
         return (
             <Suspense fallback={<div>Loading...</div>}>
-            <Suspense fallback={<div>Loading...</div>}>
-                <Component key={key} />
-            </Suspense>
+                <Suspense fallback={<div>Loading...</div>}>
+                    <Component key={key} />
+                </Suspense>
             </Suspense>
         );
     };
@@ -201,9 +199,7 @@ const Builder = () => {
                 rowHeight={rowHeight}
                 width={getSize('width')}
                 onLayoutChange={saveLayout}
-                onLayoutChange={saveLayout}
                 compactType={null}
-                preventCollision
                 preventCollision
                 style={{
                     width: getSize('width'),
@@ -217,7 +213,6 @@ const Builder = () => {
                     <div className="draggable-item" key={item.i}>
                         <button
                             className="deleteItem"
-                            onClick={() => deleteItem(item.i)}
                             onClick={() => deleteItem(item.i)}
                             onMouseDown={(event) => event.stopPropagation()}
                         >
