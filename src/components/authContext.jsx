@@ -14,6 +14,7 @@ export const AuthProvider = ({ children }) => {
         const name = prompt('What is your name?');
         if (name) {
             localStorage.setItem('author', name);
+            setAuthor(name);
             setLogged(true);
         }
     };
@@ -21,6 +22,7 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         if (showConfirm('Are you sure you want to log out?')) {
             localStorage.removeItem('author');
+            setAuthor(null);
             setLogged(false);
         }
     };

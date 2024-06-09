@@ -22,6 +22,7 @@ import Settings from './sheetSettings/sheetSettings';
 import draggableComponents from '../draggables/draggables.json';
 import FileOperationsButtons from './fileOperationsButtons/fileOperationsButtons';
 import StyleEditor from './styleEditor/styleEditor';
+import ErrorBanner from './errorBanner/errorBanner.jsx';
 
 import { AuthContext } from '../authContext.jsx';
 
@@ -31,7 +32,6 @@ const Builder = () => {
         setId,
         layout,
         setLayout,
-        style,
         setStyle,
         settings,
         setSettings,
@@ -50,52 +50,97 @@ const Builder = () => {
     const { logged, setLogged, author, setAuthor, login, logout } =
         useContext(AuthContext);
 
+
+    const [error, setError] = useState({
+        code: null,
+        message: '',
+    });
+
     useEffect(() => {
         const urlId = window.location.pathname.match(/\/([^/]+)\/?$/)[1];
+
+        const loggedIn = logged;
+        console.log(loggedIn);
+
         if (id !== urlId) {
             setId(urlId);
         }
 
-        const fetchData = async () => {
-            try {
-                if (urlId !== 'new') {
-                    const response = await fetch(
-                        `http://localhost:3050/api/sheet/${urlId}`
-                    );
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch sheet data');
+        if (urlId === 'new') {
+            fetchNew();
+        } else {
+            if (!loggedIn) {
+                setError({
+                    code: 401,
+                    message: `You are not logged in.`,
+                });
+            } else {
+                setError({ code: null, message: '' });
+                const fetchData = async () => {
+                    try {
+                        if (id !== 'new') {
+                            const response = await fetch(
+                                `http://localhost:3050/api/sheet/${id}`
+                            );
+                            if (!response.ok) {
+                                const error = new Error('500');
+                                error.code = 500;
+                                throw error;
+                            }
+                            const sheetData = await response.json();
+                            console.log(sheetData);
+                            if (sheetData.author === author) {
+                                console.log(sheetData.author + ' is = to ' + author + ', right?');
+                                setLayout(JSON.parse(sheetData.layout));
+                                setSettings(JSON.parse(sheetData.settings));
+                                if (sheetData.style) setStyle(sheetData.style);
+                            } else {
+                                const error = new Error(
+                                    'This is not your sheet'
+                                );
+                                error.code = 403;
+                                error.author = sheetData.author;
+                                throw error;
+                            }
+                        }
+                    } catch (error) {
+                        console.log(error.author);
+                        if (error.code === 403) {
+                            setError({
+                                code: 403,
+                                message: `This sheet is from user "${error.author}", you are logged as "${author}".`,
+                            });
+                        }
+                        if (error.code === 500) {
+                            setError({
+                                code: 500,
+                                message: "We couldn't find this sheet",
+                            });
+                        }
+                        console.error('Error fetching sheet data:', error);
                     }
-                    const sheetData = await response.json();
-                    if (sheetData.author === author) {
-                        setLayout(JSON.parse(sheetData.layout));
-                        setSettings(JSON.parse(sheetData.settings));
-                        if (sheetData.style) setStyle(sheetData.style);
-                    } else {
-                        throw new Error('Unauthorized access');
-                    }
-                }
-            } catch (error) {
-                console.error('Error fetching sheet data:', error);
-            }
-        };
+                };
 
-        fetchData();
-
-        if (id === 'new') {
-            const savedLayout = localStorage.getItem(LAYOUTKEY);
-            const savedSettings = localStorage.getItem(SETTINGSKEY);
-            const styles = localStorage.getItem(STYLEKEY);
-            if (savedLayout) {
-                setLayout(JSON.parse(savedLayout));
-            }
-            if (savedSettings) {
-                setSettings(JSON.parse(savedSettings));
-            }
-            if (styles) {
-                setStyle(JSON.parse(styles));
+                fetchData();
             }
         }
-    }, [id, author]);
+    }, [logged, author]);
+
+    const fetchNew = () => {
+        setError({ code: null, message: '' });
+        const savedLayout = localStorage.getItem(LAYOUTKEY);
+        const savedSettings = localStorage.getItem(SETTINGSKEY);
+        const styles = localStorage.getItem(STYLEKEY);
+        if (savedLayout) {
+            setLayout(JSON.parse(savedLayout));
+        }
+        if (savedSettings) {
+            setSettings(JSON.parse(savedSettings));
+        }
+        if (styles) {
+            setStyle(JSON.parse(styles));
+        }
+    };
 
     const renderComponent = (name, key) => {
         const components = {};
@@ -207,10 +252,13 @@ const Builder = () => {
         }
     };
 
-    return (
-        <div className="Builder page">
-            <Nav />
-            <main className="content">
+    const renderIfAuthor = () => {
+        if (error.code !== null) {
+            return <ErrorBanner error={error} />;
+        }
+
+        return (
+            <>
                 <aside className="sidebar">
                     <h2>Pick your component</h2>
                     {renderPicker()}
@@ -246,7 +294,14 @@ const Builder = () => {
                     </div>
                     <FileOperationsButtons />
                 </aside>
-            </main>
+            </>
+        );
+    };
+
+    return (
+        <div className="Builder page">
+            <Nav />
+            <main className="content">{renderIfAuthor()}</main>
         </div>
     );
 };
