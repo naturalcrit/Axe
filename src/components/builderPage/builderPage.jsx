@@ -59,17 +59,14 @@ const Builder = () => {
     useEffect(() => {
         const urlId = window.location.pathname.match(/\/([^/]+)\/?$/)[1];
 
-        const loggedIn = logged;
-        console.log(loggedIn);
-
-        if (id !== urlId) {
+        if (id !== logged) {
             setId(urlId);
         }
 
         if (urlId === 'new') {
             fetchNew();
         } else {
-            if (!loggedIn) {
+            if (!logged) {
                 setError({
                     code: 401,
                     message: `You are not logged in.`,
@@ -88,9 +85,7 @@ const Builder = () => {
                                 throw error;
                             }
                             const sheetData = await response.json();
-                            console.log(sheetData);
                             if (sheetData.author === author) {
-                                console.log(sheetData.author + ' is = to ' + author + ', right?');
                                 setLayout(JSON.parse(sheetData.layout));
                                 setSettings(JSON.parse(sheetData.settings));
                                 if (sheetData.style) setStyle(sheetData.style);
