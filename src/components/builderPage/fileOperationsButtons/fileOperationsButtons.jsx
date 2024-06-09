@@ -130,7 +130,7 @@ const FileOperationsButtons = ({ onSave }) => {
     };
 
     return (
-        <div>
+        <div className='buttons'>
             <button className="button" onClick={() => window.print()}>
                 Export as pdf
             </button>

@@ -20,7 +20,6 @@ const StyleEditor = () => {
                 }
             }
         };
-
         const startState = EditorState.create({
             doc: style ? style : '/* Write your CSS here */',
             extensions: [
@@ -42,7 +41,7 @@ const StyleEditor = () => {
 
     return (
         <div className="codeEditor">
-            <div ref={editorRef} style={{ height: '500px' }}></div>
+            <div ref={editorRef} style={{ height: '643px' }}></div>
         </div>
     );
 };

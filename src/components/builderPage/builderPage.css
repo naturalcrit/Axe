@@ -158,7 +158,7 @@
         }
 
         #sheetOptions {
-            padding-inline: 20px;
+
             background: #d3d3d3;
             height: 96.8vh;
             color: black;
@@ -166,7 +166,45 @@
             display: grid;
             grid-template-rows: 50px 1fr 150px;
 
+            .tabButtons {
+                position: relative;
+                width: 100%;
+                display: flex;
+                isolation: isolate;
+                gap: 2px;
+                border-bottom: 1px solid;
+
+                &::before {
+                    content: '';
+                    background: black;
+                    width: 2px;
+                    height: 100%;
+                    position: absolute;
+                    top: 0;
+                    right: 50%;
+                    translate: 50%;
+                    z-index: -1;
+                }
+
+                button {
+                    position: relative;
+                    display: block;
+                    width: 100%;
+                    margin: 0;
+                    color: black;
+                    font-size: 20px;
+                    background: #ccc;
+                    padding: 5px;
+
+                    &:hover, &.active {
+                        background: #999;
+                    }
+                }
+            }
+
             .tabs {
+                padding-inline: 20px;
+
                 .tab {
                     display: none;
 
@@ -179,22 +217,35 @@
 
             }
 
+            .buttons {
+                padding-inline: 20px;
+            }
+
             .codeEditor {
+                position: relative;
+                margin-top: 20px;
                 background: white;
                 border: 2px solid black;
                 height: 100%;
-                overflow-y:auto;
+                overflow-y: auto;
+                isolation: isolate;
 
                 .cm-focused {
-                    outline:none;
+                    outline: none;
 
                     .cm-activeLine {
                         filter: brightness(50%);
                     }
+
                     .cm-activeLineGutter {
                         filter: brightness(80%);
                     }
                 }
+
+                .cm-gutters {
+                    height: 643px;
+                }
+
             }
         }
     }

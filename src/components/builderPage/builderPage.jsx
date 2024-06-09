@@ -127,10 +127,8 @@ const Builder = () => {
 
     const renderComponent = (name, key) => {
         const components = {};
-        console.log(draggableComponents);
 
         draggableComponents.forEach((item) => {
-            console.log(item);
             components[item.name] = lazy(() =>
                 import(`../draggables/${item.name}/${item.name}.jsx`)
             );
@@ -247,12 +245,16 @@ const Builder = () => {
         const tab = e.target.className.split(' ')[0];
 
         if (tab === 'settings') {
+            e.target.classList.add('active');
             settingsTab.current.classList.add('active');
             styleEditorTab.current.classList.remove('active');
+            styleEditorTabButton.current.classList.remove('active');
         }
         if (tab === 'styleEditor') {
+            e.target.classList.add('active');
             styleEditorTab.current.classList.add('active');
             settingsTab.current.classList.remove('active');
+            settingsTabButton.current.classList.remove('active');
         }
     };
 

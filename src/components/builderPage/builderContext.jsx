@@ -18,7 +18,7 @@ export const BuilderProvider = ({ children }) => {
 
     const [id, setId] = useState(isId());
     const [layout, setLayout] = useState([]);
-    const [style, setStyle] = useState(null);
+    const [style, setStyle] = useState(!id ? window.localStorage.getItem(STYLEKEY) : null);
     const [settings, setSettings] = useState({
         title: 'Character sheet',
         columns: 12,
