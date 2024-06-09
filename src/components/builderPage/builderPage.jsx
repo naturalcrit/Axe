@@ -1,6 +1,5 @@
 import React, {
     useState,
-    useCallback,
     useEffect,
     lazy,
     Suspense,
@@ -9,6 +8,7 @@ import React, {
 } from 'react';
 import GridLayout from 'react-grid-layout';
 import { BuilderContext } from './builderContext.jsx';
+import { AuthContext } from '../authContext.jsx';
 
 // STYLES
 import './builderPage.css';
@@ -24,14 +24,12 @@ import FileOperationsButtons from './fileOperationsButtons/fileOperationsButtons
 import StyleEditor from './styleEditor/styleEditor';
 import ErrorBanner from './errorBanner/errorBanner.jsx';
 
-import { AuthContext } from '../authContext.jsx';
-
 const Builder = () => {
     const {
         id,
-        setId,
         layout,
         setLayout,
+        style,
         setStyle,
         settings,
         setSettings,
@@ -45,10 +43,7 @@ const Builder = () => {
         LAYOUTKEY,
     } = useContext(BuilderContext);
 
-    //  TODO: make sure styleEditor does not touch localstorage, it should send the styles here to be set in local or db whenever i save the sheet.
-
-    const { logged, setLogged, author, setAuthor, login, logout } =
-        useContext(AuthContext);
+    const { logged, author } = useContext(AuthContext);
 
     const [error, setError] = useState({
         code: null,
@@ -56,7 +51,7 @@ const Builder = () => {
     });
 
     useEffect(() => {
-        if (id === 'new') {
+        if (!id) {
             fetchNew();
         } else {
             if (!logged) {
@@ -68,7 +63,7 @@ const Builder = () => {
                 setError({ code: null, message: '' });
                 const fetchData = async () => {
                     try {
-                        if (id !== 'new') {
+                        if (!id) {
                             const response = await fetch(
                                 `http://localhost:3050/api/sheet/${id}`
                             );
@@ -126,14 +121,16 @@ const Builder = () => {
             setSettings(JSON.parse(savedSettings));
         }
         if (styles) {
-            setStyle(JSON.parse(styles));
+            setStyle(styles);
         }
     };
 
     const renderComponent = (name, key) => {
         const components = {};
+        console.log(draggableComponents);
 
         draggableComponents.forEach((item) => {
+            console.log(item);
             components[item.name] = lazy(() =>
                 import(`../draggables/${item.name}/${item.name}.jsx`)
             );
@@ -141,9 +138,7 @@ const Builder = () => {
         const Component = components[name];
         return (
             <Suspense fallback={<div>Loading...</div>}>
-                <Suspense fallback={<div>Loading...</div>}>
-                    <Component key={key} />
-                </Suspense>
+                <Component key={key} />
             </Suspense>
         );
     };
@@ -188,6 +183,25 @@ const Builder = () => {
         return sizes[size] ? sizes[size][side] : side === 'height' ? 1056 : 816;
     };
 
+    const styleRef = useRef(null);
+
+    const renderStyle = () => {
+        if (style === null) {
+            return <style ref={styleRef}></style>;
+        }
+        return (
+            <style
+                ref={styleRef}
+            >{`/*Imported in html download*/ \n\n\n ${style}\n`}</style>
+        );
+    };
+
+    useEffect(() => {
+        if (styleRef.current !== null && style !== null) {
+            styleRef.current.innerHTML = `/*Imported in html download*/ \n\n\n ${style}\n`;
+        }
+    }, [style]);
+
     const renderDropDiv = () => {
         const { columns, rowHeight, background, textColor } = settings;
 
@@ -205,7 +219,6 @@ const Builder = () => {
                     width: getSize('width'),
                     height: getSize('height'),
                     background,
-                    background,
                     color: textColor,
                 }}
             >
@@ -218,7 +231,6 @@ const Builder = () => {
                         >
                             x
                         </button>
-                        {renderComponent(item.componentName)}
                         {renderComponent(item.componentName)}
                     </div>
                 ))}
@@ -256,6 +268,7 @@ const Builder = () => {
                     {renderPicker()}
                 </aside>
                 <section id="create">
+                    {renderStyle()}
                     <h1>Create your own character sheet</h1>
                     <div className="drop">{renderDropDiv()}</div>
                 </section>

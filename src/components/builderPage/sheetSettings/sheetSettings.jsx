@@ -1,12 +1,4 @@
-import React, {
-    useState,
-    useCallback,
-    useEffect,
-    lazy,
-    Suspense,
-    useRef,
-    useContext,
-} from 'react';
+import React, { useRef, useContext } from 'react';
 import './sheetSettings.css';
 
 import { BuilderContext } from '../builderContext';
@@ -153,7 +145,8 @@ const Settings = ({}) => {
     return (
         <div id="settingsForm">
             <h3>Properties</h3>
-            <div className="formGroup">
+            <fieldset>
+                <div className="formGroup">
                     <label>
                         Title:
                         <input
@@ -167,6 +160,8 @@ const Settings = ({}) => {
                         />
                     </label>
                 </div>
+            </fieldset>
+
             <h3>Layout settings</h3>
             <fieldset className="formSquare">{renderLayoutForm()}</fieldset>
         </div>

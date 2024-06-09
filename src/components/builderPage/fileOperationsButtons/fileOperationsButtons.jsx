@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useContext } from 'react';
+import React, { useRef, useContext } from 'react';
 
 import { BuilderContext } from '../builderContext';
 import { AuthContext } from '../../authContext';
@@ -15,9 +15,6 @@ const FileOperationsButtons = ({ onSave }) => {
         settings,
         setSettings,
     } = useContext(BuilderContext);
-
-    const { logged, setLogged, author, setAuthor, login, logout } =
-        useContext(AuthContext);
 
     const saveHtml = async () => {
         const sheetContent = document.querySelector('.layout.sheet').outerHTML;

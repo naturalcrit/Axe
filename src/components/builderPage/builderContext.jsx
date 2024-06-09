@@ -8,7 +8,15 @@ const LAYOUTKEY = 'builderLayout';
 
 export const BuilderProvider = ({ children }) => {
     const urlId = window.location.pathname.match(/\/([^/]+)\/?$/)[1];
-    const [id, setId] = useState(urlId);
+
+    const isId = () => {
+        if(urlId) {
+            return null;
+        }
+        return urlId;
+    }
+
+    const [id, setId] = useState(isId());
     const [layout, setLayout] = useState([]);
     const [style, setStyle] = useState(null);
     const [settings, setSettings] = useState({
@@ -57,6 +65,8 @@ export const BuilderProvider = ({ children }) => {
         }
         setLayout(updatedLayout);
     };
+
+    
 
     return (
         <BuilderContext.Provider
