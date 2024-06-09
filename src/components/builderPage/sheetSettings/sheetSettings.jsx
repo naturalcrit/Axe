@@ -1,19 +1,33 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {
+    useState,
+    useCallback,
+    useEffect,
+    lazy,
+    Suspense,
+    useRef,
+    useContext,
+} from 'react';
 import './sheetSettings.css';
+
+import { BuilderContext } from '../builderContext';
 
 const SETTINGSKEY = 'sheetSettings';
 
-const Settings = ({ onSettingsSave }) => {
-    const [settings, setSettings] = useState({
-        name: 'Character sheet',
-        columns: 12,
-        rowHeight: 40,
-        size: 'letter',
-        height: 1056,
-        width: 816,
-        background: '#ffffff',
-        textColor: '#000000',
-    });
+const Settings = ({}) => {
+    const {
+        layout,
+        style,
+        settings,
+        setLayout,
+        setStyle,
+        setSettings,
+        addNewItem,
+        deleteItem,
+        saveLayout,
+        STYLEKEY,
+        SETTINGSKEY,
+        LAYOUTKEY,
+    } = useContext(BuilderContext);
 
     useEffect(() => {
         const savedSettings = localStorage.getItem(SETTINGSKEY);
@@ -34,9 +48,7 @@ const Settings = ({ onSettingsSave }) => {
                         ? Number(value)
                         : value,
             };
-            console.log(newSettings);
             localStorage.setItem(SETTINGSKEY, JSON.stringify(newSettings));
-            onSettingsSave(newSettings);
             return newSettings;
         });
     };
@@ -49,7 +61,6 @@ const Settings = ({ onSettingsSave }) => {
                 [name]: Number(value) >= 300 ? Number(value) : null,
             };
             localStorage.setItem(SETTINGSKEY, JSON.stringify(newSettings));
-            onSettingsSave(newSettings);
             return newSettings;
         });
     };
@@ -76,7 +87,7 @@ const Settings = ({ onSettingsSave }) => {
                             name="width"
                             min={300}
                             max={2000}
-                            defaultValue={settings.width || 816}
+                            value={settings.width || 816}
                             onChange={handleCustomInputChange}
                         />
                     </label>
@@ -90,7 +101,7 @@ const Settings = ({ onSettingsSave }) => {
                             name="height"
                             min={300}
                             max={3000}
-                            defaultValue={settings.height || 1056}
+                            value={settings.height || 1056}
                             onChange={handleCustomInputChange}
                         />
                     </label>
@@ -141,7 +152,7 @@ const Settings = ({ onSettingsSave }) => {
                             ref={sizeRef}
                             id="size"
                             name="size"
-                            defaultValue={settings.size}
+                            value={settings.size}
                             onChange={handleSettingsChange}
                         >
                             <option value="letter">

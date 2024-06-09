@@ -1,22 +1,33 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, {
+    useState,
+    useCallback,
+    useEffect,
+    lazy,
+    Suspense,
+    useRef,
+    useContext,
+} from 'react';
 
-const SETTINGSKEY = 'sheetSettings';
-const LAYOUTKEY = 'BuilderLayout';
+import { BuilderContext } from '../builderContext';
 
 const FileOperationsButtons = ({ onSave }) => {
     const importJsonRef = useRef();
     const saveSheetRef = useRef();
 
-    const [settings, setSettings] = useState({
-        name: 'Character sheet',
-        columns: 12,
-        rowHeight: 40,
-        size: 'letter',
-        height: 1056,
-        width: 816,
-        background: '#ffffff',
-        textColor: '#000000',
-    });
+    const {
+        layout,
+        style,
+        settings,
+        setLayout,
+        setStyle,
+        setSettings,
+        addNewItem,
+        deleteItem,
+        saveLayout,
+        STYLEKEY,
+        SETTINGSKEY,
+        LAYOUTKEY,
+    } = useContext(BuilderContext);
 
     useEffect(() => {
         const savedSettings = localStorage.getItem(SETTINGSKEY);
@@ -25,7 +36,7 @@ const FileOperationsButtons = ({ onSave }) => {
         } else {
             localStorage.setItem(SETTINGSKEY, JSON.stringify(settings));
         }
-    },[]);
+    }, []);
 
     const saveHtml = async () => {
         const sheetContent = document.querySelector('.layout.sheet').outerHTML;
@@ -129,10 +140,31 @@ const FileOperationsButtons = ({ onSave }) => {
         };
         reader.readAsText(localJson);
         window.location.reload();
-    };    
+    };
 
-    const handleSaveSheet = () => {
-        onSave();
+    const saveSheet = async () => {
+        const styleInStorage = window.localStorage.getItem(STYLEKEY);
+
+        const sheet = {
+            id: 'abc',
+            title: 'yesTitle',
+            layout: JSON.stringify(layout),
+            style: styleInStorage,
+            settings: JSON.stringify(settings),
+            author: localStorage.getItem('author') || '',
+        };
+        try {
+            const response = await fetch('http://localhost:3050/api/sheet', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(sheet),
+            });
+            const data = await response.json();
+            console.log('Sheet created:', data);
+        } catch (error) {
+            console.error('Error creating sheet:', error);
+            console.error(sheet);
+        }
     };
 
     return (
@@ -165,11 +197,7 @@ const FileOperationsButtons = ({ onSave }) => {
                 style={{ display: 'none' }}
                 onChange={importJson}
             />
-            <button
-                ref={saveSheetRef}
-                className="button"
-                onClick={handleSaveSheet}
-            >
+            <button ref={saveSheetRef} className="button" onClick={saveSheet}>
                 Save
             </button>
         </div>

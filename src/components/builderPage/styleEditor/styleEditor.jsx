@@ -1,40 +1,62 @@
-import { useEffect, useState, useRef } from 'react';
+import React, {
+    useState,
+    useCallback,
+    useEffect,
+    lazy,
+    Suspense,
+    useRef,
+    useContext,
+} from 'react';
 import { EditorView, basicSetup } from 'codemirror';
 import { EditorState } from '@codemirror/state';
 import { css } from '@codemirror/lang-css';
 import { keymap } from '@codemirror/view';
 import { defaultKeymap, indentWithTab } from '@codemirror/commands';
 
-const STYLEKEY = 'styleCode';
+import { BuilderContext } from '../builderContext';
 
-const StyleEditor = () => {
+const StyleEditor = (styles) => {
     const editorRef = useRef(null);
     const styleRef = useRef(null);
+
+    const {
+        layout,
+        style,
+        settings,
+        setLayout,
+        setStyle,
+        setSettings,
+        addNewItem,
+        deleteItem,
+        saveLayout,
+        STYLEKEY,
+        SETTINGSKEY,
+        LAYOUTKEY,
+    } = useContext(BuilderContext);
+
+    const styleInStorage = window.localStorage.getItem(STYLEKEY);
 
     useEffect(() => {
         const styleSheet = document.createElement('style');
         styleSheet.type = 'text/css';
-        styleSheet.textContent = ``;
+        styleSheet.textContent = style ? style : ``;
         document.head.appendChild(styleSheet);
         styleRef.current = styleSheet;
 
-        const styleInStorage = window.localStorage.getItem(STYLEKEY);
-
         if (styleInStorage) {
-          console.log(`it is in storage`);
             styleRef.current.textContent = styleInStorage;
         }
 
         const updateStyle = (update) => {
             if (update.docChanged) {
                 const cssContent = update.state.doc.toString();
-                styleRef.current.textContent = `.drop {\n ${cssContent}\n}`;
-                window.localStorage.setItem(STYLEKEY, cssContent)
+                styleRef.current.textContent = `/*Imported in html download*/ \n\n\n ${cssContent}\n`;
+                updateStyle(cssContent);
             }
         };
 
         const startState = EditorState.create({
-            doc: styleInStorage ? styleInStorage :'/* Write your CSS here */',
+            doc: styleInStorage ? styleInStorage : '/* Write your CSS here */',
             extensions: [
                 basicSetup,
                 css(),

@@ -5,8 +5,10 @@ import React, {
     lazy,
     Suspense,
     useRef,
+    useContext,
 } from 'react';
 import GridLayout from 'react-grid-layout';
+import { BuilderContext } from './builderContext.jsx';
 
 // STYLES
 import './builderPage.css';
@@ -21,22 +23,30 @@ import draggableComponents from '../draggables/draggables.json';
 import FileOperationsButtons from './fileOperationsButtons/fileOperationsButtons';
 import StyleEditor from './styleEditor/styleEditor';
 
-const Builder = () => {
-    const [layout, setLayout] = useState([]);
-    const [settings, setSettings] = useState({
-        name: 'Character sheet',
-        columns: 12,
-        rowHeight: 40,
-        size: 'letter',
-        height: 1056,
-        width: 816,
-        background: '#ffffff',
-        textColor: '#000000',
-    });
+const STYLEKEY = 'styleCode';
+const SETTINGSKEY = 'sheetSettings';
+const LAYOUTKEY = 'builderLayout';
 
-    const handleSettingsSave = useCallback((newSettings) => {
-        setSettings(newSettings);
-    }, []);
+const Builder = () => {
+
+    const {
+        layout,
+        style,
+        settings,
+        setLayout,
+        setStyle,
+        setSettings,
+        addNewItem,
+        deleteItem,
+        saveLayout,
+        STYLEKEY,
+        SETTINGSKEY,
+        LAYOUTKEY,
+    } = useContext(BuilderContext);
+
+    const styleInStorage = window.localStorage.getItem(STYLEKEY);
+
+    //  TODO: make sure styleEditor does not touch localstorage, it should send the styles here to be set in local or db whenever i save the sheet.
 
     useEffect(() => {
         const currentUrl = window.location.pathname;
@@ -51,57 +61,25 @@ const Builder = () => {
                     return response.json();
                 })
                 .then((sheetData) => {
+                    console.log(sheetData.style);
                     setLayout(JSON.parse(sheetData.layout));
                     setSettings(JSON.parse(sheetData.settings));
+                    if (sheetData.style) setStyle(sheetData.style);
                 })
                 .catch((error) => {
                     console.error('Error fetching sheet data:', error);
                 });
         } else {
-            const savedLayout = localStorage.getItem('BuilderLayout');
+            const savedLayout = localStorage.getItem(LAYOUTKEY);
             if (savedLayout) {
                 setLayout(JSON.parse(savedLayout));
             }
-            const savedSettings = localStorage.getItem('sheetSettings');
+            const savedSettings = localStorage.getItem(SETTINGSKEY);
             if (savedSettings) {
                 setSettings(JSON.parse(savedSettings));
             }
         }
     }, []);
-
-    const addNewItem = (componentName, width, height, label) => {
-        const newItem = {
-            i: `item-${layout.length + 1}`,
-            x: 0,
-            y: 0,
-            w: width,
-            h: height,
-            componentName,
-            label,
-        };
-        setLayout([...layout, newItem]);
-    };
-
-    const deleteItem = (itemId) => {
-        const updatedLayout = layout
-            .filter((item) => item.i !== itemId)
-            .map((item, index) => ({
-                ...item,
-                i: `item-${index}`,
-            }));
-        setLayout(updatedLayout);
-    };
-
-    const saveLayout = (newLayout) => {
-        const updatedLayout = newLayout.map((item, index) => ({
-            ...layout[index],
-            ...item,
-            i: `item-${index}`,
-        }));
-
-        localStorage.setItem('BuilderLayout', JSON.stringify(updatedLayout));
-        setLayout(updatedLayout);
-    };
 
     const renderComponent = (name, key) => {
         const components = {};
@@ -148,6 +126,7 @@ const Builder = () => {
     );
 
     const getSize = (side) => {
+        
         const { size, height, width } = settings;
         const sizes = {
             letter: { width: 816, height: 1100 },
@@ -157,28 +136,6 @@ const Builder = () => {
         };
 
         return sizes[size] ? sizes[size][side] : side === 'height' ? 1056 : 816;
-    };
-
-    const saveSheet = async () => {
-        const sheet = {
-            id: 'abc',
-            title: 'yesTitle',
-            layout: JSON.stringify(layout),
-            settings: JSON.stringify(settings),
-            author: localStorage.getItem('author') || '',
-        };
-        try {
-            const response = await fetch('http://localhost:3050/api/sheet', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(sheet),
-            });
-            const data = await response.json();
-            console.log('Sheet created:', data);
-        } catch (error) {
-            console.error('Error creating sheet:', error);
-            console.error(sheet);
-        }
     };
 
     const renderDropDiv = () => {
@@ -266,16 +223,13 @@ const Builder = () => {
                     </nav>
                     <div className="tabs">
                         <div className="tab settings active" ref={settingsTab}>
-                            <Settings
-                                settings={settings}
-                                onSettingsSave={handleSettingsSave}
-                            />
+                            <Settings />
                         </div>
                         <div className="tab styleEditor" ref={styleEditorTab}>
                             <StyleEditor />
                         </div>
                     </div>
-                    <FileOperationsButtons onSave={saveSheet} />
+                    <FileOperationsButtons />
                 </aside>
             </main>
         </div>
