@@ -23,63 +23,79 @@ import draggableComponents from '../draggables/draggables.json';
 import FileOperationsButtons from './fileOperationsButtons/fileOperationsButtons';
 import StyleEditor from './styleEditor/styleEditor';
 
-const STYLEKEY = 'styleCode';
-const SETTINGSKEY = 'sheetSettings';
-const LAYOUTKEY = 'builderLayout';
+import { AuthContext } from '../authContext.jsx';
 
 const Builder = () => {
-
     const {
+        id,
+        setId,
         layout,
-        style,
-        settings,
         setLayout,
+        style,
         setStyle,
+        settings,
         setSettings,
+
         addNewItem,
         deleteItem,
         saveLayout,
+
         STYLEKEY,
         SETTINGSKEY,
         LAYOUTKEY,
     } = useContext(BuilderContext);
 
-    const styleInStorage = window.localStorage.getItem(STYLEKEY);
-
     //  TODO: make sure styleEditor does not touch localstorage, it should send the styles here to be set in local or db whenever i save the sheet.
 
-    useEffect(() => {
-        const currentUrl = window.location.pathname;
-        const id = currentUrl.split('/').pop();
+    const { logged, setLogged, author, setAuthor, login, logout } =
+        useContext(AuthContext);
 
-        if (id !== 'new') {
-            fetch(`http://localhost:3050/api/sheet/${id}`)
-                .then((response) => {
+    useEffect(() => {
+        const urlId = window.location.pathname.match(/\/([^/]+)\/?$/)[1];
+        if (id !== urlId) {
+            setId(urlId);
+        }
+
+        const fetchData = async () => {
+            try {
+                if (urlId !== 'new') {
+                    const response = await fetch(
+                        `http://localhost:3050/api/sheet/${urlId}`
+                    );
                     if (!response.ok) {
                         throw new Error('Failed to fetch sheet data');
                     }
-                    return response.json();
-                })
-                .then((sheetData) => {
-                    console.log(sheetData.style);
-                    setLayout(JSON.parse(sheetData.layout));
-                    setSettings(JSON.parse(sheetData.settings));
-                    if (sheetData.style) setStyle(sheetData.style);
-                })
-                .catch((error) => {
-                    console.error('Error fetching sheet data:', error);
-                });
-        } else {
+                    const sheetData = await response.json();
+                    if (sheetData.author === author) {
+                        setLayout(JSON.parse(sheetData.layout));
+                        setSettings(JSON.parse(sheetData.settings));
+                        if (sheetData.style) setStyle(sheetData.style);
+                    } else {
+                        throw new Error('Unauthorized access');
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching sheet data:', error);
+            }
+        };
+
+        fetchData();
+
+        if (id === 'new') {
             const savedLayout = localStorage.getItem(LAYOUTKEY);
+            const savedSettings = localStorage.getItem(SETTINGSKEY);
+            const styles = localStorage.getItem(STYLEKEY);
             if (savedLayout) {
                 setLayout(JSON.parse(savedLayout));
             }
-            const savedSettings = localStorage.getItem(SETTINGSKEY);
             if (savedSettings) {
                 setSettings(JSON.parse(savedSettings));
             }
+            if (styles) {
+                setStyle(JSON.parse(styles));
+            }
         }
-    }, []);
+    }, [id, author]);
 
     const renderComponent = (name, key) => {
         const components = {};
@@ -126,7 +142,6 @@ const Builder = () => {
     );
 
     const getSize = (side) => {
-        
         const { size, height, width } = settings;
         const sizes = {
             letter: { width: 816, height: 1100 },

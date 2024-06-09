@@ -29,15 +29,6 @@ const Settings = ({}) => {
         LAYOUTKEY,
     } = useContext(BuilderContext);
 
-    useEffect(() => {
-        const savedSettings = localStorage.getItem(SETTINGSKEY);
-        if (savedSettings) {
-            setSettings(JSON.parse(savedSettings));
-        } else {
-            localStorage.setItem(SETTINGSKEY, JSON.stringify(settings));
-        }
-    }, []);
-
     const handleSettingsChange = (event) => {
         const { name, value } = event.target;
         setSettings((prevSettings) => {

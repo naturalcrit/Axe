@@ -1,14 +1,7 @@
-import React, {
-    useState,
-    useCallback,
-    useEffect,
-    lazy,
-    Suspense,
-    useRef,
-    useContext,
-} from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 
 import { BuilderContext } from '../builderContext';
+import { AuthContext } from '../../authContext';
 
 const FileOperationsButtons = ({ onSave }) => {
     const importJsonRef = useRef();
@@ -18,25 +11,14 @@ const FileOperationsButtons = ({ onSave }) => {
         layout,
         style,
         settings,
-        setLayout,
-        setStyle,
         setSettings,
-        addNewItem,
-        deleteItem,
-        saveLayout,
         STYLEKEY,
         SETTINGSKEY,
         LAYOUTKEY,
     } = useContext(BuilderContext);
 
-    useEffect(() => {
-        const savedSettings = localStorage.getItem(SETTINGSKEY);
-        if (savedSettings) {
-            setSettings(JSON.parse(savedSettings));
-        } else {
-            localStorage.setItem(SETTINGSKEY, JSON.stringify(settings));
-        }
-    }, []);
+    const { logged, setLogged, author, setAuthor, login, logout } =
+        useContext(AuthContext);
 
     const saveHtml = async () => {
         const sheetContent = document.querySelector('.layout.sheet').outerHTML;
@@ -98,17 +80,10 @@ const FileOperationsButtons = ({ onSave }) => {
 
     const saveJson = () => {
         const exportedJson = [];
-        const savedLayout = localStorage.getItem(LAYOUTKEY);
-        if (savedLayout) {
-            exportedJson.push(JSON.parse(savedLayout));
-        } else {
-            alert('No layouts found.');
-            return;
-        }
-        const savedSettings = localStorage.getItem(SETTINGSKEY);
-        if (savedSettings) {
-            exportedJson.push(JSON.parse(savedSettings));
-        }
+
+        exportedJson.push(JSON.parse(layout));
+        exportedJson.push(JSON.parse(style));
+        exportedJson.push(JSON.parse(settings));
 
         const jsonContent = JSON.stringify(exportedJson, null, 2);
         const blob = new Blob([jsonContent], { type: 'application/json' });

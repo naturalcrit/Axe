@@ -1,33 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { showConfirm } from '../../utils';
+
+import { AuthContext } from '../authContext.jsx';
 
 import './nav.css'; // Import CSS/LESS file directly
 import NaturalCritIcon from './naturalcrit.svg.jsx';
 
 const Nav = () => {
-    const [logged, setLogged] = useState(false);
+    const { logged, setLogged, author, setAuthor, login, logout } =
+        useContext(AuthContext);
 
     useEffect(() => {
-        if (localStorage.getItem('author')) {
+        if (localStorage.getItem('author') || author) {
             setLogged(true);
+            setAuthor(localStorage.getItem('author'));
         }
     }, []);
-
-    const login = () => {
-        const name = prompt('What is your name?');
-        if (name) {
-            localStorage.setItem('author', name);
-            setLogged(true);
-        }
-    };
-
-    const logout = () => {
-        if (showConfirm('Are you sure you want to log out?')) {
-            localStorage.removeItem('author');
-            setLogged(false);
-        }
-    };
 
     const renderLogin = () => {
         if (logged) {

@@ -1,17 +1,7 @@
-import React, {
-    useState,
-    useCallback,
-    useEffect,
-    lazy,
-    Suspense,
-    useRef,
-    useContext,
-} from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import { EditorView, basicSetup } from 'codemirror';
 import { EditorState } from '@codemirror/state';
 import { css } from '@codemirror/lang-css';
-import { keymap } from '@codemirror/view';
-import { defaultKeymap, indentWithTab } from '@codemirror/commands';
 
 import { BuilderContext } from '../builderContext';
 
@@ -19,26 +9,12 @@ const StyleEditor = (styles) => {
     const editorRef = useRef(null);
     const styleRef = useRef(null);
 
-    const {
-        layout,
-        style,
-        settings,
-        setLayout,
-        setStyle,
-        setSettings,
-        addNewItem,
-        deleteItem,
-        saveLayout,
-        STYLEKEY,
-        SETTINGSKEY,
-        LAYOUTKEY,
-    } = useContext(BuilderContext);
+    const { layout, style, STYLEKEY } = useContext(BuilderContext);
 
     const styleInStorage = window.localStorage.getItem(STYLEKEY);
 
     useEffect(() => {
         const styleSheet = document.createElement('style');
-        styleSheet.type = 'text/css';
         styleSheet.textContent = style ? style : ``;
         document.head.appendChild(styleSheet);
         styleRef.current = styleSheet;

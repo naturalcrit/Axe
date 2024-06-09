@@ -1,4 +1,4 @@
-import React, { createContext, useState, useCallback, useEffect } from 'react';
+import React, { createContext, useState } from 'react';
 
 export const BuilderContext = createContext();
 
@@ -7,9 +7,9 @@ const SETTINGSKEY = 'sheetSettings';
 const LAYOUTKEY = 'builderLayout';
 
 export const BuilderProvider = ({ children }) => {
-    const styleInStorage = window.localStorage.getItem(STYLEKEY);
+    const [id, setId] = useState(null);
     const [layout, setLayout] = useState([]);
-    const [style, setStyle] = useState(styleInStorage || null);
+    const [style, setStyle] = useState(null);
     const [settings, setSettings] = useState({
         name: 'Character sheet',
         columns: 12,
@@ -20,7 +20,6 @@ export const BuilderProvider = ({ children }) => {
         background: '#ffffff',
         textColor: '#000000',
     });
-
 
     const addNewItem = (componentName, width, height, label) => {
         const newItem = {
@@ -60,15 +59,19 @@ export const BuilderProvider = ({ children }) => {
     return (
         <BuilderContext.Provider
             value={{
+                id,
+                setId,
                 layout,
-                style,
-                settings,
                 setLayout,
+                style,
                 setStyle,
+                settings,
                 setSettings,
+
                 addNewItem,
                 deleteItem,
                 saveLayout,
+
                 STYLEKEY,
                 SETTINGSKEY,
                 LAYOUTKEY,
