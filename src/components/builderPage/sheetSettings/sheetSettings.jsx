@@ -30,7 +30,7 @@ const Settings = ({}) => {
         setSettings((prevSettings) => {
             const newSettings = {
                 ...prevSettings,
-                [name]: Number(value) >= 300 ? Number(value) : null,
+                [name]: Number(value),
             };
             if (!id) {
                 localStorage.setItem(SETTINGSKEY, JSON.stringify(newSettings));
@@ -58,9 +58,8 @@ const Settings = ({}) => {
                             type="number"
                             id="width"
                             name="width"
-                            min={300}
-                            max={2000}
-                            value={settings.width || 816}
+                            min={0}
+                            value={settings.width}
                             onChange={handleCustomInputChange}
                         />
                     </label>
@@ -72,9 +71,8 @@ const Settings = ({}) => {
                             type="number"
                             id="height"
                             name="height"
-                            min={300}
-                            max={3000}
-                            value={settings.height || 1056}
+                            min={0}
+                            value={settings.height}
                             onChange={handleCustomInputChange}
                         />
                     </label>
@@ -99,7 +97,7 @@ const Settings = ({}) => {
                             type="number"
                             name="columns"
                             min={3}
-                            defaultValue={settings.columns}
+                            value={settings.columns}
                             onChange={handleSettingsChange}
                         />
                     </label>
@@ -113,7 +111,7 @@ const Settings = ({}) => {
                             type="number"
                             name="rowHeight"
                             min={20}
-                            defaultValue={settings.rowHeight}
+                            value={settings.rowHeight}
                             onChange={handleSettingsChange}
                         />
                     </label>

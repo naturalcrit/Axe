@@ -175,7 +175,10 @@ const Builder = () => {
             letter: { width: 816, height: 1100 },
             A4: { width: 827, height: 1169 },
             A5: { width: 583, height: 827 },
-            custom: { width: width, height: height },
+            custom: {
+                width: width >= 300 && width <= 3000 ? width : 300,
+                height: height >= 300 && height <= 3000 ? height : 300,
+            },
         };
 
         return sizes[size] ? sizes[size][side] : side === 'height' ? 1056 : 816;
