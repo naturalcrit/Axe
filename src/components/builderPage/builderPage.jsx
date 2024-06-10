@@ -277,7 +277,7 @@ const Builder = () => {
                 <aside id="sheetOptions">
                     <nav className="tabButtons">
                         <button
-                            className="settings button"
+                            className="settings button active"
                             ref={settingsTabButton}
                             onClick={changeTab}
                         >
