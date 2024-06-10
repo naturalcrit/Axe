@@ -1,35 +1,35 @@
 .page.home {
-    
+
     .content {
-        padding:50px;
-        color:black;
+        padding: 50px;
+        color: black;
         background: url('https://i.imgur.com/84cupji.png') repeat;
-        display:flex;
+        display: flex;
         flex-direction: column;
 
 
         section {
-            display:grid;
+            display: grid;
             grid-template-columns: 1fr 1fr;
-            gap:50px;
+            gap: 50px;
 
             &:nth-of-type(even) {
-                text-align:right;
+                text-align: right;
                 margin-left: auto;
             }
 
             .text *::selection {
-                background:#333;
-                color:white;
+                background: #333;
+                color: white;
             }
-            
+
             .displayImage {
                 box-shadow: 0 0 7px black;
             }
         }
 
         hr {
-            margin-block:50px;
+            margin-block: 50px;
         }
 
     }
