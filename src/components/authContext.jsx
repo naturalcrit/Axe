@@ -1,14 +1,19 @@
-import React, { createContext, useState, useCallback, useEffect } from 'react';
+import React, { createContext, useState } from 'react';
 
 import { showConfirm } from '../utils';
 
 export const AuthContext = createContext();
 
-
-
 export const AuthProvider = ({ children }) => {
+    const getAuthorFromStorage = () => {
+        if (localStorage.getItem('author')) {
+            return localStorage.getItem('author');
+        }
+        return null;
+    };
+
     const [logged, setLogged] = useState(false);
-    const [author, setAuthor] = useState(null);
+    const [author, setAuthor] = useState(getAuthorFromStorage());
 
     const login = () => {
         const name = prompt('What is your name?');

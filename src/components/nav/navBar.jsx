@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useContext } from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 
 import { AuthContext } from '../authContext.jsx';
@@ -7,15 +7,8 @@ import './nav.css'; // Import CSS/LESS file directly
 import NaturalCritIcon from './naturalcrit.svg.jsx';
 
 const Nav = () => {
-    const { logged, setLogged, author, setAuthor, login, logout } =
+    const { logged, login, logout } =
         useContext(AuthContext);
-
-    useEffect(() => {
-        if (localStorage.getItem('author') || author) {
-            setLogged(true);
-            setAuthor(localStorage.getItem('author'));
-        }
-    }, []);
 
     const renderLogin = () => {
         if (logged) {
@@ -59,7 +52,7 @@ const Nav = () => {
                     Create new sheet
                 </Link>
                 <Link to="/sheets" className="navItem">
-                    Sheets
+                    My Sheets
                 </Link>
                 {renderLogin()}
             </div>
