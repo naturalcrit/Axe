@@ -1,31 +1,20 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef, useContext } from 'react';
 
-const SETTINGSKEY = 'sheetSettings';
-const LAYOUTKEY = 'BuilderLayout';
+import { BuilderContext } from '../builderContext';
+import { AuthContext } from '../../authContext';
 
 const FileOperationsButtons = ({ onSave }) => {
     const importJsonRef = useRef();
     const saveSheetRef = useRef();
 
-    const [settings, setSettings] = useState({
-        name: 'Character sheet',
-        columns: 12,
-        rowHeight: 40,
-        size: 'letter',
-        height: 1056,
-        width: 816,
-        background: '#ffffff',
-        textColor: '#000000',
-    });
-
-    useEffect(() => {
-        const savedSettings = localStorage.getItem(SETTINGSKEY);
-        if (savedSettings) {
-            setSettings(JSON.parse(savedSettings));
-        } else {
-            localStorage.setItem(SETTINGSKEY, JSON.stringify(settings));
-        }
-    },[]);
+    const {
+        id,
+        layout,
+        setLayout,
+        style,
+        settings,
+        setSettings,
+    } = useContext(BuilderContext);
 
     const saveHtml = async () => {
         const sheetContent = document.querySelector('.layout.sheet').outerHTML;
@@ -63,7 +52,7 @@ const FileOperationsButtons = ({ onSave }) => {
         const htmlWithStyles = `
             <html>
                 <head>
-                    <title>Custom Character Sheet</title>
+                    <title>${settings.title}</title>
                     ${headContent}
                 </head>
                 <body>
@@ -87,23 +76,16 @@ const FileOperationsButtons = ({ onSave }) => {
 
     const saveJson = () => {
         const exportedJson = [];
-        const savedLayout = localStorage.getItem(LAYOUTKEY);
-        if (savedLayout) {
-            exportedJson.push(JSON.parse(savedLayout));
-        } else {
-            alert('No layouts found.');
-            return;
-        }
-        const savedSettings = localStorage.getItem(SETTINGSKEY);
-        if (savedSettings) {
-            exportedJson.push(JSON.parse(savedSettings));
-        }
+
+        exportedJson.push(JSON.parse(layout));
+        exportedJson.push(JSON.parse(style));
+        exportedJson.push(JSON.parse(settings));
 
         const jsonContent = JSON.stringify(exportedJson, null, 2);
         const blob = new Blob([jsonContent], { type: 'application/json' });
         const element = document.createElement('a');
         element.href = window.URL.createObjectURL(blob);
-        element.download = 'exportedData.json';
+        element.download = `${settings.title}.json`;
         element.style.display = 'none';
         document.body.appendChild(element);
         element.click();
@@ -118,25 +100,37 @@ const FileOperationsButtons = ({ onSave }) => {
             const jsonContent = event.target.result;
             const parsedJson = JSON.parse(jsonContent);
 
-            window.localStorage.setItem(
-                LAYOUTKEY,
-                JSON.stringify(parsedJson[0])
-            );
-            window.localStorage.setItem(
-                SETTINGSKEY,
-                JSON.stringify(parsedJson[1])
-            );
+            setLayout(JSON.stringify(parsedJson[0]));
+            setSettings(JSON.stringify(parsedJson[1]));
         };
         reader.readAsText(localJson);
         window.location.reload();
-    };    
+    };
 
-    const handleSaveSheet = () => {
-        onSave();
+    const saveSheet = async () => {
+        const sheet = {
+            id: id,
+            layout: JSON.stringify(layout),
+            style: style,
+            settings: JSON.stringify(settings),
+            author: localStorage.getItem('author') || '',
+        };
+        try {
+            const response = await fetch('http://localhost:3050/api/sheet', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(sheet),
+            });
+            const data = await response.json();
+            console.log('Sheet created:', data);
+        } catch (error) {
+            console.error('Error creating sheet:', error);
+            console.error(sheet);
+        }
     };
 
     return (
-        <div>
+        <div className='buttons'>
             <button className="button" onClick={() => window.print()}>
                 Export as pdf
             </button>
@@ -165,11 +159,7 @@ const FileOperationsButtons = ({ onSave }) => {
                 style={{ display: 'none' }}
                 onChange={importJson}
             />
-            <button
-                ref={saveSheetRef}
-                className="button"
-                onClick={handleSaveSheet}
-            >
+            <button ref={saveSheetRef} className="button" onClick={saveSheet}>
                 Save
             </button>
         </div>

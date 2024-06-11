@@ -1,12 +1,14 @@
 import React, {
     useState,
-    useCallback,
     useEffect,
     lazy,
     Suspense,
     useRef,
+    useContext,
 } from 'react';
 import GridLayout from 'react-grid-layout';
+import { BuilderContext } from './builderContext.jsx';
+import { AuthContext } from '../authContext.jsx';
 
 // STYLES
 import './builderPage.css';
@@ -20,87 +22,107 @@ import Settings from './sheetSettings/sheetSettings';
 import draggableComponents from '../draggables/draggables.json';
 import FileOperationsButtons from './fileOperationsButtons/fileOperationsButtons';
 import StyleEditor from './styleEditor/styleEditor';
+import ErrorBanner from './errorBanner/errorBanner.jsx';
 
 const Builder = () => {
-    const [layout, setLayout] = useState([]);
-    const [settings, setSettings] = useState({
-        name: 'Character sheet',
-        columns: 12,
-        rowHeight: 40,
-        size: 'letter',
-        height: 1056,
-        width: 816,
-        background: '#ffffff',
-        textColor: '#000000',
+    const {
+        id,
+        layout,
+        setLayout,
+        style,
+        setStyle,
+        settings,
+        setSettings,
+
+        addNewItem,
+        deleteItem,
+        saveLayout,
+
+        STYLEKEY,
+        SETTINGSKEY,
+        LAYOUTKEY,
+    } = useContext(BuilderContext);
+
+    const { logged, author } = useContext(AuthContext);
+
+    const [error, setError] = useState({
+        code: null,
+        message: '',
     });
 
-    const handleSettingsSave = useCallback((newSettings) => {
-        setSettings(newSettings);
-    }, []);
-
     useEffect(() => {
-        const currentUrl = window.location.pathname;
-        const id = currentUrl.split('/').pop();
-
-        if (id !== 'new') {
-            fetch(`http://localhost:3050/api/sheet/${id}`)
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch sheet data');
-                    }
-                    return response.json();
-                })
-                .then((sheetData) => {
-                    setLayout(JSON.parse(sheetData.layout));
-                    setSettings(JSON.parse(sheetData.settings));
-                })
-                .catch((error) => {
-                    console.error('Error fetching sheet data:', error);
-                });
+        if (!id) {
+            fetchNew();
         } else {
-            const savedLayout = localStorage.getItem('BuilderLayout');
-            if (savedLayout) {
-                setLayout(JSON.parse(savedLayout));
-            }
-            const savedSettings = localStorage.getItem('sheetSettings');
-            if (savedSettings) {
-                setSettings(JSON.parse(savedSettings));
+            if (!logged) {
+                setError({
+                    code: 401,
+                    message: `You are not logged in.`,
+                });
+            } else {
+                setError({ code: null, message: '' });
+                const fetchData = async () => {
+                    try {
+                        if (!id) {
+                            const response = await fetch(
+                                `http://localhost:3050/api/sheet/${id}`
+                            );
+                            if (!response.ok) {
+                                const error = new Error('500');
+                                error.code = 500;
+                                throw error;
+                            }
+                            const sheetData = await response.json();
+                            if (sheetData.author === author) {
+                                setLayout(JSON.parse(sheetData.layout));
+                                setSettings(JSON.parse(sheetData.settings));
+                                if (sheetData.style) setStyle(sheetData.style);
+                            } else {
+                                const error = new Error(
+                                    'This is not your sheet'
+                                );
+                                error.code = 403;
+                                error.author = sheetData.author;
+                                throw error;
+                            }
+                        }
+                    } catch (error) {
+                        console.log(error.author);
+                        if (error.code === 403) {
+                            setError({
+                                code: 403,
+                                message: `This sheet is from user "${error.author}", you are logged as "${author}".`,
+                            });
+                        }
+                        if (error.code === 500) {
+                            setError({
+                                code: 500,
+                                message: "We couldn't find this sheet",
+                            });
+                        }
+                        console.error('Error fetching sheet data:', error);
+                    }
+                };
+
+                fetchData();
             }
         }
-    }, []);
+    }, [logged, author]);
 
-    const addNewItem = (componentName, width, height, label) => {
-        const newItem = {
-            i: `item-${layout.length + 1}`,
-            x: 0,
-            y: 0,
-            w: width,
-            h: height,
-            componentName,
-            label,
-        };
-        setLayout([...layout, newItem]);
-    };
-
-    const deleteItem = (itemId) => {
-        const updatedLayout = layout
-            .filter((item) => item.i !== itemId)
-            .map((item, index) => ({
-                ...item,
-                i: `item-${index}`,
-            }));
-        setLayout(updatedLayout);
-    };
-
-    const saveLayout = (newLayout) => {
-        const updatedLayout = newLayout.map((item, index) => ({
-            ...layout[index],
-            ...item,
-            i: `item-${index}`,
-        }));
-
-        localStorage.setItem('BuilderLayout', JSON.stringify(updatedLayout));
-        setLayout(updatedLayout);
+    const fetchNew = () => {
+        setError({ code: null, message: '' });
+        const savedLayout = localStorage.getItem(LAYOUTKEY);
+        const savedSettings = localStorage.getItem(SETTINGSKEY);
+        const styles = localStorage.getItem(STYLEKEY);
+        if (savedLayout) {
+            setLayout(JSON.parse(savedLayout));
+        }
+        if (savedSettings) {
+            setSettings(JSON.parse(savedSettings));
+        }
+        if (styles) {
+            setStyle(styles);
+        }
     };
 
     const renderComponent = (name, key) => {
@@ -153,33 +175,33 @@ const Builder = () => {
             letter: { width: 816, height: 1100 },
             A4: { width: 827, height: 1169 },
             A5: { width: 583, height: 827 },
-            custom: { width: width, height: height },
+            custom: {
+                width: width >= 300 && width <= 3000 ? width : 300,
+                height: height >= 300 && height <= 3000 ? height : 300,
+            },
         };
 
         return sizes[size] ? sizes[size][side] : side === 'height' ? 1056 : 816;
     };
 
-    const saveSheet = async () => {
-        const sheet = {
-            id: 'abc',
-            title: 'yesTitle',
-            layout: JSON.stringify(layout),
-            settings: JSON.stringify(settings),
-            author: localStorage.getItem('author') || '',
-        };
-        try {
-            const response = await fetch('http://localhost:3050/api/sheet', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(sheet),
-            });
-            const data = await response.json();
-            console.log('Sheet created:', data);
-        } catch (error) {
-            console.error('Error creating sheet:', error);
-            console.error(sheet);
+    const styleRef = useRef(null);
+
+    const renderStyle = () => {
+        if (style === null) {
+            return <style ref={styleRef}></style>;
         }
+        return (
+            <style
+                ref={styleRef}
+            >{`/*Imported in html download*/ \n\n\n ${style}\n`}</style>
+        );
     };
+
+    useEffect(() => {
+        if (styleRef.current !== null && style !== null) {
+            styleRef.current.innerHTML = `/*Imported in html download*/ \n\n\n ${style}\n`;
+        }
+    }, [style]);
 
     const renderDropDiv = () => {
         const { columns, rowHeight, background, textColor } = settings;
@@ -226,31 +248,39 @@ const Builder = () => {
         const tab = e.target.className.split(' ')[0];
 
         if (tab === 'settings') {
+            e.target.classList.add('active');
             settingsTab.current.classList.add('active');
             styleEditorTab.current.classList.remove('active');
+            styleEditorTabButton.current.classList.remove('active');
         }
         if (tab === 'styleEditor') {
+            e.target.classList.add('active');
             styleEditorTab.current.classList.add('active');
             settingsTab.current.classList.remove('active');
+            settingsTabButton.current.classList.remove('active');
         }
     };
 
-    return (
-        <div className="Builder page">
-            <Nav />
-            <main className="content">
+    const renderIfAuthor = () => {
+        if (error.code !== null) {
+            return <ErrorBanner error={error} />;
+        }
+
+        return (
+            <>
                 <aside className="sidebar">
                     <h2>Pick your component</h2>
                     {renderPicker()}
                 </aside>
                 <section id="create">
+                    {renderStyle()}
                     <h1>Create your own character sheet</h1>
                     <div className="drop">{renderDropDiv()}</div>
                 </section>
                 <aside id="sheetOptions">
                     <nav className="tabButtons">
                         <button
-                            className="settings button"
+                            className="settings button active"
                             ref={settingsTabButton}
                             onClick={changeTab}
                         >
@@ -266,18 +296,22 @@ const Builder = () => {
                     </nav>
                     <div className="tabs">
                         <div className="tab settings active" ref={settingsTab}>
-                            <Settings
-                                settings={settings}
-                                onSettingsSave={handleSettingsSave}
-                            />
+                            <Settings />
                         </div>
                         <div className="tab styleEditor" ref={styleEditorTab}>
                             <StyleEditor />
                         </div>
                     </div>
-                    <FileOperationsButtons onSave={saveSheet} />
+                    <FileOperationsButtons />
                 </aside>
-            </main>
+            </>
+        );
+    };
+
+    return (
+        <div className="Builder page">
+            <Nav />
+            <main className="content">{renderIfAuthor()}</main>
         </div>
     );
 };

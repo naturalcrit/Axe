@@ -1,0 +1,13 @@
+.page.Builder .content:has(.errorBanner) {
+    grid-template-columns: 1fr;
+    place-items: center;
+}
+
+.errorBanner {
+    margin: 20px;
+    width: clamp(300px, 50%, 1000px);
+    height: 500px;
+    background: #eee;
+    color: black;
+    padding: 20px 70px;
+}

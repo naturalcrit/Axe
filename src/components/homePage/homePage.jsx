@@ -1,6 +1,6 @@
-import React from "react";
-import "./homePage.css";
-import Nav from "../nav/navBar";
+import React from 'react';
+import './homePage.css';
+import Nav from '../nav/navBar';
 
 const Home = () => {
     return (
@@ -16,13 +16,13 @@ const Home = () => {
                             there, using a simple Drag n Drop system.
                         </p>
                         <p>
-                            It's part of the{" "}
+                            It's part of the{' '}
                             <a href="http://naturalcrit.com">
                                 NaturalCrit project
                             </a>
                             , a set of tools for DMs to improve their experience
                             building a world, or even an entire RPG. You may
-                            have heard of the most famous tool we have,{" "}
+                            have heard of the most famous tool we have,{' '}
                             <a href="https://homebrewery.naturalcrit.com/">
                                 The Homebrewery
                             </a>
@@ -32,19 +32,20 @@ const Home = () => {
                         </p>
                         <p>
                             This project has some costs to it, so if you want
-                            to, you can join us on{" "}
+                            to, you can join us on{' '}
                             <a href="https://www.patreon.com/NaturalCrit">
                                 our patreon
-                            </a>{" "}
+                            </a>{' '}
                             and help us keep our servers running.
                         </p>
                     </div>
                     <div className="image">
                         <img
                             className="displayImage"
-                            src={require("../../assets/images/HB_homepage.png")}
+                            src={require('../../assets/images/HB_homepage.png')}
                             alt="Homebrewery Home Page"
                             title="Homebrewery Home Page"
+                            draggable={false}
                         />
                     </div>
                 </section>
@@ -55,9 +56,10 @@ const Home = () => {
                     <div className="image">
                         <img
                             className="displayImage"
-                            src={require("../../assets/images/Axe_Builder.png")}
+                            src={require('../../assets/images/Axe_Builder.png')}
                             alt="Builder Page"
                             title="Builder Page"
+                            draggable={false}
                         />
                     </div>
                     <div className="text">
@@ -77,9 +79,16 @@ const Home = () => {
                             as page size controls, or some basic styling.
                         </p>
                         <p>
-                            Using CSS, you can style your character sheet in any
-                            way imaginable, although it is harder to learn than
-                            a simple form.
+                            Using{' '}
+                            <a
+                                title="Learn CSS at codeacademy.com"
+                                href="https://www.codecademy.com/learn/learn-css"
+                            >
+                                CSS
+                            </a>
+                            , you can style your character sheet in any way
+                            imaginable, although it is harder to learn than a
+                            simple form.
                         </p>
                     </div>
                 </section>

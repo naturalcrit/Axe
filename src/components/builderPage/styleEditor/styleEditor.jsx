@@ -1,32 +1,47 @@
-import { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import { EditorView, basicSetup } from 'codemirror';
 import { EditorState } from '@codemirror/state';
 import { css } from '@codemirror/lang-css';
-import { keymap } from '@codemirror/view';
-import { defaultKeymap, indentWithTab } from '@codemirror/commands'
 
-
+import { BuilderContext } from '../builderContext';
 
 const StyleEditor = () => {
     const editorRef = useRef(null);
 
-    useEffect(() => {
+    const { id, style, setStyle, STYLEKEY } = useContext(BuilderContext);
+
+    useEffect(() => {        
+        const updateStyle = (update) => {
+            if (update.docChanged) {
+                const cssContent = update.state.doc.toString();
+                setStyle(cssContent);
+                if (!id) {
+                    window.localStorage.setItem(STYLEKEY, cssContent);
+                }
+            }
+        };
         const startState = EditorState.create({
-          doc: 'Hello World',
-          extensions: [ basicSetup, css() ],
-        })
-    
-        const view = new EditorView({ state: startState, parent: editorRef.current })
-    
+            doc: style ? style : '/* Write your CSS here */',
+            extensions: [
+                basicSetup,
+                css(),
+                EditorView.updateListener.of(updateStyle),
+            ],
+        });
+
+        const view = new EditorView({
+            state: startState,
+            parent: editorRef.current,
+        });
+
         return () => {
-          view.destroy()
-        }
-      }, [])
-    
+            view.destroy();
+        };
+    }, []);
 
     return (
-        <div className='codeEditor'>
-            <div ref={editorRef} style={{ height: '500px' }}></div>
+        <div className="codeEditor">
+            <div ref={editorRef} style={{ height: '643px' }}></div>
         </div>
     );
 };

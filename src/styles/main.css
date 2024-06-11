@@ -58,6 +58,10 @@ button:disabled {
     margin-inline: auto;
     color: white;
     font-family: 'Open Sans';
+
+    main.content {
+        margin-top:29px;
+    }
 }
 
 
