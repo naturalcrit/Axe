@@ -12,8 +12,8 @@ export const AuthProvider = ({ children }) => {
         return null;
     };
 
-    const [logged, setLogged] = useState(false);
     const [author, setAuthor] = useState(getAuthorFromStorage());
+    const [logged, setLogged] = useState(!!author);
 
     const login = () => {
         const name = prompt('What is your name?');
