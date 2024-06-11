@@ -66,8 +66,6 @@ export const BuilderProvider = ({ children }) => {
         setLayout(updatedLayout);
     };
 
-    
-
     return (
         <BuilderContext.Provider
             value={{

@@ -128,14 +128,14 @@ const FileOperationsButtons = ({ onSave }) => {
 
     return (
         <div className="buttons">
-            <button className="button" onClick={() => window.print()}>
+            <button className="button export" onClick={() => window.print()}>
                 Export as pdf
             </button>
-            <button className="button" onClick={exportHtml}>
+            <button className="button export" onClick={exportHtml}>
                 Export as HTML
             </button>
             <button
-                className="button"
+                className="button export"
                 onClick={() => {
                     exportJson();
                 }}
@@ -143,7 +143,7 @@ const FileOperationsButtons = ({ onSave }) => {
                 Export as JSON
             </button>
             <button
-                className="button"
+                className="button import"
                 onClick={() => importJsonRef.current.click()}
             >
                 Import a character sheet
@@ -156,7 +156,7 @@ const FileOperationsButtons = ({ onSave }) => {
                 style={{ display: 'none' }}
                 onChange={importJson}
             />
-            <button ref={saveSheetRef} className="button" onClick={saveSheet}>
+            <button ref={saveSheetRef} className="button save" onClick={saveSheet}>
                 Save
             </button>
         </div>

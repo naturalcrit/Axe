@@ -166,6 +166,7 @@
             display: grid;
             grid-template-rows: 50px 1fr 150px;
 
+
             .tabButtons {
                 position: relative;
                 width: 100%;
@@ -221,6 +222,10 @@
                 padding-inline: 20px;
             }
 
+            button.export {
+                background-color:var(--blue);
+            }
+
             .codeEditor {
                 position: relative;
                 margin-top: 20px;
@@ -247,6 +252,13 @@
                 }
 
             }
+        }
+    }
+    &.new #sheetOptions button.save {
+        background-color: var(--orange);
+
+        &:hover {
+            background-color: var(--green);
         }
     }
 }

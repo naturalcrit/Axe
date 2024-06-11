@@ -309,7 +309,7 @@ const Builder = () => {
     };
 
     return (
-        <div className="Builder page">
+        <div className={`Builder page ${!id ? "new" : ""}`}>
             <Nav />
             <main className="content">{renderIfAuthor()}</main>
         </div>
