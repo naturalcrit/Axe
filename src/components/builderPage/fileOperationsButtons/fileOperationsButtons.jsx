@@ -3,6 +3,8 @@ import React, { useRef, useContext } from 'react';
 import { BuilderContext } from '../builderContext';
 import { AuthContext } from '../../authContext';
 
+import { nanoid } from 'nanoid';
+
 const FileOperationsButtons = ({ onSave }) => {
     const importJsonRef = useRef();
     const saveSheetRef = useRef();
@@ -109,7 +111,7 @@ const FileOperationsButtons = ({ onSave }) => {
 
     const saveSheet = async () => {
         const sheet = {
-            id: id,
+            id: nanoid(10),
             layout: JSON.stringify(layout),
             style: style,
             settings: JSON.stringify(settings),
@@ -123,6 +125,7 @@ const FileOperationsButtons = ({ onSave }) => {
             });
             const data = await response.json();
             console.log('Sheet created:', data);
+            window.location.href = `/builder/${sheet.id}`;
         } catch (error) {
             console.error('Error creating sheet:', error);
             console.error(sheet);

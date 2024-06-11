@@ -1,10 +1,7 @@
 import express from 'express';
-import { nanoid } from 'nanoid';
 import Sheet from '../models/sheetModel.js';
 
 const router = express.Router();
-
-const line = '----------------------------------------------------------------------------';
 
 // Get all sheets for a specific author
 router.get('/sheetCollection', async (req, res) => {
@@ -48,7 +45,7 @@ router.get('/sheet/:id', async (req, res) => {
 router.post('/sheet', async (req, res) => {
     console.log(req.body);
     const sheet = new Sheet({
-        id: nanoid(10),
+        id: req.body.id,
         layout: req.body.layout,
         style: req.body.style,
         settings: req.body.settings,
@@ -91,6 +88,5 @@ router.delete('/sheet/:id', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
-
 
 export default router;

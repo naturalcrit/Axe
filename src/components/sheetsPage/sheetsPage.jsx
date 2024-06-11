@@ -47,7 +47,7 @@ const Sheets = () => {
     const renderSheets = () => {
         if (loading) {
             return (
-                <div className="sheets__loading">
+                <div className="sheets loading">
                     <h1>Loading sheets...</h1>
                 </div>
             );
@@ -55,7 +55,7 @@ const Sheets = () => {
 
         if (error) {
             return (
-                <div className="sheets__error">
+                <div className="sheets error">
                     <h1>{error}</h1>
                 </div>
             );
@@ -63,17 +63,16 @@ const Sheets = () => {
 
         if (!sheets || sheets.length === 0) {
             return (
-                <div className="sheets__noSheets">
+                <div className="sheets noSheets">
                     <h1>No sheets found</h1>
                 </div>
             );
         }
-
         return (
-            <ul className="sheets__list">
+            <ul className="sheetList">
                 {sheets.map((sheet) => (
-                    <li key={sheet.id} className="sheets__item">
-                        <h3>{sheet.title}</h3>
+                    <li key={sheet.id} className="sheetItem">
+                        <h3>{JSON.parse(sheet.settings).title}</h3>
                         <a href={`/builder/${sheet.id}`} className="sheetLink">
                             open
                         </a>{' '}
