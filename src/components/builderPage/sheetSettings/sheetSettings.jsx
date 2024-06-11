@@ -153,7 +153,7 @@ const Settings = ({}) => {
                             type="text"
                             name="title"
                             min={3}
-                            defaultValue={settings.title}
+                            value={settings.title}
                             onChange={handleSettingsChange}
                         />
                     </label>
