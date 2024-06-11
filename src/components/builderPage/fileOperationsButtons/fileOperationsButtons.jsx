@@ -9,16 +9,10 @@ const FileOperationsButtons = ({ onSave }) => {
     const importJsonRef = useRef();
     const saveSheetRef = useRef();
 
-    const {
-        id,
-        layout,
-        setLayout,
-        style,
-        settings,
-        setSettings,
-    } = useContext(BuilderContext);
+    const { id, layout, setLayout, style, settings, setSettings } =
+        useContext(BuilderContext);
 
-    const saveHtml = async () => {
+    const exportHtml = async () => {
         const sheetContent = document.querySelector('.layout.sheet').outerHTML;
         const tempElement = document.createElement('div');
         tempElement.innerHTML = sheetContent;
@@ -76,7 +70,7 @@ const FileOperationsButtons = ({ onSave }) => {
         document.body.removeChild(element);
     };
 
-    const saveJson = () => {
+    const exportJson = () => {
         const exportedJson = [];
 
         exportedJson.push(JSON.parse(layout));
@@ -133,17 +127,17 @@ const FileOperationsButtons = ({ onSave }) => {
     };
 
     return (
-        <div className='buttons'>
+        <div className="buttons">
             <button className="button" onClick={() => window.print()}>
                 Export as pdf
             </button>
-            <button className="button" onClick={saveHtml}>
+            <button className="button" onClick={exportHtml}>
                 Export as HTML
             </button>
             <button
                 className="button"
                 onClick={() => {
-                    saveJson();
+                    exportJson();
                 }}
             >
                 Export as JSON
