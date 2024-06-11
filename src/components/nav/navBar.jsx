@@ -7,8 +7,7 @@ import './nav.css'; // Import CSS/LESS file directly
 import NaturalCritIcon from './naturalcrit.svg.jsx';
 
 const Nav = () => {
-    const { logged, login, logout } =
-        useContext(AuthContext);
+    const { logged, login, logout } = useContext(AuthContext);
 
     const renderLogin = () => {
         if (logged) {

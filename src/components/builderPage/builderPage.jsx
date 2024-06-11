@@ -27,6 +27,7 @@ import ErrorBanner from './errorBanner/errorBanner.jsx';
 const Builder = () => {
     const {
         id,
+        setId,
         layout,
         setLayout,
         style,
@@ -107,7 +108,7 @@ const Builder = () => {
                 fetchData();
             }
         }
-    }, [logged, author]);
+    }, [logged, author, id]);
 
     const fetchNew = () => {
         setError({ code: null, message: '' });
@@ -308,8 +309,10 @@ const Builder = () => {
         );
     };
 
+    console.log(id);
+
     return (
-        <div className={`Builder page ${!id ? "new" : ""}`}>
+        <div className={`Builder page ${!id ? 'new' : ''}`}>
             <Nav />
             <main className="content">{renderIfAuthor()}</main>
         </div>

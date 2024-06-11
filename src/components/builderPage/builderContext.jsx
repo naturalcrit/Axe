@@ -10,15 +10,17 @@ export const BuilderProvider = ({ children }) => {
     const urlId = window.location.pathname.match(/\/([^/]+)\/?$/)[1];
 
     const isId = () => {
-        if(urlId) {
+        if (urlId === 'new') {
             return null;
         }
         return urlId;
-    }
+    };
 
     const [id, setId] = useState(isId());
     const [layout, setLayout] = useState([]);
-    const [style, setStyle] = useState(!id ? window.localStorage.getItem(STYLEKEY) : null);
+    const [style, setStyle] = useState(
+        !id ? window.localStorage.getItem(STYLEKEY) : null
+    );
     const [settings, setSettings] = useState({
         title: 'Character sheet',
         columns: 12,

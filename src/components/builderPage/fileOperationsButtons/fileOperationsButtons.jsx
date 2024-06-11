@@ -9,7 +9,7 @@ const FileOperationsButtons = ({ onSave }) => {
     const importJsonRef = useRef();
     const saveSheetRef = useRef();
 
-    const { id, layout, setLayout, style, settings, setSettings } =
+    const { id, setId, layout, setLayout, style, settings, setSettings } =
         useContext(BuilderContext);
 
     const exportHtml = async () => {
@@ -156,7 +156,11 @@ const FileOperationsButtons = ({ onSave }) => {
                 style={{ display: 'none' }}
                 onChange={importJson}
             />
-            <button ref={saveSheetRef} className="button save" onClick={saveSheet}>
+            <button
+                ref={saveSheetRef}
+                className="button save"
+                onClick={saveSheet}
+            >
                 Save
             </button>
         </div>
