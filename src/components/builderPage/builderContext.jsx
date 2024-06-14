@@ -1,4 +1,5 @@
 import React, { createContext, useState } from 'react';
+import { useParams, useLocation, } from 'react-router-dom';
 
 export const BuilderContext = createContext();
 
@@ -7,15 +8,15 @@ const SETTINGSKEY = 'sheetSettings';
 const LAYOUTKEY = 'builderLayout';
 
 export const BuilderProvider = ({ children }) => {
-    const urlId = window.location.pathname.match(/\/([^/]+)\/?$/)[1];
-
+    const params = useParams();
+    
     const isId = () => {
-        if (urlId === 'new') {
+        if (Object.keys(params).length === 0) {
             return null;
         }
-        return urlId;
+        return params.id;
     };
-
+    
     const [id, setId] = useState(isId());
     const [layout, setLayout] = useState([]);
     const [style, setStyle] = useState(
@@ -31,6 +32,10 @@ export const BuilderProvider = ({ children }) => {
         background: '#ffffff',
         textColor: '#000000',
     });
+
+    const recheckId = () => {
+        setId(isId());
+    }
 
     const addNewItem = (componentName, width, height, label) => {
         const newItem = {
@@ -73,6 +78,7 @@ export const BuilderProvider = ({ children }) => {
             value={{
                 id,
                 setId,
+                recheckId,
                 layout,
                 setLayout,
                 style,

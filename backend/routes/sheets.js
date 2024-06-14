@@ -43,18 +43,42 @@ router.get('/sheet/:id', async (req, res) => {
 
 // Create a new sheet
 router.post('/sheet', async (req, res) => {
+    console.log('attempting to create a new sheet');
     console.log(req.body);
     const sheet = new Sheet({
         id: req.body.id,
         layout: req.body.layout,
-        style: req.body.style,
+        styles: req.body.styles,
         settings: req.body.settings,
         author: req.body.author || 'noAuthor',
     });
 
     try {
         const newSheet = await sheet.save();
+        console.log('new sheet created');
         res.status(201).json(newSheet);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+});
+
+router.put('/sheet/:id', async (req, res) => {
+    try {
+        const updatedSheet = await Sheet.findOneAndUpdate(
+            { id: req.params.id },
+            {
+                layout: req.body.layout,
+                styles: req.body.styles,
+                settings: req.body.settings,
+                author: req.body.author || 'noAuthor',
+            },
+            { new: true }
+        );
+        if (!updatedSheet) {
+            return res.status(404).json({ error: 'Sheet not found' });
+        }
+        console.table(updatedSheet);
+        res.status(200).json(updatedSheet);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }

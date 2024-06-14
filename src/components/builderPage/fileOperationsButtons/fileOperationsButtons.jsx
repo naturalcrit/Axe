@@ -9,7 +9,7 @@ const FileOperationsButtons = ({ onSave }) => {
     const importJsonRef = useRef();
     const saveSheetRef = useRef();
 
-    const { id, setId, layout, setLayout, style, settings, setSettings } =
+    const { id, layout, setLayout, style, settings, setSettings } =
         useContext(BuilderContext);
 
     const exportHtml = async () => {
@@ -105,23 +105,33 @@ const FileOperationsButtons = ({ onSave }) => {
 
     const saveSheet = async () => {
         const sheet = {
-            id: nanoid(10),
+            id: id || nanoid(10),
             layout: JSON.stringify(layout),
-            style: style,
+            styles: style || '',
             settings: JSON.stringify(settings),
             author: localStorage.getItem('author') || '',
         };
+
+        const method = id ? 'PUT' : 'POST';
+        const url = id
+            ? `http://localhost:3050/api/sheet/${id}`
+            : 'http://localhost:3050/api/sheet';
+
         try {
-            const response = await fetch('http://localhost:3050/api/sheet', {
-                method: 'POST',
+            const response = await fetch(url, {
+                method: method,
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(sheet),
             });
             const data = await response.json();
-            console.log('Sheet created:', data);
+            console.table(data);
             window.location.href = `/builder/${sheet.id}`;
         } catch (error) {
-            console.error('Error creating sheet:', error);
+            console.log(error);
+            console.error(
+                id ? 'Error updating sheet:' : 'Error creating sheet:',
+                error
+            );
             console.error(sheet);
         }
     };

@@ -4,7 +4,7 @@ const sheetSchema = new mongoose.Schema({
     id: { type: String, required: true, unique: true },
     layout: { type: String, required: true },
     settings: { type: String, required: true },
-    styles: { type: String, required: false },
+    styles: { type: String, required: true },
     author: { type: String, required: true },
 });
 

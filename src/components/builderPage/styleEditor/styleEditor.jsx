@@ -20,6 +20,7 @@ const StyleEditor = () => {
                 }
             }
         };
+        
         const startState = EditorState.create({
             doc: style ? style : '/* Write your CSS here */',
             extensions: [
@@ -37,7 +38,7 @@ const StyleEditor = () => {
         return () => {
             view.destroy();
         };
-    }, []);
+    }, [style]);
 
     return (
         <div className="codeEditor">

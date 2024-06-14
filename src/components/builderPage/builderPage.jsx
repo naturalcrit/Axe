@@ -6,6 +6,7 @@ import React, {
     useRef,
     useContext,
 } from 'react';
+import { useParams } from 'react-router-dom';
 import GridLayout from 'react-grid-layout';
 import { BuilderContext } from './builderContext.jsx';
 import { AuthContext } from '../authContext.jsx';
@@ -27,7 +28,7 @@ import ErrorBanner from './errorBanner/errorBanner.jsx';
 const Builder = () => {
     const {
         id,
-        setId,
+        recheckId,
         layout,
         setLayout,
         style,
@@ -43,6 +44,13 @@ const Builder = () => {
         SETTINGSKEY,
         LAYOUTKEY,
     } = useContext(BuilderContext);
+
+    const params = useParams();
+    useEffect(() => {
+        if (id !== params) {
+            recheckId();
+        }
+    },[]);
 
     const { logged, author } = useContext(AuthContext);
 
@@ -62,30 +70,33 @@ const Builder = () => {
                 });
             } else {
                 setError({ code: null, message: '' });
-                const fetchData = async () => {
+                const fetchSheet = async () => {
                     try {
-                        if (!id) {
-                            const response = await fetch(
-                                `http://localhost:3050/api/sheet/${id}`
-                            );
-                            if (!response.ok) {
-                                const error = new Error('500');
-                                error.code = 500;
-                                throw error;
-                            }
-                            const sheetData = await response.json();
-                            if (sheetData.author === author) {
-                                setLayout(JSON.parse(sheetData.layout));
-                                setSettings(JSON.parse(sheetData.settings));
-                                if (sheetData.style) setStyle(sheetData.style);
-                            } else {
-                                const error = new Error(
-                                    'This is not your sheet'
-                                );
-                                error.code = 403;
-                                error.author = sheetData.author;
-                                throw error;
-                            }
+                        const response = await fetch(
+                            `http://localhost:3050/api/sheet/${id}`
+                        );
+                        if (!response.ok) {
+                            const error = new Error('500');
+                            error.code = 500;
+                            throw error;
+                        }
+                        const sheetData = await response.json();
+                        console.log(
+                            'checking if author in sheet',
+                            sheetData.author,
+                            'is = to author set: ',
+                            author
+                        );
+                        if (sheetData.author === author) {
+                            console.table(sheetData);
+                            setLayout(JSON.parse(sheetData.layout));
+                            setSettings(JSON.parse(sheetData.settings));
+                            setStyle(sheetData.styles);
+                        } else {
+                            const error = new Error('This is not your sheet');
+                            error.code = 403;
+                            error.author = sheetData.author;
+                            throw error;
                         }
                     } catch (error) {
                         console.log(error.author);
@@ -105,9 +116,11 @@ const Builder = () => {
                     }
                 };
 
-                fetchData();
+                fetchSheet();
             }
         }
+
+        console.log(logged, author, id);
     }, [logged, author, id]);
 
     const fetchNew = () => {
@@ -308,8 +321,6 @@ const Builder = () => {
             </>
         );
     };
-
-    console.log(id);
 
     return (
         <div className={`Builder page ${!id ? 'new' : ''}`}>
